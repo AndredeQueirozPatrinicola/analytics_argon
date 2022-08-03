@@ -1,0 +1,32 @@
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+  <div class="scrollbar-inner">
+    <!-- Brand -->
+    <div class="sidenav-header  align-items-center">
+      <a class="navbar-brand" href="/">
+        <img src="/static/assets/img/{{ logo }}" class="navbar-brand-img" alt="Argon Design - Jinja Template Logo.">
+      </a>
+    </div>
+    <div class="navbar-inner">
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+
+        <ul class="navbar-nav">
+
+          {% for item in menu %}
+          <li class="nav-item">
+          <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="{{ item.url }}">
+          <i class="ni ni-tv-2 text-primary"></i>
+          <span class="nav-link-text">{{ item.text }}</span>
+          </a>
+          </li>
+          {% endfor %}
+
+        </ul>
+        <!-- Divider -->
+        <hr class="my-3">
+
+      </div>
+    </div>
+  </div>
+</nav>
