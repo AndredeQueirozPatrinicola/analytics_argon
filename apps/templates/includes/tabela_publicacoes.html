@@ -1,0 +1,35 @@
+<div class="col-xl-4">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="row align-items-center">
+            <div class="col">
+                {% for i in tabela_publicacoes %}
+                <h3 class="mb-0">{{ i.titulo }} </h3>
+                {% endfor %}
+            </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Ano</th>
+            </tr>
+          </thead>
+          <tbody>
+                {% for tabela in tabela_pu %}
+                <tr>
+                    {% for item in tabela %}
+                    <td>
+                        {{ item }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

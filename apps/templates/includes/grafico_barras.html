@@ -1,0 +1,18 @@
+<div class="col-xl-4">
+    <div class="card">
+      <div class="card-header bg-transparent">
+        <div class="row align-items-center">
+            <div class="col">
+                {% for item in grafico_pizza_titulo %}
+                <h3 class="mb-0">{{ item.titulo }}</h3>
+                {% endfor %}
+            </div>
+        </div>
+      </div>
+      <div class="card-body">
+        {% autoescape off %}
+            {{ grafico_ori }}
+        {% endautoescape %}
+      </div>
+    </div>
+  </div>

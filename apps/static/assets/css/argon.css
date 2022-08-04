@@ -3672,7 +3672,7 @@ input[type="button"].btn-block {
   margin-left: 1.5rem; }
 
 .card-header {
-  padding: 1.25rem 1.5rem;
+  padding: 0;
   margin-bottom: 0;
   background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
@@ -17605,6 +17605,7 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
   background: transparent; }
 
 /*# sourceMappingURL=argon.css.map */
+
 
 
 

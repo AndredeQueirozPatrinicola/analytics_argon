@@ -1,0 +1,34 @@
+<div class="col-xl-8">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="row align-items-center">
+        {% for i in tabela_header %}
+          <p class='titulo-tabela'>{{ i.titulo }}</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">{{ i.nome }}</th>
+              <th scope="col">{{ i.nivel }}</th>
+              <th scope="col">{{ i.programa }}</th>
+            {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+                {% for tabela in tabela %}
+                <tr>
+                  {% for item in tabela %}
+                  <td>
+                    {{ item }}
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

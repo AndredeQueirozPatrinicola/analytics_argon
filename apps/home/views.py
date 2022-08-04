@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,6 +5,7 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, render
 
+from .utils import tabela_orientandos, linhas_grafico, tabela_ultimas_publicações, pizza
 
 def index(request):
     context = {
@@ -50,6 +46,49 @@ def pages(request):
 
 
 def docentes(request):
+    tabela = tabela_orientandos()
+    grafico_ori = pizza()
+    linhas = linhas_grafico()
+    tabela_publi = tabela_ultimas_publicações()
+
+
+    docente = [
+        {
+            'nome' : 'Vladimir Safatle',
+            'programa' : 'Filosofia',
+            'departamento' : 'Filosofia'
+        }
+    ]
+
+
+    grafico_pizza_titulo = [
+        {
+            'titulo' : 'Relação entre mestrado e doutorado'
+        }
+    ]
+    
+    grafico_titulo = [
+        {
+            'titulo' : 'Produção de artigos por ano (2000 - 2021)',
+            'categoria' : 'Artigos'
+        }
+    ]
+
+    tabela_header = [
+        {
+            'titulo' : 'Orientandos Ativos',
+            'nome' : 'nome',
+            'nivel' : 'nivel',
+            'programa' : 'programa'
+        }
+    ]
+
+    tabela_publicacoes = [
+        {
+            'titulo' : 'Ultimas publicações'
+        }
+    ]
+
     caminho = [
         {
             'text' :"Departamentos", 
@@ -58,10 +97,20 @@ def docentes(request):
         {
             'text' : "Docentes",
             'url' : '/docentes/'
-        }]
+        }
+    ]
 
     context = {
-        'caminho' : caminho
+        'tabela_header' : tabela_header,
+        'caminho' : caminho,
+        'tabela' : tabela,
+        'grafico_ori' : grafico_ori,
+        'tabela_pu' : tabela_publi,
+        'tabela_publicacoes' : tabela_publicacoes,
+        'linhas' : linhas,
+        'grafico_titulo' : grafico_titulo,
+        'grafico_pizza_titulo' : grafico_pizza_titulo,
+        'docente' : docente
     }
 
     return render(request, 'home/docentes.html', context)
