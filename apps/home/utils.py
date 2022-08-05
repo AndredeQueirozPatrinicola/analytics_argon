@@ -44,7 +44,11 @@ def pizza():
     nivel.append(x)
     nivel.append(y)        
 
-    figura = px.pie(values=nivel, names=tipos, width=450, color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"])
+    figura = px.pie(values=nivel, names=tipos, width=450, color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], labels={
+        'values': 'Valor',
+        'names': 'Tipo',
+        'color' : 'Cor'
+    })
 
     figura.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
         l=60, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
@@ -94,7 +98,7 @@ def tabela_ultimas_publicações():
     res = requests.get(url = 'https://dados.fflch.usp.br/api/programas/docente/7208476340192177')
     dados = res.json()
     tabela = pd.DataFrame(dados['livros'])
-    publicacoes = tabela.head(7)
+    publicacoes = tabela.head(5)
     titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
     publicacao_com_ano = titulo_ano.values.tolist()
 

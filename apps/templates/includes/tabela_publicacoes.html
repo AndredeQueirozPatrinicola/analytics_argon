@@ -4,25 +4,27 @@
         <div class="row align-items-center">
             <div class="col">
                 {% for i in tabela_publicacoes %}
-                <h3 class="mb-0">{{ i.titulo }} </h3>
+                <h3 class="mb-0 titulo-tabela-publi">{{ i.titulo }} </h3>
                 {% endfor %}
             </div>
         </div>
       </div>
-      <div class="table-responsive">
+      <div class="">
         <!-- Projects table -->
-        <table class="table align-items-center table-flush">
+        <table class="table align-items-center table-flush tabela-publicacoes">
           <thead class="thead-light">
             <tr>
-              <th scope="col">Nome</th>
-              <th scope="col">Ano</th>
+              {% for i in tabela_publicacoes %}
+              <th scope="col">{{ i.titulo_trabalho }}</th>
+              <th scope="col">{{ i.ano }}</th>
+              {% endfor %}
             </tr>
           </thead>
           <tbody>
                 {% for tabela in tabela_pu %}
                 <tr>
                     {% for item in tabela %}
-                    <td>
+                    <td class='pl-3'>
                         {{ item }}
                     </td>
                     {% endfor %}

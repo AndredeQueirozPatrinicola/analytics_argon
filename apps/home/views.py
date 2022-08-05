@@ -63,7 +63,7 @@ def docentes(request):
 
     grafico_pizza_titulo = [
         {
-            'titulo' : 'Relação entre mestrado e doutorado'
+            'titulo' : 'Relação entre mestrandos e doutorandos'
         }
     ]
     
@@ -77,15 +77,17 @@ def docentes(request):
     tabela_header = [
         {
             'titulo' : 'Orientandos Ativos',
-            'nome' : 'nome',
-            'nivel' : 'nivel',
-            'programa' : 'programa'
+            'nome' : 'Nome',
+            'nivel' : 'Nivel',
+            'programa' : 'Programa'
         }
     ]
 
     tabela_publicacoes = [
         {
-            'titulo' : 'Ultimas publicações'
+            'titulo' : 'Ultimas publicações',
+            'titulo_trabalho' : 'Titulo',
+            'ano' : 'Ano de publicação'
         }
     ]
 

@@ -553,7 +553,8 @@ pre {
 .col {
   flex-basis: 0;
   flex-grow: 1;
-  max-width: 100%; }
+  max-width: 100%;
+}
 
 .row-cols-1 > * {
   flex: 0 0 100%;
@@ -17607,5 +17608,43 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
 /*# sourceMappingURL=argon.css.map */
 
 
+
+.titulo-tabela{
+  padding: 10px 0 0 25px;
+  margin-bottom: 5px;
+}
+
+.titulo-tabela-publi{
+  padding: 10px;
+}
+
+.titulo-tabela-linha{
+  padding-left: 35px;
+  padding-top: 10px;
+}
+
+.link-direita-linha{
+  margin-right: 20px;
+}
+
+.tabela-publicacoes{
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+.tabela-publicacoes th:first-child{
+  width: 60%;
+}
+
+.tabela-publicacoes td,.tabela-publicacoes th{
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.tabela-publicacoes td{
+  text-align: center;
+}
 
 

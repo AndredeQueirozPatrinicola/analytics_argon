@@ -2,7 +2,7 @@
     <div class="card bg-default">
       <div class="card-header bg-transparent">
         <div class="row align-items-center">
-          <div class="col">
+          <div class="col titulo-tabela-linha">
             {% for item in grafico_titulo %}
             <h6 class="text-light text-uppercase ls-1 mb-1">{{ item.categoria }}</h6>
             <h5 class="h3 text-white mb-0">{{ item.titulo }}</h5>
@@ -13,7 +13,7 @@
               <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark"
                 data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$"
                 data-suffix="k">
-                <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                <a href="#" class="nav-link py-2 px-3 active ml-20" data-toggle="tab">
                   <span class="d-none d-md-block"></span>
                   <span class="d-md-none"></span>
                 </a>
@@ -21,7 +21,7 @@
               <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark"
                 data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$"
                 data-suffix="k">
-                <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                <a href="#" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab">
                   <span class="d-none d-md-block"></span>
                   <span class="d-md-none"></span>
                 </a>
