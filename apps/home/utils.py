@@ -44,14 +44,14 @@ def pizza():
     nivel.append(x)
     nivel.append(y)        
 
-    figura = px.pie(values=nivel, names=tipos, width=450, color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], labels={
+    figura = px.pie(values=nivel, names=tipos,  color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], labels={
         'values': 'Valor',
         'names': 'Tipo',
         'color' : 'Cor'
     })
 
     figura.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-        l=60, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
 
 
     grafico_pizza = plot(figura, output_type='div', config={
@@ -75,17 +75,24 @@ def linhas_grafico():
     df_ano_artigos = pd.DataFrame(ano_sortado)
     eixo_x = df_ano_artigos.index
 
-    linhas = px.line(df_ano_artigos, x=eixo_x, y='ANO', width=980, height=400, labels={
+    linhas = px.line(df_ano_artigos, x=eixo_x, y='ANO', height=390,labels={
         'index': '',
         'ANO': ''
     })
 
     linhas.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-        l=20, r=20, t=20, b=50), font_color="white", showlegend=False)
+        l=0, r=30, t=20, b=50), font_color="white", showlegend=False)
+
+
+    linhas.update_layout(
+        autosize=True,
+    )
+
+
     linhas.update_xaxes(showline=True, linewidth=1, linecolor='white',
-                        mirror=True, showgrid=True, gridwidth=1, gridcolor='grey')
+                        mirror=True, showgrid=True, gridwidth=1, gridcolor='grey', automargin=True)
     linhas.update_yaxes(showline=True, linewidth=1, linecolor='white',
-                        mirror=True, showgrid=True, gridwidth=1, gridcolor='grey')
+                        mirror=True, showgrid=True, gridwidth=1, gridcolor='grey', automargin=True)
 
     graph = plot(linhas, output_type="div", config={
         'displaylogo': False,

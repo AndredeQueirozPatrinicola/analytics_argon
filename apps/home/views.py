@@ -87,7 +87,7 @@ def docentes(request):
         {
             'titulo' : 'Ultimas publicações',
             'titulo_trabalho' : 'Titulo',
-            'ano' : 'Ano de publicação'
+            'ano' : 'Ano'
         }
     ]
 
