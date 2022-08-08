@@ -17636,8 +17636,7 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
   width: 60%;
 }
 
-.tabela-publicacoes td,.tabela-publicacoes th{
-  word-break: break-all;
+.tabela-publicacoes td,.tabela-publicacoes th, .break-word{
   word-wrap: break-word;
   overflow: hidden;
   white-space: normal;
@@ -17645,6 +17644,10 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
 
 .tabela-publicacoes td{
   text-align: center;
+}
+
+.submenu{
+  box-shadow: none;
 }
 
 

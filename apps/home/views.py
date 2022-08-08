@@ -5,7 +5,10 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, render
 
-from .utils import tabela_orientandos, linhas_grafico, tabela_ultimas_publicações, pizza
+import requests
+import pandas as pd
+
+from .utils import Docente
 
 def index(request):
     context = {
@@ -45,18 +48,22 @@ def pages(request):
 
 
 
-def docentes(request):
-    tabela = tabela_orientandos()
-    grafico_ori = pizza()
-    linhas = linhas_grafico()
-    tabela_publi = tabela_ultimas_publicações()
+def docentes(request, parametro):
+    docente = Docente(parametro)
+
+
+    tabela = docente.tabela_orientandos()
+    grafico_ori = docente.plota_pizza()
+    linhas = docente.plota_grafico_historico()
+    tabela_publi = docente.tabela_ultimas_publicações()
 
 
     docente = [
         {
-            'nome' : 'Vladimir Safatle',
-            'programa' : 'Filosofia',
-            'departamento' : 'Filosofia'
+            'nome' : docente.dados.get('nome'),
+            'programa' : '',
+            'departamento' : '',
+            'link_lattes': 'http://lattes.cnpq.br/' + docente.dados.get('id_lattes')
         }
     ]
 
@@ -116,3 +123,46 @@ def docentes(request):
     }
 
     return render(request, 'home/docentes.html', context)
+
+
+def departamento(request, sigla):
+
+    api = requests.get('https://dados.fflch.usp.br/api/programas')
+    dados = api.json()
+
+    for i in dados['departamentos']:
+        if i['sigla'] == sigla:
+            nome = i['nome']
+            id = i['id_lattes_docentes']
+            codset = i['codigo']
+
+    docentes_api = requests.get('https://dados.fflch.usp.br/api/docentes')
+    dados_docentes = docentes_api.json()
+
+    docentes = []
+
+    for docente in dados_docentes:
+        if int(docente['codset']) == int(codset):
+            docentes.append(docente)
+
+    df = pd.DataFrame(docentes)
+
+    id_lattes = df['id_lattes']
+
+    caminho = [
+        {
+            'text' : nome,
+            'url' : '/departamento/' + sigla
+        }
+    ]
+
+    context = {
+        'caminho' : caminho,
+        'nome' : nome,
+        'id_lattes' : id,
+        'docentes' : docentes,
+        'df' : df,
+        'lattes_id' : id_lattes
+    }
+
+    return render(request, 'home/departamento.html', context)

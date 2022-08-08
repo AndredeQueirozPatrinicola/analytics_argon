@@ -1,0 +1,27 @@
+<div class="table-responsive">
+<table class="table align-items-center table-flush">
+    <thead class="thead-light">
+        <tr>
+            {% for col in df.columns %}
+            <th scope="col">
+              {{col}}
+            </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for index, row in df.iterrows %}
+        <tr>
+          {% for cell in row %}
+          <a href='/docentes/3752790499157008'>
+                <td> 
+                        {{cell}}
+                </td>
+            </a>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+

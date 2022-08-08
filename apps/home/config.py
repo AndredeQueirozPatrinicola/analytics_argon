@@ -4,12 +4,27 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.apps import AppConfig
-
+import requests
 
 def config(request):
+
+    api = requests.get('https://dados.fflch.usp.br/api/programas')
+    dados = api.json()
+
+    menu_departamentos = []
+
+    for i in dados['departamentos']:
+
+        menu_departamentos.append({
+            'text': i['nome'],
+            'url' : '/departamento/' + i['sigla'] 
+            })
+
+
     return {'menu':[{
-                'text' : 'Programas',
-                'url' : '/programas/'
+                'text' : 'Departamentos',
+                'url' : '/departamentos/',
+                'submenu' : menu_departamentos
             },
             {
                 'text' : 'Docentes',
@@ -17,7 +32,8 @@ def config(request):
             }],
             'logo' : 'brand/logo.png',
             'icon' : 'icons/fflch_simbolo.jpg',
-            'name_app' : 'FFLCH | Analytics'
+            'name_app' : 'FFLCH | Analytics',
+            'departamentos' : dados['departamentos']
             }
 
 

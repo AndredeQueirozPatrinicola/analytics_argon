@@ -11,7 +11,7 @@
       </div>
       <div class="">
         <!-- Projects table -->
-        <table class="table align-items-center table-flush tabela-publicacoes">
+        <table class="table table-flush tabela-publicacoes">
           <thead class="thead-light">
             <tr>
               {% for i in tabela_publicacoes %}
@@ -24,9 +24,15 @@
                 {% for tabela in tabela_pu %}
                 <tr>
                     {% for item in tabela %}
-                    <td class='pl-3'>
+                      {% if item == tabela|last %}
+                    <td class='pl-3 text-center'>
                         {{ item }}
                     </td>
+                    {% else %}
+                    <td class='pl-3 text-left'>
+                      {{ item }}
+                    </td>
+                    {% endif %}
                     {% endfor %}
                 </tr>
                 {% endfor %}

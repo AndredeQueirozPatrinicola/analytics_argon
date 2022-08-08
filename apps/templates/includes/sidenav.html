@@ -14,12 +14,29 @@
         <ul class="navbar-nav">
 
           {% for item in menu %}
-          <li class="nav-item">
-          <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="{{ item.url }}">
-          <i class="ni ni-tv-2 text-primary"></i>
-          <span class="nav-link-text">{{ item.text }}</span>
-          </a>
-          </li>
+            {% if item.submenu %}
+            <li class="nav-item dropdown">
+              <a class="break-word nav-link dropdown-toggle {% if 'index' in segment %} active {% endif %}" href="{{ item.url }}"  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ni ni-tv-2 text-primary"></i>
+                <span class="nav-link-text">{{ item.text }}</span>
+              </a>
+              <div class="dropdown-menu submenu" aria-labelledby="navbarDropdown">
+                {% for i in item.submenu %}
+                <a class="break-word dropdown-item {% if 'index' in segment %} active {% endif %}" href="{{ i.url }}" >
+                  <span class="nav-link-text">{{ i.text }}</span>
+                </a>
+                {% endfor %}
+              </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="break-word nav-link {% if 'index' in segment %} active {% endif %}" href="{{ item.url }}">
+                <i class="ni ni-tv-2 text-primary"></i>
+                <span class="nav-link-text">{{ item.text }}</span>
+              </a>
+            </li>
+            {% endif %}
+    
           {% endfor %}
 
         </ul>

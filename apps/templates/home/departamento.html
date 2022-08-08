@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+
+  <br><br><br><br>
+
+  {% include "includes/tabela.html" %}
+
+  {% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
