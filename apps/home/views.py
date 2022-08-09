@@ -48,14 +48,14 @@ def pages(request):
 
 
 
-def docentes(request, parametro):
+def docente(request, parametro):
     docente = Docente(parametro)
 
 
     tabela = docente.tabela_orientandos()
     grafico_ori = docente.plota_pizza()
     linhas = docente.plota_grafico_historico()
-    tabela_publi = docente.tabela_ultimas_publicações()
+    tabela_publi = docente.tabela_ultimas_publicacoes()
 
 
     docente = [
@@ -125,7 +125,7 @@ def docentes(request, parametro):
     return render(request, 'home/docentes.html', context)
 
 
-def departamento(request, sigla):
+def docentes(request, sigla):
 
     api = requests.get('https://dados.fflch.usp.br/api/programas')
     dados = api.json()
@@ -162,7 +162,16 @@ def departamento(request, sigla):
         'id_lattes' : id,
         'docentes' : docentes,
         'df' : df,
-        'lattes_id' : id_lattes
+        'lattes_id' : id_lattes,
+        'tabela' : 'docentes'
     }
 
     return render(request, 'home/departamento.html', context)
+
+
+
+def departamentos(request):
+
+
+
+    return render(request, 'home/departamentos.html')

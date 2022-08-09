@@ -5,16 +5,20 @@ import plotly.express as px
 from plotly.offline import plot
 
 
-# Classes
+#Constantes
 
+API = 'https://dados.fflch.usp.br/api/'
+API_PROGRAMAS = API + 'programas/'
+API_DOCENTES = API + 'docentes'
+API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docente/'
 
-api = 'https://dados.fflch.usp.br/api/programas/docente/'
 
 class Docente():
 
+    
     def __init__(self, parametro):
         self.parametro = parametro
-        res = requests.get(url = api + self.parametro)
+        res = requests.get(url = API_PROGRAMAS_DOCENTE + self.parametro)
         dados = res.json()
         self.dados = dados
 
@@ -66,60 +70,80 @@ class Docente():
 
     def plota_pizza(self):
         dados = self.dados
-        df = pd.DataFrame(dados['orientandos'])
+        if dados['orientandos']:
+            df = pd.DataFrame(dados['orientandos'])
 
-        nivpgm = list(df['nivpgm'])
-        tipos = ['ME', 'DO']
+            nivpgm = list(df['nivpgm'])
+            tipos = ['ME', 'DO']
 
-        nivel = []
-        x,y = 0, 0
-        for i in nivpgm:
-            if i == 'ME':
-                x += 1
-            if i == 'DO':
-                y += 1
+            nivel = []
+            x,y = 0, 0
+            for i in nivpgm:
+                if i == 'ME':
+                    x += 1
+                if i == 'DO':
+                    y += 1
 
-        nivel.append(x)
-        nivel.append(y)        
+            nivel.append(x)
+            nivel.append(y)        
 
-        figura = px.pie(values=nivel, names=tipos,  color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], labels={
-            'values': 'Valor',
-            'names': 'Tipo',
-            'color' : 'Cor'
-        })
+            figura = px.pie(values=nivel, names=tipos,  color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], labels={
+                'values': 'Valor',
+                'names': 'Tipo',
+                'color' : 'Cor'
+            })
 
-        figura.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+            figura.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
+                l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
 
-        grafico_pizza = plot(figura, output_type='div', config={
-        'displaylogo': False,
-        'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+            grafico_pizza = plot(figura, output_type='div', config={
+            'displaylogo': False,
+            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        return grafico_pizza
+            return grafico_pizza
+        else:
+            return None
+        
 
 
     def tabela_orientandos(self):
         dados = self.dados
-        df = pd.DataFrame(dados['orientandos'])
+        if dados['orientandos']:
+            df = pd.DataFrame(dados['orientandos'])
 
-        nomep = list(df['nompes'])
-        nivpgm = list(df['nivpgm'])
-        nomare = list(df['nomare'])
+            nomep = list(df['nompes'])
+            nivpgm = list(df['nivpgm'])
+            nomare = list(df['nomare'])
 
-        lis = []
-        x = 0
-        while x < len(nomep):
-            lis.append([f'{nomep[x]}', f'{nivpgm[x]}' , f'{nomare[x]}'])
-            x += 1
+            lis = []
+            x = 0
+            while x < len(nomep):
+                lis.append([f'{nomep[x]}', f'{nivpgm[x]}' , f'{nomare[x]}'])
+                x += 1
 
-        return lis
+            return lis
+        else:
+            return None
 
-    def tabela_ultimas_publicações(self):
+    def tabela_ultimas_publicacoes(self):
         dados = self.dados
-        tabela = pd.DataFrame(dados['livros'])
-        publicacoes = tabela.head(5)
-        titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
-        publicacao_com_ano = titulo_ano.values.tolist()
+        if dados['livros']:
+            tabela = pd.DataFrame(dados['livros'])
+            publicacoes = tabela.head(5)
+            titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
+            publicacao_com_ano = titulo_ano.values.tolist()
+            return publicacao_com_ano
+        else:
+            return None
 
-        return publicacao_com_ano
 
+
+class Departamento():
+
+    def __init__(self, sigla):
+        self.sigla = sigla
+        res = requests.get(url = api)
+        dados = res.json()
+        self.dados = dados
+    
+    

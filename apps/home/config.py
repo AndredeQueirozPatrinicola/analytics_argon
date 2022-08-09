@@ -11,13 +11,13 @@ def config(request):
     api = requests.get('https://dados.fflch.usp.br/api/programas')
     dados = api.json()
 
-    menu_departamentos = []
+    menu_departamentos = [{'text': 'Geral', 'url': '/departamentos'}]
 
     for i in dados['departamentos']:
 
         menu_departamentos.append({
             'text': i['nome'],
-            'url' : '/departamento/' + i['sigla'] 
+            'url' : '/docentes/' + i['sigla'] 
             })
 
 
@@ -25,10 +25,6 @@ def config(request):
                 'text' : 'Departamentos',
                 'url' : '/departamentos/',
                 'submenu' : menu_departamentos
-            },
-            {
-                'text' : 'Docentes',
-                'url' : '/docentes/'
             }],
             'logo' : 'brand/logo.png',
             'icon' : 'icons/fflch_simbolo.jpg',
