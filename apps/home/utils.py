@@ -145,5 +145,3 @@ class Departamento():
         res = requests.get(url = api)
         dados = res.json()
         self.dados = dados
-    
-    
