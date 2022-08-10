@@ -22,7 +22,7 @@
       {% for index, row in df.iterrows %}
         <tr>
           {% if tabela == 'docentes' %}
-              <td>{% if row.id_lattes != "0" %}<a href='/docente/{{ row.id_lattes }}'>{{ row.nompes }}</a>{% else %}{{ row.nompes }}{% endif %}</td>
+              <td>{% if row.id_lattes != "0" %}<a href='/{{ sigla_departamento }}/docente/{{ row.id_lattes }}'>{{ row.nompes }}</a>{% else %}{{ row.nompes }}{% endif %}</td>
               <td>{{ row.email }}</td>
               <td>{% if row.sitatl == 'A'%} Ativo {%else%} Aposentado {%endif%}</td>
               <td>{% if row.id_lattes != "0" %}<a href='http://lattes.cnpq.br/{{ row.id_lattes }}' target='_blank'><i class='ai ai-lattes ai-2x f-20'></i></a>{% endif %}</td>
@@ -39,4 +39,6 @@
     </tbody>
   </table>
 </div>
+
+
 

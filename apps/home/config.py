@@ -15,9 +15,11 @@ def config(request):
 
     for i in dados['departamentos']:
 
+        nome = i['nome']
+
         menu_departamentos.append({
-            'text': i['nome'],
-            'url' : '/docentes/' + i['sigla'] 
+            'text': nome,
+            'url' : '/' + i['sigla'] + '/docentes' 
             })
 
 

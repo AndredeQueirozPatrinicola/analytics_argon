@@ -17650,4 +17650,33 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
   box-shadow: none;
 }
 
+.grafico-docente-tab{
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  right: 30px;
+}
 
+.titulo-grafico-docente-tab{
+  margin-top: 20px;
+}
+
+.card-body-grafico-docente{
+  padding-bottom: 0;
+}
+
+.chart-grafico-docente{
+  height: auto;
+}
+
+.grafico-docente-tab li a.active h6{
+  color: #fff;
+}
+
+.grafico-docente-tab li a h6{
+  color: #000;
+}
+
+.chart-grafico-docente .svg-container{
+  width: 100% !important;
+}

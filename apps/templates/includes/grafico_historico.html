@@ -2,44 +2,49 @@
     <div class="card bg-default">
       <div class="card-header bg-transparent">
         <div class="row align-items-center">
-          <div class="col titulo-tabela-linha">
-            {% for item in grafico_titulo %}
-            <h6 class="text-light text-uppercase ls-1 mb-1">{{ item.categoria }}</h6>
-            <h5 class="h3 text-white mb-0">{{ item.titulo }}</h5>
-            {% endfor %}
-          </div>
-          <div class="col">
-            <ul class="nav nav-pills justify-content-end">
-              <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark"
-                data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$"
-                data-suffix="k">
-                <a href="#" class="nav-link py-2 px-3 active ml-20" data-toggle="tab">
+            <ul class="nav nav-pills justify-content-end grafico-docente-tab" role="tablist">
+              <li class="nav-item mr-2 mr-md-0" data-toggle="chart">
+                <a href="#artigo" class="nav-link py-2 px-3 active ml-20" data-toggle="tab" id="grafico-artigo" role="tab" aria-controls="artigo" aria-selected="true">
                   <span class="d-none d-md-block"></span>
                   <span class="d-md-none"></span>
+                  <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_artigos.categoria }}</h6>
                 </a>
               </li>
-              <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark"
-                data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$"
-                data-suffix="k">
-                <a href="#" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab">
+              <li class="nav-item" data-toggle="chart">
+                <a href="#livros" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab" id="grafico-livros" role="tab" aria-controls="livros" aria-selected="false">
                   <span class="d-none d-md-block"></span>
                   <span class="d-md-none"></span>
+                  <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_livros.categoria }}</h6>
                 </a>
               </li>
             </ul>
-          </div>
         </div>
       </div>
-      <div class="card-body">
+      <div class="card-body card-body-grafico-docente">
         <!-- Chart -->
-        <div class="chart">
-            <!-- Chart wrapper -->
+        <div class="chart tab-content chart-grafico-docente">
+
+          <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
+            <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_titulo_artigos.titulo }}</h5>
             {% autoescape off %}
-            {{ linhas }}
+            {{ grafico_artigos }}
             {% endautoescape %}
+          </div>
+           <div class="tab-pane fade" id="livros" role="tabpanel" aria-labelledby="grafico-livros">
+            <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_titulo_livros.titulo }}</h5>
+            {% autoescape off %}
+            {{ grafico_livros }}
+            {% endautoescape %}
+            </div>
+  
         </div>
       </div>
     </div>
   </div>
+
+ 
+
+
+
 
 

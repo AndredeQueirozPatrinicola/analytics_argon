@@ -48,15 +48,15 @@ def pages(request):
 
 
 
-def docente(request, parametro):
-
-    docente = Docente(parametro)
+def docente(request, sigla, parametro):
+    docente = Docente(parametro, sigla)
 
     tabela = docente.tabela_orientandos()
     grafico_ori = docente.plota_pizza()
-    linhas = docente.plota_grafico_historico()
+    grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico_artigos()
+    grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico_livros()
     tabela_publi = docente.tabela_ultimas_publicacoes()
-
+    caminho = docente.pega_caminho()
 
     docente = [
         {
@@ -74,12 +74,6 @@ def docente(request, parametro):
         }
     ]
     
-    grafico_titulo = [
-        {
-            'titulo' : 'Produção de artigos por ano (2000 - 2021)',
-            'categoria' : 'Artigos'
-        }
-    ]
 
     tabela_header = [
         {
@@ -98,16 +92,6 @@ def docente(request, parametro):
         }
     ]
 
-    caminho = [
-        {
-            'text' :"Departamentos", 
-            'url' : "/"
-        },
-        {
-            'text' : "Docentes",
-            'url' : '/docentes/'
-        }
-    ]
 
     context = {
         'tabela_header' : tabela_header,
@@ -116,10 +100,13 @@ def docente(request, parametro):
         'grafico_ori' : grafico_ori,
         'tabela_pu' : tabela_publi,
         'tabela_publicacoes' : tabela_publicacoes,
-        'linhas' : linhas,
-        'grafico_titulo' : grafico_titulo,
+        'grafico_artigos' : grafico_artigos,
+        'grafico_titulo_artigos' : grafico_titulo_artigos,
+        'grafico_livros' : grafico_livros,
+        'grafico_titulo_livros' : grafico_titulo_livros,
         'grafico_pizza_titulo' : grafico_pizza_titulo,
-        'docente' : docente
+        'docente' : docente,
+        'sigla_departamento' : sigla
     }
 
     return render(request, 'home/docentes.html', context)
@@ -145,7 +132,8 @@ def docentes(request, sigla):
         'docentes' : docentes,
         'df' : df,
         'lattes_id' : id_lattes,
-        'tabela' : 'docentes'
+        'tabela' : 'docentes',
+        'sigla_departamento' : sigla
     }
 
     return render(request, 'home/departamento.html', context)
