@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 import requests
 import pandas as pd
 
-from .utils import Docente
+from .utils import Docente, Departamento
 
 def index(request):
     context = {
@@ -49,8 +49,8 @@ def pages(request):
 
 
 def docente(request, parametro):
-    docente = Docente(parametro)
 
+    docente = Docente(parametro)
 
     tabela = docente.tabela_orientandos()
     grafico_ori = docente.plota_pizza()
@@ -127,27 +127,9 @@ def docente(request, parametro):
 
 def docentes(request, sigla):
 
-    api = requests.get('https://dados.fflch.usp.br/api/programas')
-    dados = api.json()
+    docentes = Departamento(sigla)
 
-    for i in dados['departamentos']:
-        if i['sigla'] == sigla:
-            nome = i['nome']
-            id = i['id_lattes_docentes']
-            codset = i['codigo']
-
-    docentes_api = requests.get('https://dados.fflch.usp.br/api/docentes')
-    dados_docentes = docentes_api.json()
-
-    docentes = []
-
-    for docente in dados_docentes:
-        if int(docente['codset']) == int(codset):
-            docentes.append(docente)
-
-    df = pd.DataFrame(docentes)
-
-    id_lattes = df['id_lattes']
+    df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
 
     caminho = [
         {
@@ -175,3 +157,5 @@ def departamentos(request):
 
 
     return render(request, 'home/departamentos.html')
+
+
