@@ -14123,7 +14123,7 @@ button.bg-lighter:focus {
   background-color: #cbd3da !important; }
 
 .bg-gradient-primary {
-  background: linear-gradient(87deg, #052e70 0, #052e70 100%) !important; }
+  background-color: #fff !important; }
 
 .bg-gradient-secondary {
   background: linear-gradient(87deg, #f7fafc 0, #f7f8fc 100%) !important; }
@@ -14340,7 +14340,7 @@ button.section-darker:focus {
   background-color: black !important; }
 
 .bg-gradient-primary {
-  background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important; }
+  background-color: #fff !important; }
 
 .bg-gradient-secondary {
   background: linear-gradient(87deg, #f7fafc 0, #f7f8fc 100%) !important; }
@@ -17609,74 +17609,3 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
 
 
 
-.titulo-tabela{
-  padding: 10px 0 0 25px;
-  margin-bottom: 5px;
-}
-
-.titulo-tabela-publi{
-  padding: 10px;
-}
-
-.titulo-tabela-linha{
-  padding-left: 35px;
-  padding-top: 10px;
-}
-
-.link-direita-linha{
-  margin-right: 20px;
-}
-
-.tabela-publicacoes{
-  max-width: 100%;
-  table-layout: fixed;
-}
-
-.tabela-publicacoes th:first-child{
-  width: 60%;
-}
-
-.tabela-publicacoes td,.tabela-publicacoes th, .break-word{
-  word-wrap: break-word;
-  overflow: hidden;
-  white-space: normal;
-}
-
-.tabela-publicacoes td{
-  text-align: center;
-}
-
-.submenu{
-  box-shadow: none;
-}
-
-.grafico-docente-tab{
-  position: absolute;
-  z-index: 2;
-  top: 16px;
-  right: 30px;
-}
-
-.titulo-grafico-docente-tab{
-  margin-top: 20px;
-}
-
-.card-body-grafico-docente{
-  padding-bottom: 0;
-}
-
-.chart-grafico-docente{
-  height: auto;
-}
-
-.grafico-docente-tab li a.active h6{
-  color: #fff;
-}
-
-.grafico-docente-tab li a h6{
-  color: #000;
-}
-
-.chart-grafico-docente .svg-container{
-  width: 100% !important;
-}
