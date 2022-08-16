@@ -3,29 +3,40 @@
     <div class="card-header bg-transparent">
       <div class="row align-items-center">
           <ul class="nav nav-pills justify-content-end grafico-docente-tab" role="tablist">
-            {% for grafico in graficos %}
             <li class="nav-item mr-2 mr-md-0" data-toggle="chart">
-              <a href="#{{ grafico.grafico_titulo.nome }}" class="nav-link py-2 px-3 {% if graficos|first %}active{% endif %} ml-20" data-toggle="tab" id="grafico-{{ grafico.grafico_titulo.categoria }}" role="tab" aria-controls="{{ grafico.grafico_titulo.nome }}" aria-selected="{% if graficos|first %}true{% else %}false{% endif %}">
+              <a href="#artigo" class="nav-link py-2 px-3 active ml-20" data-toggle="tab" id="grafico-artigo" role="tab" aria-controls="artigo" aria-selected="true">
                 <span class="d-none d-md-block"></span>
                 <span class="d-md-none"></span>
-                <h6 class="text-uppercase ls-1 mb-1">{{ grafico.grafico_titulo.nome }}</h6>
+                <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_artigos.categoria }}</h6>
               </a>
             </li>
-            {% endfor %}
+            <li class="nav-item" data-toggle="chart">
+              <a href="#livros" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab" id="grafico-livros" role="tab" aria-controls="livros" aria-selected="false">
+                <span class="d-none d-md-block"></span>
+                <span class="d-md-none"></span>
+                <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_livros.categoria }}</h6>
+              </a>
+            </li>
           </ul>
       </div>
     </div>
     <div class="card-body card-body-grafico-docente">
       <!-- Chart -->
       <div class="chart tab-content chart-grafico-docente">
-        {% for grafico in graficos %}
-        <div class="tab-pane fade show{% if graficos|first %} active{% endif %}" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
-          <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico.grafico_titulo.titulo }}</h5>
+
+        <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
+          <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_titulo_artigos.titulo }}</h5>
           {% autoescape off %}
-            {{ grafico.graph }}
+          {{ grafico_artigos }}
           {% endautoescape %}
         </div>
-        {% endfor %}
+         <div class="tab-pane fade" id="livros" role="tabpanel" aria-labelledby="grafico-livros">
+          <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_titulo_livros.titulo }}</h5>
+          {% autoescape off %}
+          {{ grafico_livros }}
+          {% endautoescape %}
+          </div>
+
       </div>
     </div>
   </div>
