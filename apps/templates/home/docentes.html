@@ -13,19 +13,19 @@
 <div class="container-fluid mt--6">
   <div class="row">
 
-    {% include 'includes/grafico_historico.html' %}
+    {% include "includes/graficos/grafico_historico.html" %}
 
     {% if tabela_pu != None %}
-    {% include "includes/tabela_publicacoes.html" %}
+    {% include "includes/tabelas/tabela_publicacoes.html" %}
     {% endif %}
 
   </div>
   {% if tabela != None %}
   <div class="row">
 
-    {% include "includes/tabela_orientandos.html" %}
+    {% include "includes/tabelas/tabela_orientandos.html" %}
 
-    {% include 'includes/grafico_barras.html' %}
+    {% include "includes/graficos/grafico_barras.html" %}
 
   </div>
   {% endif %}
