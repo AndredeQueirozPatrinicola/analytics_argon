@@ -53,8 +53,8 @@ def docente(request, sigla, parametro):
 
     tabela = docente.tabela_orientandos()
     grafico_ori = docente.plota_pizza()
-    grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico_artigos()
-    grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico_livros()
+    grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico('artigos')
+    grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico('livros')
     tabela_publi = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
 
