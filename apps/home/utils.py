@@ -23,6 +23,19 @@ class Docente():
         self.dados = dados
         self.sigla = sigla
 
+
+    def linhas_de_pesquisa(self):
+        dados = self.dados
+        linhas_pesquisa = dados.get('linhas_pesquisa')
+
+        linhas_titulo = {
+            'text' : "Linhas de Pesquisa",
+        }
+
+
+        return linhas_titulo, linhas_pesquisa
+
+
     def pega_caminho(self):
         res = requests.get(url=API_PROGRAMAS)
         dados = res.json()
@@ -92,7 +105,7 @@ class Docente():
 
             return graph, grafico_titulo
 
-    def plota_pizza(self):
+    def plota_grafico_pizza(self):
         dados = self.dados
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])

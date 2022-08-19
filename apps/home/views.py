@@ -52,11 +52,12 @@ def docente(request, sigla, parametro):
     docente = Docente(parametro, sigla)
 
     tabela = docente.tabela_orientandos()
-    grafico_ori = docente.plota_pizza()
+    grafico_ori = docente.plota_grafico_pizza()
     grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico('artigos')
     grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico('livros')
     tabela_publi = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
+    titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
 
     docente = [
         {
@@ -106,7 +107,9 @@ def docente(request, sigla, parametro):
         'grafico_titulo_livros' : grafico_titulo_livros,
         'grafico_pizza_titulo' : grafico_pizza_titulo,
         'docente' : docente,
-        'sigla_departamento' : sigla
+        'sigla_departamento' : sigla,
+        'linhas_pesquisa' : linhas_pesquisa,
+        'titulo_linhas' : titulo_linhas
     }
 
     return render(request, 'home/docentes.html', context)
