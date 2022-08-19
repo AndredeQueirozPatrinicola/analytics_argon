@@ -8,7 +8,10 @@ from django.shortcuts import redirect, render
 import requests
 import pandas as pd
 
-from .utils import Docente, Departamento
+#from .utils import Docente, Departamento
+
+from .classes.docente import Docente
+from .classes.departamento import Departamento
 
 def index(request):
     context = {
