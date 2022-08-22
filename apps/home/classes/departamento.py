@@ -1,3 +1,4 @@
+from unicodedata import name
 import numpy as np
 import pandas as pd
 import requests
@@ -43,13 +44,13 @@ class Departamento():
 
     def pega_numero_docentes(self, sigla):
         dados = self.dados 
-        teste, x, y, z = self.tabela_docentes(sigla)
+        docentes, x, y, z = self.tabela_docentes(sigla)
         df = pd.DataFrame(dados['departamentos'])
 
         valor = df['sigla'].to_list().index(sigla)
         resultado = df['total_docentes'].iloc[valor]
 
-        aposentados = len(teste) -  resultado
+        aposentados = len(docentes) -  resultado
         
 
         conteudo = {
@@ -60,3 +61,48 @@ class Departamento():
         }
 
         return conteudo
+
+    def plota_aposentados_ativos(self, sigla):
+        dados = self.pega_numero_docentes(sigla)
+
+        ativos_aposentados = [dados.get('numero_ativos'), dados.get('numero_aposentados')]
+        tipos=['Ativos', "Aposentados"]
+
+        titulo = 'Relação entre aposentados e ativos'
+
+        fig = px.pie(values=ativos_aposentados, names=tipos, color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"])
+
+        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
+                l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+        grafico_pizza = plot(fig, output_type='div', config={
+                'displaylogo': False,
+                'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+
+        return grafico_pizza, titulo
+
+    def plota_tipo_vinculo_docente(self,sigla):
+        dados = self.dados_docentes
+
+        df = pd.DataFrame(dados)
+
+        df = df[['nomset', 'nomefnc']]
+
+        df = df.loc[df['nomset'] == 'Geografia']
+
+        var = df['nomefnc'].value_counts()
+
+        df2 = pd.DataFrame(var)
+
+
+        fig = px.pie(df2, values='nomefnc', names=df2.index, color=df2.index, color_discrete_sequence=["#052e70", '#264a87', '#667691',"#AFAFAF"])
+
+        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
+                        l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+
+        grafico_pizza = plot(fig, output_type='div', config={
+                        'displaylogo': False,
+                        'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+
+
+        return grafico_pizza

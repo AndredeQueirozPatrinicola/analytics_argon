@@ -122,11 +122,15 @@ def docente(request, sigla, parametro):
 
 
 def docentes(request, sigla):
-
+    
     docentes = Departamento(sigla)
 
     df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
     numero_docentes = docentes.pega_numero_docentes(sigla)
+    grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
+    grafico_pizza_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
+
+
 
     caminho = [
         {
@@ -144,7 +148,10 @@ def docentes(request, sigla):
         'lattes_id' : id_lattes,
         'tabela' : 'docentes',
         'sigla_departamento' : sigla,
-        'numero_docentes' : numero_docentes
+        'numero_docentes' : numero_docentes,
+        'grafico_aposentados_ativos' : grafico_pizza_aposentados_ativos,
+        'titulo_aposentados_ativos' : titulo_aposentados_ativos,
+        'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo
     }
 
     return render(request, 'home/departamento.html', context)
