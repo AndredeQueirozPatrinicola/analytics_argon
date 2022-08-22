@@ -17,6 +17,13 @@
                 <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_livros.categoria }}</h6>
               </a>
             </li>
+            <li class="nav-item" data-toggle="chart">
+              <a href="#capitulos" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab" id="grafico-capitulos" role="tab" aria-controls="capitulos" aria-selected="false">
+                <span class="d-none d-md-block"></span>
+                <span class="d-md-none"></span>
+                <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_capitulos.categoria }}</h6>
+              </a>
+            </li>
           </ul>
       </div>
     </div>
@@ -36,7 +43,12 @@
           {{ grafico_livros }}
           {% endautoescape %}
           </div>
-
+          <div class="tab-pane fade show active" id="capitulos" role="tabpanel" aria-labelledby="grafico-capitulos">
+            <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_titulo_capitulos.titulo }}</h5>
+            {% autoescape off %}
+            {{ grafico_capitulos }}
+            {% endautoescape %}
+            </div>
       </div>
     </div>
   </div>

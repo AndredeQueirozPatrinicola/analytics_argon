@@ -58,6 +58,7 @@ def docente(request, sigla, parametro):
     grafico_ori = docente.plota_grafico_pizza()
     grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico('artigos')
     grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico('livros')
+    grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico('capitulos')
     tabela_publi = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
     titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
@@ -109,6 +110,8 @@ def docente(request, sigla, parametro):
         'grafico_livros' : grafico_livros,
         'grafico_titulo_livros' : grafico_titulo_livros,
         'grafico_pizza_titulo' : grafico_pizza_titulo,
+        'grafico_capitulos' : grafico_capitulos,
+        'grafico_titulo_capitulos' : grafico_titulo_capitulos,
         'docente' : docente,
         'sigla_departamento' : sigla,
         'linhas_pesquisa' : linhas_pesquisa,
