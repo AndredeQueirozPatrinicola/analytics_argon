@@ -166,3 +166,7 @@
   left: calc(50% - 40px);
   top: 150px;
  }
+
+ .texto-numero-docentes{
+  font-weight: bold;
+ }

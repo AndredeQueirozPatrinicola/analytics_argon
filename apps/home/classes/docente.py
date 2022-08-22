@@ -55,6 +55,7 @@ class Docente():
         return caminho
 
     def plota_grafico_historico(self, tipo):
+        try:
             dados = self.dados
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
@@ -101,6 +102,8 @@ class Docente():
             }
 
             return graph, grafico_titulo
+        except:
+            return None, None
 
     def plota_grafico_pizza(self):
         dados = self.dados

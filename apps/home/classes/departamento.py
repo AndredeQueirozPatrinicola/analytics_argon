@@ -40,3 +40,23 @@ class Departamento():
         id_lattes = df['id_lattes']
 
         return df, id_lattes, nome, id
+
+    def pega_numero_docentes(self, sigla):
+        dados = self.dados 
+        teste, x, y, z = self.tabela_docentes(sigla)
+        df = pd.DataFrame(dados['departamentos'])
+
+        valor = df['sigla'].to_list().index(sigla)
+        resultado = df['total_docentes'].iloc[valor]
+
+        aposentados = len(teste) -  resultado
+        
+
+        conteudo = {
+            'texto_ativos' : 'Numero de docentes(ativos): ',
+            'numero_ativos' : resultado,
+            'texto_aposentados' : 'Numero de docentes(aposentados): ',
+            'numero_aposentados' : aposentados 
+        }
+
+        return conteudo

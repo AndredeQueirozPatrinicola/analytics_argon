@@ -126,6 +126,7 @@ def docentes(request, sigla):
     docentes = Departamento(sigla)
 
     df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
+    numero_docentes = docentes.pega_numero_docentes(sigla)
 
     caminho = [
         {
@@ -142,7 +143,8 @@ def docentes(request, sigla):
         'df' : df,
         'lattes_id' : id_lattes,
         'tabela' : 'docentes',
-        'sigla_departamento' : sigla
+        'sigla_departamento' : sigla,
+        'numero_docentes' : numero_docentes
     }
 
     return render(request, 'home/departamento.html', context)
