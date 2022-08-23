@@ -136,13 +136,33 @@ class Departamento():
                          mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
 
         fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=40, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
+            l=20, r=40, t=20, b=5), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
 
         grafico = plot(fig, output_type='div', config={
             'displaylogo': False,
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = 'Produção total de Livros, Artigos e Capitulos do departamento'
+        titulo = 'Produção total de Livros, Artigos e Capitulos do departamento - 2022'
 
         return grafico, titulo
+
+
+    def tabela_trabalhos(self, sigla):
+
+        api = requests.get('https://dados.fflch.usp.br/api/pesquisa?filtro=departamento&ano_ini=&ano_fim=&serie_historica_tipo=')
+        data = api.json()
+        df = pd.DataFrame(data)
+        df2 = pd.DataFrame(df[sigla])
+        indices = df2.index
+        indices.to_list()
+        valores = df2[sigla].to_list()
+        
+        x = 0
+        dic = []
+        while x < len(indices):
+            queijo = [indices[x], valores[x]]
+            dic.append(queijo)
+            x += 1
+            
+        return dic

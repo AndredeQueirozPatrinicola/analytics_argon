@@ -130,7 +130,7 @@ def docentes(request, sigla):
     grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
     grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
     grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
-
+    tabela_trabalhos = docentes.tabela_trabalhos(sigla)
 
 
     caminho = [
@@ -155,7 +155,8 @@ def docentes(request, sigla):
         'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo,
         'titulo_tipo_vinculo' : titulo_tipo_vinculo,
         'grafico_prod_docentes' : grafico_prod_docentes, 
-        'titulo_prod_docentes' : titulo_prod_docentes
+        'titulo_prod_docentes' : titulo_prod_docentes,
+        'tabela_trabalhos' : tabela_trabalhos
     }
 
     return render(request, 'home/departamento.html', context)

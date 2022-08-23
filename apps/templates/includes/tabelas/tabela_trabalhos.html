@@ -1,0 +1,32 @@
+<div class="col-xl-6">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="row align-items-center">
+  
+          <p class='titulo-tabela'>{{ i.titulo }}Relação entre pesquisas com e sem bolsa</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">{{ i.nome }}Titulos</th>
+              <th scope="col">{{ i.nivel }}Valores</th>
+
+            </tr>
+          </thead>
+          <tbody>
+                {% for tabela in tabela_trabalhos %}
+                <tr>
+                  {% for item in tabela %}
+                  <td>
+                    {{ item }}
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
