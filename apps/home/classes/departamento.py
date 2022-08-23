@@ -9,7 +9,7 @@ from plotly.offline import plot
 API = 'https://dados.fflch.usp.br/api/'
 API_PROGRAMAS = API + 'programas/'
 API_DOCENTES = API + 'docentes'
-API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docente/'
+API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docentes/'
 
 
 class Departamento():
@@ -19,6 +19,10 @@ class Departamento():
         dados = res.json()
         res_docentes = requests.get(url=API_DOCENTES)
         dados_docentes = res_docentes.json()
+        res_programas_docentes = requests.get(
+            url=f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}')
+        dados_programas_docentes = res_programas_docentes.json()
+        self.dados_programas_docentes = dados_programas_docentes
         self.dados_docentes = dados_docentes
         self.dados = dados
         self.sigla = sigla
@@ -63,7 +67,6 @@ class Departamento():
 
     def plota_aposentados_ativos(self, sigla):
         dados = self.pega_numero_docentes(sigla)
-
         ativos_aposentados = [
             dados.get('numero_ativos'), dados.get('numero_aposentados')]
         tipos = ['Ativos', "Aposentados"]
@@ -88,8 +91,6 @@ class Departamento():
         departamentos_siglas = {'FLA': 'Antrolopogia', 'FLP': 'Ciência Politica', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
                                 'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Linguistica', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
 
-        print(departamentos_siglas.get(sigla))
-
         df = pd.DataFrame(dados)
         df = df[['nomset', 'nomefnc']]
         df = df.loc[df['nomset'] == departamentos_siglas.get(sigla)]
@@ -107,3 +108,41 @@ class Departamento():
         titulo = 'Relação entre tipos de vínculo de docente'
 
         return grafico_pizza, titulo
+
+    def plota_prod_departamento(self, sigla):
+        """ 
+        res_programas_docentes = requests.get(
+            url=f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}')
+        dados_programas_docentes = res_programas_docentes.json() """
+        dados = self.dados_programas_docentes
+
+        df = pd.DataFrame(dados)
+        somas = df['total_livros'].to_list(
+        ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
+
+        x = 0
+        lista_valores = []
+        while x < len(somas):
+            lista_valores_individuais = [int(i) for i in somas[x]]
+            lista_valores.append(sum(lista_valores_individuais))
+            x += 1
+
+        fig = px.bar(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=lista_valores, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+                     color_discrete_sequence=["#052e70", '#264a87', '#667691', "#AFAFAF"])
+
+        fig.update_yaxes(title='', showticklabels=True, showline=True, linewidth=1, linecolor='#e0dfda',
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
+        fig.update_xaxes(title='', showticklabels=True, showline=True, linewidth=1, linecolor='#e0dfda',
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
+
+        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
+            l=20, r=40, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
+
+        grafico = plot(fig, output_type='div', config={
+            'displaylogo': False,
+            'displayModeBar': False,
+            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+
+        titulo = 'Produção total de Livros, Artigos e Capitulos do departamento'
+
+        return grafico, titulo
