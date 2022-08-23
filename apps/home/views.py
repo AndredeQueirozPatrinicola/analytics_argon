@@ -128,7 +128,7 @@ def docentes(request, sigla):
     df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
     numero_docentes = docentes.pega_numero_docentes(sigla)
     grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
-    grafico_pizza_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
+    grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
 
 
 
@@ -151,7 +151,8 @@ def docentes(request, sigla):
         'numero_docentes' : numero_docentes,
         'grafico_aposentados_ativos' : grafico_pizza_aposentados_ativos,
         'titulo_aposentados_ativos' : titulo_aposentados_ativos,
-        'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo
+        'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo,
+        'titulo_tipo_vinculo' : titulo_tipo_vinculo
     }
 
     return render(request, 'home/departamento.html', context)
