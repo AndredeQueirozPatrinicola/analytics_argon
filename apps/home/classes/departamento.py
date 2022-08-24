@@ -110,10 +110,7 @@ class Departamento():
         return grafico_pizza, titulo
 
     def plota_prod_departamento(self, sigla):
-        """ 
-        res_programas_docentes = requests.get(
-            url=f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}')
-        dados_programas_docentes = res_programas_docentes.json() """
+
         dados = self.dados_programas_docentes
 
         df = pd.DataFrame(dados)
@@ -136,14 +133,14 @@ class Departamento():
                          mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
 
         fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=40, t=20, b=5), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
+            l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
 
         grafico = plot(fig, output_type='div', config={
             'displaylogo': False,
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = 'Produção total de Livros, Artigos e Capitulos do departamento - 2022'
+        titulo = 'Produção total do departamento'
 
         return grafico, titulo
 

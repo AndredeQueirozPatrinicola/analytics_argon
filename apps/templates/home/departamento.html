@@ -17,6 +17,8 @@
 
   <br><br><br><br>
 
+  <h3 class="titulo-sessao-departamentos"><i class="fas fa-angle-right mr-2"></i>Produção do departamento</h3>
+
   <div class="row">
 
   {% include 'includes/graficos/grafico_prod_docentes.html' %}
@@ -24,11 +26,15 @@
 
   </div>
 
+  <h3 class="titulo-sessao-departamentos"><i class="fas fa-angle-right mr-2"></i>Iniciação Científica e pós graduação</h3>
+
   <div class="row">
 
     {% include 'includes/tabelas/tabela_trabalhos.html' %}
 
   </div>
+
+  <h3 class="titulo-sessao-departamentos"><i class="fas fa-angle-right mr-2"></i>Docentes</h3>
 
   <div class="row">
 
@@ -36,8 +42,6 @@
 
 
   {% include "includes/graficos/grafico_aposentados_ativos.html" %}
-
-
 
   </div>
 
@@ -50,9 +54,6 @@
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
 
-<script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
-<script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
-
 <script src="/static/assets/js/datatables.min.js"></script>
 
 
@@ -62,7 +63,7 @@ $(document).ready(function(){
     $('#tabelas-dinamicas').DataTable({responsive: true,
 // "bSort": false,
 "aaSorting": [],
-"pageLength": 15,
+"pageLength": 16,
 "language": {
     "decimal": "",
     "emptyTable": "Sem dados disponíveis",
