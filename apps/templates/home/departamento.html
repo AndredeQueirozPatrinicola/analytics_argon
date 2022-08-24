@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 
+{% load static %}
+
 {% block title %} FFLCH {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
@@ -50,5 +52,45 @@
 
 <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
 <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+<script src="/static/assets/js/datatables.min.js"></script>
+
+
+<script>
+
+$(document).ready(function(){
+    $('#tabelas-dinamicas').DataTable({responsive: true,
+// "bSort": false,
+"aaSorting": [],
+"pageLength": 15,
+"language": {
+    "decimal": "",
+    "emptyTable": "Sem dados disponíveis",
+    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+    "infoEmpty": "Mostrando de 0 até 0 de 0 registros",
+    "infoFiltered": "(filtrado de _MAX_ registros no total)",
+    "infoPostFix": "",
+    "thousands": ",",
+    "lengthMenu": "Mostrar _MENU_ Registros",
+    "loadingRecords": "A carregar dados...",
+    "processing": "A processar...",
+    "search": "Procurar:",
+    "zeroRecords": "Não foram encontrados resultados",
+    "paginate": {
+        "first": "Primeiro",
+        "last": "Último",
+        "next": "",
+        "previous": ""
+    },
+    "aria": {
+        "sortAscending": ": ordem crescente",
+        "sortDescending": ": ordem decrescente"
+    }
+}});
+});
+
+
+</script>
+
 
 {% endblock javascripts %}
