@@ -20,7 +20,7 @@ class Departamento():
         res_docentes = requests.get(url=API_DOCENTES)
         dados_docentes = res_docentes.json()
         res_programas_docentes = requests.get(
-            url=f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}')
+            url= API_PROGRAMAS_DOCENTE + sigla)
         dados_programas_docentes = res_programas_docentes.json()
         self.dados_programas_docentes = dados_programas_docentes
         self.dados_docentes = dados_docentes
@@ -88,17 +88,18 @@ class Departamento():
     def plota_tipo_vinculo_docente(self, sigla):
         dados = self.dados_docentes
 
-        departamentos_siglas = {'FLA': 'Antrolopogia', 'FLP': 'Ciência Politica', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
-                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Linguistica', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
+                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
 
         df = pd.DataFrame(dados)
         df = df[['nomset', 'nomefnc']]
         df = df.loc[df['nomset'] == departamentos_siglas.get(sigla)]
+
         var = df['nomefnc'].value_counts()
         df2 = pd.DataFrame(var)
 
         fig = px.pie(df2, values='nomefnc', names=df2.index, color=df2.index,
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', "#AFAFAF"])
+                     color_discrete_sequence=["#052e70", '#264a87', '#667691','#7d8da8', "#9facc2","#AFAFAF"])
         fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
             l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
         grafico_pizza = plot(fig, output_type='div', config={
@@ -109,7 +110,7 @@ class Departamento():
 
         return grafico_pizza, titulo
 
-    def plota_prod_departamento(self, sigla):
+    def plota_prod_departamento(self):
 
         dados = self.dados_programas_docentes
 
@@ -125,7 +126,7 @@ class Departamento():
             x += 1
 
         fig = px.bar(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=lista_valores, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', "#AFAFAF"])
+                     color_discrete_sequence=["#052e70", '#264a87', '#667691','#7d8da8', "#9facc2","#AFAFAF"])
 
         fig.update_yaxes(title='', showticklabels=True, showline=True, linewidth=1, linecolor='#e0dfda',
                          mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
