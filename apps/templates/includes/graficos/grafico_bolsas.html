@@ -1,38 +1,5 @@
 <div class="col-xl-8">
     <div class="card bg-default">
-      <div class="card-header bg-transparent">
-        <div class="row align-items-center">
-            <ul class="nav nav-pills justify-content-end grafico-docente-tab" role="tablist">
-              {% if grafico_artigos != None %}
-              <li class="nav-item mr-2 mr-md-0" data-toggle="chart">
-                <a href="#artigo" class="nav-link py-2 px-3 active ml-20" data-toggle="tab" id="grafico-artigo" role="tab" aria-controls="artigo" aria-selected="true">
-                  <span class="d-none d-md-block"></span>
-                  <span class="d-md-none"></span>
-                  <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_artigos.categoria }}</h6>
-                </a>
-              </li>
-              {% endif %}
-              {% if grafico_livros != None %}
-              <li class="nav-item" data-toggle="chart">
-                <a href="#livros" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab" id="grafico-livros" role="tab" aria-controls="livros" aria-selected="false">
-                  <span class="d-none d-md-block"></span>
-                  <span class="d-md-none"></span>
-                  <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_livros.categoria }}</h6>
-                </a>
-              </li>
-              {% endif %}
-              {% if grafico_capitulos != None %}
-              <li class="nav-item" data-toggle="chart">
-                <a href="#capitulos" class="nav-link py-2 px-3 link-direita-linha" data-toggle="tab" id="grafico-capitulos" role="tab" aria-controls="capitulos" aria-selected="false">
-                  <span class="d-none d-md-block"></span>
-                  <span class="d-md-none"></span>
-                  <h6 class="text-uppercase ls-1 mb-1">{{ grafico_titulo_capitulos.categoria }}</h6>
-                </a>
-              </li>
-              {% endif %}
-            </ul>
-        </div>
-      </div>
       <div class="card-body card-body-grafico-docente">
         <!-- Chart -->
         <div class="chart tab-content chart-grafico-docente">
