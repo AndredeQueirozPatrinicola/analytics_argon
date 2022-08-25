@@ -6,6 +6,8 @@ import plotly.express as px
 from datetime import datetime
 from plotly.offline import plot
 
+from .apis import Api
+
 API = 'https://dados.fflch.usp.br/api/'
 API_PROGRAMAS = API + 'programas/'
 API_DOCENTES = API + 'docentes'
@@ -16,21 +18,12 @@ API_PESQUISA = API + 'pesquisa'
 class Departamento():
 
     def __init__(self, sigla):
-        res = requests.get(url=API_PROGRAMAS)
-        dados = res.json()
-        res_docentes = requests.get(url=API_DOCENTES)
-        dados_docentes = res_docentes.json()
-        res_programas_docentes = requests.get(
-            url=API_PROGRAMAS_DOCENTE + sigla)
-        dados_programas_docentes = res_programas_docentes.json()
-        self.dados_programas_docentes = dados_programas_docentes
-        self.dados_docentes = dados_docentes
-        self.dados = dados
         self.sigla = sigla
 
     def tabela_docentes(self, sigla):
-        dados = self.dados
-        dados_docentes = self.dados_docentes
+        api = Api()
+        dados = api.pega_dados_programas()
+        dados_docentes = api.pega_dados_docentes()
 
         for i in dados['departamentos']:
             if i['sigla'] == sigla:
@@ -48,7 +41,8 @@ class Departamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        dados = self.dados
+        api = Api()
+        dados = api.pega_dados_programas()
         docentes, x, y, z = self.tabela_docentes(sigla)
         df = pd.DataFrame(dados['departamentos'])
 
@@ -87,7 +81,8 @@ class Departamento():
         return grafico_pizza, titulo
 
     def plota_tipo_vinculo_docente(self, sigla):
-        dados = self.dados_docentes
+        api = Api()
+        dados = api.pega_dados_docentes()
 
         departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
                                 'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
@@ -111,9 +106,9 @@ class Departamento():
 
         return grafico_pizza, titulo
 
-    def plota_prod_departamento(self):
-
-        dados = self.dados_programas_docentes
+    def plota_prod_departamento(self, sigla):
+        api = Api()
+        dados = api.pega_dados_programas_docentes(sigla)
 
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(
@@ -148,10 +143,10 @@ class Departamento():
 
     def tabela_trabalhos(self, sigla):
 
-        api = requests.get(
-            'https://dados.fflch.usp.br/api/pesquisa?filtro=departamento&ano_ini=&ano_fim=&serie_historica_tipo=')
-        data = api.json()
-        df = pd.DataFrame(data)
+        api = Api()
+        dados = api.pega_dados_pesquisa()
+
+        df = pd.DataFrame(dados)
         df2 = pd.DataFrame(df[sigla])
         indices = df2.index
         indices.to_list()
@@ -168,35 +163,31 @@ class Departamento():
 
     def plota_grafico_bolsa_sem(self):
 
-        parametros = {
-            "filtro": 'serie_historica',
-            "ano_ini": 2016,
-            'ano_fim': 2021,
-            'serie_historica_tipo': 'departamento'
-        }
-
-        api = requests.get(
-            url='https://dados.fflch.usp.br/api/pesquisa', params=parametros)
-        dados = api.json()
+        api = Api()
+        dados = api.pega_dados_pesquisa('serie_historica', 2016, 2021, 'departamento')
 
         departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
-                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Linguística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
 
         df = pd.DataFrame(dados[departamentos_siglas.get(self.sigla)])
-        df = df.drop(['pesquisadores_colab', 'projetos_pesquisa'])
+        df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
-        df = df.rename(columns={"ic_com_bolsa": "IC com bolsa", "ic_sem_bolsa": "IC sem bolsa", 'pesquisas_pos_doutorado_com_bolsa':
-                       'Pesquisas pós doutorado com bolsa', 'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'})
-        fig = px.histogram(df, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['IC com bolsa', 'IC sem bolsa', 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], barmode='group', height=400, color_discrete_map={
+        df = df.rename(columns={
+                                "ic_com_bolsa": "IC com bolsa", 
+                                "ic_sem_bolsa": "IC sem bolsa", 
+                                'pesquisas_pos_doutorado_com_bolsa':'Pesquisas pós doutorado com bolsa', 
+                                'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
+                                })
+        fig = px.histogram(df, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
+        barmode='group', height=400, color_discrete_map={
             "IC com bolsa": "#053787",
             "IC sem bolsa": "#264a87",
             "Pesquisas pós doutorado com bolsa": "#9facc2",
-            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"}, labels={
-            'x': '',
-            'variable': 'Legenda',
-            'ic_com_bolsa': 'IC com bolsa',
-
-        })
+            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"}, 
+            labels={
+                'x': '',
+                'variable': 'Legenda',
+            })
 
         fig.update_layout({
             'paper_bgcolor': 'rgba(0, 0, 0, 0)',
@@ -220,5 +211,83 @@ class Departamento():
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
         titulo = "Relação entre IC's e Pesquisas de pós com e sem bolsa - (2016-2021)"
+
+        return grafico, titulo
+
+
+    
+    def plota_prod_serie_historica(self, sigla):
+        api = Api()
+        dados = api.pega_dados_programas_docentes(sigla)
+
+        anos = [2016,2017,2018,2019,2020,2021]
+    
+        resultados = []
+        y = 0
+        while y < len(anos):
+        
+            parametros = {
+                'tipo':'anual',
+                'ano' : anos[y],
+                'ano_ini' : '',
+                'ano_fim' : ''
+            }
+
+            api = requests.get(url = f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}', params = parametros)
+
+            dados = api.json()
+
+            df = pd.DataFrame(dados)
+
+            somas = df['total_livros'].to_list(
+            ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
+
+            x = 0
+            lista_valores = []
+            while x < len(somas):
+                lista_valores_individuais = [int(i) for i in somas[x]]
+                lista_valores.append(sum(lista_valores_individuais))
+                x += 1
+                
+            resultados.append(lista_valores)
+            
+            y += 1
+
+
+        df2 = pd.DataFrame(resultados, anos)
+        df2 = df2.rename(columns = {0 : 'Livros', 1 : 'Artigos', 2 : 'Capitulos'})
+
+        fig = px.histogram(df2, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode = 'group', color_discrete_map={
+            "Livros": "#053787",
+            "Artigos": "#9facc2",
+            "Capitulos": "#AFAFAF"
+            }, 
+            labels={
+                'x': '',
+                'variable': 'Legenda',
+            })
+
+        fig.update_layout({
+            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        }, margin=dict(
+            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="")
+
+        fig.update_xaxes(showline=True, linewidth=1, linecolor='#e0dfda',
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor='#e0dfda',
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
+
+        grafico = plot(fig, output_type='div', config={
+            'displaylogo': False,
+            'displayModeBar': False,
+            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+
+        titulo = "Produção do departamento - (2016-2021)"
 
         return grafico, titulo

@@ -156,7 +156,6 @@ class Docente():
                 lis.append([f'{nomep[x]}', f'{nivpgm[x]}', f'{nomare[x]}'])
                 x += 1
 
-            print(lis)
             return lis
         else:
             return None

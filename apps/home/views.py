@@ -129,10 +129,10 @@ def docentes(request, sigla):
     numero_docentes = docentes.pega_numero_docentes(sigla)
     grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
     grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
-    grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento()
+    grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
+    grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
     grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
     tabela_trabalhos = docentes.tabela_trabalhos(sigla)
-
 
     caminho = [
         {
@@ -159,7 +159,10 @@ def docentes(request, sigla):
         'titulo_prod_docentes' : titulo_prod_docentes,
         'tabela_trabalhos' : tabela_trabalhos,
         'grafico_bolsas' : grafico_bolsas,
-        'titulo_bolsas': titulo_bolsas
+        'titulo_bolsas': titulo_bolsas,
+        'grafico_historico_prod' : grafico_historico_prod,
+        'titulo_historico_prod' : titulo_historico_prod
+
     }
 
     return render(request, 'home/departamento.html', context)
