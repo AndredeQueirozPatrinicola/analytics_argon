@@ -148,6 +148,15 @@ class Departamento():
 
         df = pd.DataFrame(dados)
         df2 = pd.DataFrame(df[sigla])
+        df2 = df2.rename(index={
+                        'nome_departamento': "Nome do departamento", 
+                        'ic_com_bolsa': "IC com bolsa",
+                        'ic_sem_bolsa': "IC sem bolsa",
+                        'pesquisadores_colab': 'Pesquisadores colaboradores ativos',
+                        'projetos_pesquisa': 'Projetos de pesquisa dos Docentes',
+                        'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa', 
+                        'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
+                        })
         indices = df2.index
         indices.to_list()
         valores = df2[sigla].to_list()
@@ -155,8 +164,8 @@ class Departamento():
         x = 0
         dic = []
         while x < len(indices):
-            queijo = [indices[x], valores[x]]
-            dic.append(queijo)
+            tabela_dados = [indices[x], valores[x]]
+            dic.append(tabela_dados)
             x += 1
 
         return dic
