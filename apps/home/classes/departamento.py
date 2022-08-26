@@ -8,12 +8,6 @@ from plotly.offline import plot
 
 from .apis import Api
 
-API = 'https://dados.fflch.usp.br/api/'
-API_PROGRAMAS = API + 'programas/'
-API_DOCENTES = API + 'docentes'
-API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docentes/'
-API_PESQUISA = API + 'pesquisa'
-
 
 class Departamento():
 
@@ -300,3 +294,5 @@ class Departamento():
         titulo = "Produção do departamento - (2016-2021)"
 
         return grafico, titulo
+
+

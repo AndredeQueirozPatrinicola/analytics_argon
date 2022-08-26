@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -171,9 +172,16 @@ def docentes(request, sigla):
 
 
 def departamentos(request):
-    departamentos =
+    departamentos = Departamentos()
+
+    df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
+
+    context = {
+        'df_docentes' : df_docentes,
+        'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes
+    }
 
 
-    return render(request, 'home/departamentos.html')
+    return render(request, 'home/departamentos.html', context)
 
 

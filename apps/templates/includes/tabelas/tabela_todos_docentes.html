@@ -1,0 +1,69 @@
+<!--
+<div class="col-xl-9">
+    <div class="card">
+        <div class="card-header border-0">
+            <div class="row align-items-center">
+
+                <p class='titulo-tabela'>{{ titulo_tabela_todos_docentes }}</p>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Curso</th>
+                        <th>Lattes</th>
+                        <th>Situação Atual</th>
+                        <th>Função</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tabela in tabela_todos_docentes %}
+                    <tr>
+                        {% for item in tabela %}
+                        <td>
+                            {{ item }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+-->
+
+<div class="col-xl-8">
+    <div class="row align-items-center">
+
+        </div>
+    <div class="table-responsive">
+        <table class="table align-items-center table-flush" id="tabelas-dinamicas">
+            <thead class="thead-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Situação Atual</th>
+                    <th>Lattes</th>
+                    <th>Função</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df_docentes.iterrows %}
+                <tr>
+                    <td>{% if row.id_lattes != "0" %}<a href='{{ sigla_departamento }}/docente/{{ row.id_lattes }}'>
+                        {{ row.nompes }}</a>{% else %}{{ row.nompes }}{% endif %}</td>
+                    <td>{{ row.email }}</td>
+                    <td>{{ row.nomset }}</td>
+                    <td>{% if row.id_lattes != "0" %}<a href='http://lattes.cnpq.br/{{ row.id_lattes }}'
+                            target='_blank'><i class='ai ai-lattes ai-2x f-20'></i></a>{% endif %}</td>
+                    <td>{{ row.nomefnc }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
