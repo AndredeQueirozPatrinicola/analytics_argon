@@ -12,6 +12,7 @@ import pandas as pd
 
 from .classes.docente import Docente
 from .classes.departamento import Departamento
+from .classes.departamentos import Departamentos
 
 def index(request):
     context = {
@@ -170,7 +171,7 @@ def docentes(request, sigla):
 
 
 def departamentos(request):
-
+    departamentos =
 
 
     return render(request, 'home/departamentos.html')

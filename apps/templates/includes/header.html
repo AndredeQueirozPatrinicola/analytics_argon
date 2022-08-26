@@ -60,6 +60,7 @@
           </div>
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats">
+              {% if docente != None %}
               <!-- Card body -->
               <div class="card-body">
                 <div class="row">
@@ -78,10 +79,12 @@
                 </p>
                 {% endfor %}
               </div>
+              {% endif %}
             </div>
           </div>
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats">
+              {% if docente != None %}
               <!-- Card body -->
               <div class="card-body">
                 <div class="row">
@@ -98,10 +101,12 @@
                   <span class="text-nowrap"></span>
                 </p>
               </div>
+              {% endif %}
             </div>
           </div>
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats">
+              {% if docente != None %}
               <!-- Card body -->
               <div class="card-body">
                 <div class="row">
@@ -118,6 +123,7 @@
                   <span class="text-nowrap"></span>
                 </p>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
