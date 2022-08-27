@@ -1,39 +1,3 @@
-<!--
-<div class="col-xl-9">
-    <div class="card">
-        <div class="card-header border-0">
-            <div class="row align-items-center">
-
-                <p class='titulo-tabela'>{{ titulo_tabela_todos_docentes }}</p>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table align-items-center table-flush">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Curso</th>
-                        <th>Lattes</th>
-                        <th>Situação Atual</th>
-                        <th>Função</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tabela in tabela_todos_docentes %}
-                    <tr>
-                        {% for item in tabela %}
-                        <td>
-                            {{ item }}
-                        </td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
--->
 
 <div class="col-xl-8">
     <div class="row align-items-center">
@@ -45,7 +9,7 @@
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
-                    <th>Situação Atual</th>
+                    <th>Curso</th>
                     <th>Lattes</th>
                     <th>Função</th>
                 </tr>
