@@ -9,13 +9,18 @@ from django.shortcuts import redirect, render
 import requests
 import pandas as pd
 
+from apps.home.models import Docente
+
 #from .utils import Docente, Departamento
 
-from .classes.docente import Docente
+from .classes.docente import DadosDocente
 from .classes.departamento import Departamento
 from .classes.departamentos import Departamentos
 
+from .utils import Api
+
 def index(request):
+
     context = {
         'segment': 'index',
     }
@@ -54,7 +59,9 @@ def pages(request):
 
 
 def docente(request, sigla, parametro):
-    docente = Docente(parametro, sigla)
+    docente = DadosDocente(parametro, sigla)
+
+
 
     tabela = docente.tabela_orientandos()
     grafico_ori = docente.plota_grafico_pizza()
@@ -65,12 +72,15 @@ def docente(request, sigla, parametro):
     caminho = docente.pega_caminho()
     titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
 
+
+
+
     docente = [
         {
-            'nome' : docente.dados.get('nome'),
+            'nome' : caminho[1].get('text'),
             'programa' : '',
             'departamento' : '',
-            'link_lattes': 'http://lattes.cnpq.br/' + docente.dados.get('id_lattes')
+            'link_lattes': 'http://lattes.cnpq.br/' + parametro
         }
     ]
 
@@ -117,7 +127,9 @@ def docente(request, sigla, parametro):
         'docente' : docente,
         'sigla_departamento' : sigla,
         'linhas_pesquisa' : linhas_pesquisa,
-        'titulo_linhas' : titulo_linhas
+        'titulo_linhas' : titulo_linhas,
+
+
     }
 
     return render(request, 'home/docentes.html', context)
@@ -175,13 +187,50 @@ def departamentos(request):
     departamentos = Departamentos()
 
     df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
+    grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
 
     context = {
         'df_docentes' : df_docentes,
-        'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes
+        'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
+        'grafico_relacao_cursos' :  grafico_relacao_cursos,
+        'titulo_relacao_cursos' : titulo_relacao_cursos
     }
 
 
     return render(request, 'home/departamentos.html', context)
 
 
+
+def testes(request):
+    parametro = '9156992025883151'
+
+    teste = Docente.objects.filter(docente_id=parametro).values_list()
+
+
+    teste = teste[0][2]
+
+    context = {
+        'teste' : teste
+    }
+
+    return render(request, 'home/testes.html', context)
+
+
+
+
+
+
+# PERIGO
+def popula_db(request):
+    api = Api()
+    api.pega_dados_docente()
+    print('Foi')
+
+    return render(request, 'home/index.html')
+
+
+
+def deleta_db(request):
+    Docente.objects.all().delete()
+
+    return render(request, 'home/index.html')

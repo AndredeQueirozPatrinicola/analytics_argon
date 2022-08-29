@@ -3,13 +3,7 @@ import requests
 
 
 api = 'https://dados.fflch.usp.br/api/'
-#API_PROGRAMAS = API + 'programas/'
-#API_DOCENTES = API + 'docentes'
-#API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docentes/'
-#API_PESQUISA = API + 'pesquisa'
 
-#res = requests.get(url=API_PROGRAMAS)
-#dados = res.json()
 
 
 class Api:
@@ -37,10 +31,6 @@ class Api:
         dados = res.json()
         return dados
 
-    def pega_dados_pesquisa(self):
-        res = requests.get(url=self.api_pesquisa)
-        dados = res.json()
-        return dados
 
     def pega_dados_pesquisa(self, *args):
 

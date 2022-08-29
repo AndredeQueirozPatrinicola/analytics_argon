@@ -5,24 +5,21 @@ import plotly.express as px
 from datetime import datetime
 from plotly.offline import plot
 
-API = 'https://dados.fflch.usp.br/api/'
-API_PROGRAMAS = API + 'programas/'
-API_DOCENTES = API + 'docentes'
-API_PROGRAMAS_DOCENTE = API_PROGRAMAS + 'docente/'
 
 
-class Docente():
+from apps.home.models import Docente
+
+
+class DadosDocente():
 
     def __init__(self, parametro, sigla):
         self.parametro = parametro
-        res = requests.get(url=API_PROGRAMAS_DOCENTE + self.parametro)
-        dados = res.json()
-        self.dados = dados
         self.sigla = sigla
 
 
     def linhas_de_pesquisa(self):
-        dados = self.dados
+        api = Docente.objects.filter(docente_id=self.parametro).values_list()
+        dados = api[0][2]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
         linhas_titulo = {
@@ -34,12 +31,58 @@ class Docente():
 
 
     def pega_caminho(self):
-        res = requests.get(url=API_PROGRAMAS)
-        dados = res.json()
+        api = Docente.objects.filter(docente_id=self.parametro).values_list()
+        dados = api[0][3]
+        dados_nome = api[0][2]
 
-        for i in dados['departamentos']:
-            if i['sigla'] == self.sigla:
-                self.nome_departamento = i['nome']
+        if len(dados[0]) == 5:
+                self.nome_departamento = dados[0].get('nome')
+
+        else:
+            grupo =  {'Ciências Sociais': ['Ciência Política', 'Ciência Social (Antropologia Social)', 'Sociologia'],
+
+              'História': ['História Social', 'História Econômica'],
+
+              'Geografia': ['Geografia (Geografia Humana)', 'Geografia (Geografia Física)'],
+
+              'Letras': ['Filologia e Língua Portuguesa', 'Letras (Teoria Literária e Literatura Comparada)', 
+                         'Letras (Língua Inglesa e Literaturas Inglesa e Norte-Americana)', 'Literatura Brasileira', 
+                         'Lingüística', 'Humanidades, Direitos e Outras Legitimidades', 
+                         'Letras (Estudos Lingüísticos, Literários e Tradutológicos em Francês)',
+                         'Letras (Literatura Portuguesa)', 'Letras (Língua Espanhola e Literaturas Espanhola e Hispano-Americana)',
+                         'Letras (Estudos Comparados de Literaturas de Língua Portuguesa)', 'Estudos Judaicos e Árabes',
+                         'Letras (Língua, Literatura e Cultura Italianas)', 'Letras (Letras Clássicas)',
+                         'Letras (Língua, Literatura e Cultura Japonesa)', 'Estudos da Tradução', 
+                         'Mestrado Profissional em Letras em Rede Nacional', 'Letras (Língua e Literatura Alemã)',
+                         'Literatura e Cultura Russa'],
+
+              'Filosofia':['Filosofia']}
+
+
+            a = 0
+            while a < len(dados[0][a]):
+                if self.parametro in dados[0][a].get('docentes'):
+                    departamento_aproximado = dados[0][a].get('nomcur')
+
+                a += 1
+
+
+
+            if departamento_aproximado in grupo.get('Letras'):
+                self.nome_departamento = "Letras"
+            
+            if departamento_aproximado in grupo.get('Filosofia'):
+                self.nome_departamento = "Filosofia"
+
+            if departamento_aproximado in grupo.get('Geografia'):
+                self.nome_departamento = "Geografia"
+
+            if departamento_aproximado in grupo.get('História'):
+                self.nome_departamento = "História"
+
+            if departamento_aproximado in grupo.get('Ciências Sociais'):
+                self.nome_departamento = "Ciências Sociais"
+                
 
         caminho = [
             {
@@ -47,7 +90,7 @@ class Docente():
                 'url': "/" + self.sigla + "/docentes"
             },
             {
-                'text': self.dados.get('nome'),
+                'text': dados_nome.get('nome'),
                 'url': '#'
             }
         ]
@@ -56,7 +99,8 @@ class Docente():
 
     def plota_grafico_historico(self, tipo):
         try:
-            dados = self.dados
+            api = Docente.objects.filter(docente_id=self.parametro).values_list()
+            dados = api[0][2]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
             ano = df_livros['ANO'].value_counts()
@@ -106,7 +150,8 @@ class Docente():
             return None, None
 
     def plota_grafico_pizza(self):
-        dados = self.dados
+        api = Docente.objects.filter(docente_id=self.parametro).values_list()
+        dados = api[0][2]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
 
@@ -142,7 +187,8 @@ class Docente():
             return None
 
     def tabela_orientandos(self):
-        dados = self.dados
+        api = Docente.objects.filter(docente_id=self.parametro).values_list()
+        dados = api[0][2]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
 
@@ -161,7 +207,8 @@ class Docente():
             return None
 
     def tabela_ultimas_publicacoes(self):
-        dados = self.dados
+        api = Docente.objects.filter(docente_id=self.parametro).values_list()
+        dados = api[0][2]
         if dados['livros']:
             tabela = pd.DataFrame(dados['livros'])
             publicacoes = tabela.head(5)
@@ -170,3 +217,5 @@ class Docente():
             return publicacao_com_ano
         else:
             return None
+
+

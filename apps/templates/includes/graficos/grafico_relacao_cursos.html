@@ -1,0 +1,16 @@
+<div class="col-xl-4">
+    <div class="card">
+      <div class="card-header bg-transparent">
+        <div class="row align-items-center">
+          <div class="col">
+            <h3 class="mb-0 titulo-tabela-publi">{{ titulo_relacao_cursos }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        {% autoescape off %}
+        {{ grafico_relacao_cursos }}
+        {% endautoescape %}
+      </div>
+    </div>
+  </div>
