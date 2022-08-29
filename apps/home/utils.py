@@ -17,9 +17,73 @@ class Api:
         self.api_pesquisa = self.api + 'pesquisa'
 
     def pega_dados_programas(self):
-        res = requests.get(url=self.api_programas)
-        dados = res.json()
-        salva_json = Docente(docente='')
+
+        siglas = ['FLA', 'FLP', 'FLF', 'FLH', 'FLC', 'FLM', 'FLO', 'FLL', 'FSL', 'FLT', 'FLG']
+        anos = [2016,2017,2018,2019,2020,2021]
+
+        parametros_vazios = {
+            'filtro' : 'departamento',
+            'ano_ini' : '',
+            'ano_fim' : '',
+            'serie_historica_tipo' : ''
+        }
+
+        parametros = {
+            'filtro' : 'serie_historica',
+            'ano_ini' : 2016,
+            'ano_fim' : 2021,
+            'serie_historica_tipo' : 'departamento'
+        }
+
+        raw_programas = requests.get('https://dados.fflch.usp.br/api/programas')
+        raw_docentes = requests.get('https://dados.fflch.usp.br/api/docentes')
+        raw_pesquisa = requests.get(url='https://dados.fflch.usp.br/api/pesquisa', params=parametros_vazios)
+        raw_pesquisa_parametros = requests.get(url = f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+
+
+        dados_programas = raw_programas.json() # dicionario com dicionarios
+        dados_docentes = raw_docentes.json()   # lista com dicionarios
+        dados_pesquisa = raw_pesquisa.json()   # dicionarios com dicionario
+        dados_pesquisa_parametros = raw_pesquisa_parametros() #dicionarios com dicionarios
+        
+        c = 0
+        lista_programas_docentes = []
+        while c < len(anos):
+            parametros_programas = {'tipo' : 'periodo', 'ano_ini' : anos[c], 'ano_fim' : 2021}
+
+            raw_programas_docentes = requests.get(url=f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[c]}', params=parametros_programas)
+        
+            dados_programas_docentes = raw_programas_docentes.json()  
+
+            lista_programas_docentes.append(dados_programas_docentes)
+        
+        
+        
+        
+        
+        
+        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
+                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Linguística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+
+
+
+        
+        
+        siglas_dic = {}
+        x = 0
+        while x < len(siglas):
+            siglas_dic[siglas[x]] = dados_pesquisa.get(siglas[x])
+
+        # siglas_dic -> dados_pesquisa ex:{'FLA':{dados:dados} }
+
+
+
+
+
+
+
+
+
 
     def pega_dados_docente(self):
         print('oi')
@@ -64,16 +128,12 @@ class Api:
             c += 1
 
 
-
         lista_id_docentes_reta = [item for sublist in lista_id_docentes for item in sublist]
         lista_id_docentes_dep_reta = [item for sublist in lista_id_docentes_dep for item in sublist]
-
-
         lista = [lista_id_docentes_reta, lista_id_docentes_dep_reta]
-
         parametros = [item for sublist in lista for item in sublist]
-
         parametros = [*set(parametros)]
+
 
         for i in parametros:
             if i == None:

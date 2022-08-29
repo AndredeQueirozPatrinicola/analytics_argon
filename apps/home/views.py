@@ -234,3 +234,7 @@ def deleta_db(request):
     Docente.objects.all().delete()
 
     return render(request, 'home/index.html')
+
+
+def popula_db_docentes(request):
+    pass

@@ -8,6 +8,10 @@ from plotly.offline import plot
 
 from .apis import Api
 
+# api programas
+# api docentes
+# api pesquisa
+
 
 class Departamento():
 
