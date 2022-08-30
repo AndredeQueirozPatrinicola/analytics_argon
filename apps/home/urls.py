@@ -13,6 +13,8 @@ urlpatterns = [
 
     path('teste', views.testes, name='testes'),
 
+    path('atualizadb_dep', views.popula_db_dep, name='popula_db_dep'),
+
     path('atualizadb/', views.popula_db, name='populadb'),
 
     path('deletadb', views.deleta_db, name='deleta_db'),
