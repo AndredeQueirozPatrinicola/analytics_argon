@@ -220,26 +220,3 @@ def testes(request):
 
 
 
-# PERIGO
-def popula_db(request):
-    api = Api()
-    api.pega_dados_docente()
-    print('Foi')
-
-    return render(request, 'home/index.html')
-
-
-
-def deleta_db(request):
-    Docente.objects.all().delete()
-
-    return render(request, 'home/index.html')
-
-
-def popula_db_dep(request):
-    api = Api()
-    api.pega_dados_departamentos()
-
-    print('Foi')
-
-    return render(request, 'home/index.html')
