@@ -1,6 +1,6 @@
 import requests
 
-from .models import Departamento, Docente
+from apps.home.models import Departamento, Docente
 
 from time import sleep
 
@@ -133,7 +133,7 @@ class Api:
 
 
     def pega_dados_docente(self):
-        print('oi')
+        print('Inicio')
         response = requests.get('https://dados.fflch.usp.br/api/programas')
         data = response.json()
 
@@ -217,13 +217,16 @@ class Api:
                 #verifica.update(api_programas=lista_api)
                 
 
-            print('oi3')
+            
 
             salva_json = Docente(docente_id=parametro,
                                     api_docente=docentes_dados, api_programas=lista_api)
 
             salva_json.save()
-            print('oila')
+            print('Salvou')
             z += 1
 
+        
+
             
+

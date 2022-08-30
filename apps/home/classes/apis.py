@@ -13,6 +13,7 @@ class Api:
         self.api_programas = self.api + 'programas/'
         self.api_docentes = self.api + 'docentes'
         self.api_programas_docentes = self.api_programas + 'docentes/'
+        self.api_programas_docente = self.api_programas + 'docente/'
         self.api_pesquisa = self.api + 'pesquisa'
 
 
@@ -28,6 +29,12 @@ class Api:
 
     def pega_dados_programas_docentes(self, sigla): #  1 2
         res = requests.get(url=self.api_programas_docentes + sigla)
+        dados = res.json()
+        return dados
+
+
+    def pega_dados_programas_docente(self, parametro): #  1 2
+        res = requests.get(url=self.api_programas_docente + parametro)
         dados = res.json()
         return dados
 

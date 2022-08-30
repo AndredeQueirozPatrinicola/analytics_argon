@@ -1,8 +1,7 @@
 import requests
 from time import sleep
 
-import models
-
+from apps.home.models import Departamento
 
 
 
@@ -113,7 +112,7 @@ class Api:
 
 
 
-            dados = models.Departamento(sigla = siglas[x], 
+            dados = Departamento(sigla = siglas[x], 
                                 api_docentes=dados_docentes_filtrados,
                                 api_programas=lista_programas_departamentos, 
                                 api_programas_docente=lista_programas_docentes,
