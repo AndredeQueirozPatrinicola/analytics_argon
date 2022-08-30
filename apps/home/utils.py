@@ -4,6 +4,8 @@ from apps.home.models import Departamento, Docente
 
 from time import sleep
 
+import pandas as pd
+
 api = 'https://dados.fflch.usp.br/api/'
 
 
@@ -134,59 +136,12 @@ class Api:
 
     def pega_dados_docente(self):
         print('Inicio')
-        response = requests.get('https://dados.fflch.usp.br/api/programas')
-        data = response.json()
+        res = requests.get('https://dados.fflch.usp.br/api/docentes')
+        dados = res.json()
+        df = pd.DataFrame(dados)
+        parametros = df['id_lattes'].to_list()
+        
 
-
-        api_departamentos = [i for i in data.get('departamentos')]
-        api_programas = [i for i in data.get('programas')]
-
-
-
-        g = 0
-        lista_id_docentes = []
-        while g < len(api_programas):
-            teste = api_programas[g].get('docentes')
-            lista_id_docentes.append(teste)
-            
-            g += 1
-
-
-
-        g = 0
-        lista_id_docentes_dep = []
-        while g < len(api_departamentos):
-            teste = api_departamentos[g].get('id_lattes_docentes')
-            lista_id_docentes_dep.append(teste)
-            
-            g += 1
-
-
-
-        for i in lista_id_docentes:
-            x = 0
-            lista_id_docentes[x].sort()
-            x += 1
-            
-            
-        for j in lista_id_docentes_dep:
-            c = 0
-            lista_id_docentes[c].sort()
-            c += 1
-
-
-        lista_id_docentes_reta = [item for sublist in lista_id_docentes for item in sublist]
-        lista_id_docentes_dep_reta = [item for sublist in lista_id_docentes_dep for item in sublist]
-        lista = [lista_id_docentes_reta, lista_id_docentes_dep_reta]
-        parametros = [item for sublist in lista for item in sublist]
-        parametros = [*set(parametros)]
-
-
-        for i in parametros:
-            if i == None:
-                parametros.remove(i)
-
-        print('oi')
         z = 0
         while z < len(parametros):
             sleep(2)

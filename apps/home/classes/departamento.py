@@ -231,9 +231,8 @@ class DadosDepartamento():
     def plota_prod_serie_historica(self, sigla):
         #api = Api()
         #dados = api.pega_dados_programas_docentes(sigla)
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
+        #api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
         #dados = [0][0]
-        print(api[0][0])
         anos = [2016,2017,2018,2019,2020,2021]
     
         resultados = []

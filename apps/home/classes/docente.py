@@ -5,9 +5,10 @@ import plotly.express as px
 from datetime import datetime
 from plotly.offline import plot
 
-
-
 from apps.home.models import Docente
+
+API = 'https://dados.fflch.usp.br/api/'
+API_PROGRAMAS = API + 'programas/'
 
 
 class DadosDocente():
@@ -31,58 +32,22 @@ class DadosDocente():
 
 
     def pega_caminho(self):
-        api = Docente.objects.filter(docente_id=self.parametro).values_list()
-        dados = api[0][3]
-        dados_nome = api[0][2]
+        try:
+            api = Docente.objects.filter(docente_id=self.parametro).values_list()
+            dados = api[0][3]
+            dados_nome = api[0][2]
 
-        if len(dados[0]) == 5:
-                self.nome_departamento = dados[0].get('nome')
+            self.nome_departamento = dados[0].get('nome')
 
-        else:
-            grupo =  {'Ciências Sociais': ['Ciência Política', 'Ciência Social (Antropologia Social)', 'Sociologia'],
-
-              'História': ['História Social', 'História Econômica'],
-
-              'Geografia': ['Geografia (Geografia Humana)', 'Geografia (Geografia Física)'],
-
-              'Letras': ['Filologia e Língua Portuguesa', 'Letras (Teoria Literária e Literatura Comparada)', 
-                         'Letras (Língua Inglesa e Literaturas Inglesa e Norte-Americana)', 'Literatura Brasileira', 
-                         'Lingüística', 'Humanidades, Direitos e Outras Legitimidades', 
-                         'Letras (Estudos Lingüísticos, Literários e Tradutológicos em Francês)',
-                         'Letras (Literatura Portuguesa)', 'Letras (Língua Espanhola e Literaturas Espanhola e Hispano-Americana)',
-                         'Letras (Estudos Comparados de Literaturas de Língua Portuguesa)', 'Estudos Judaicos e Árabes',
-                         'Letras (Língua, Literatura e Cultura Italianas)', 'Letras (Letras Clássicas)',
-                         'Letras (Língua, Literatura e Cultura Japonesa)', 'Estudos da Tradução', 
-                         'Mestrado Profissional em Letras em Rede Nacional', 'Letras (Língua e Literatura Alemã)',
-                         'Literatura e Cultura Russa'],
-
-              'Filosofia':['Filosofia']}
-
-
-            a = 0
-            while a < len(dados[0][a]):
-                if self.parametro in dados[0][a].get('docentes'):
-                    departamento_aproximado = dados[0][a].get('nomcur')
-
-                a += 1
-
-
-
-            if departamento_aproximado in grupo.get('Letras'):
-                self.nome_departamento = "Letras"
+        except:
+            print('oi')
+            res = requests.get(url=API_PROGRAMAS)
+            dados = res.json()
             
-            if departamento_aproximado in grupo.get('Filosofia'):
-                self.nome_departamento = "Filosofia"
+            for i in dados['departamentos']:
+                if i['sigla'] == self.sigla:
+                    self.nome_departamento = i['nome']
 
-            if departamento_aproximado in grupo.get('Geografia'):
-                self.nome_departamento = "Geografia"
-
-            if departamento_aproximado in grupo.get('História'):
-                self.nome_departamento = "História"
-
-            if departamento_aproximado in grupo.get('Ciências Sociais'):
-                self.nome_departamento = "Ciências Sociais"
-                
 
         caminho = [
             {
