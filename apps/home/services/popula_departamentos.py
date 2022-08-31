@@ -1,13 +1,11 @@
 import requests
-
-from apps.home.models import Departamento, Docente
-
 from time import sleep
 
-import pandas as pd
+from apps.home.models import Departamento
+
+
 
 api = 'https://dados.fflch.usp.br/api/'
-
 
 class Api:
 
@@ -17,6 +15,7 @@ class Api:
         self.api_docentes = self.api + 'docentes'
         self.api_programas_docentes = self.api_programas + 'docente/'
         self.api_pesquisa = self.api + 'pesquisa'
+
 
     def pega_dados_departamentos(self):
         siglas = ['FLA', 'FLP', 'FLF', 'FLH', 'FLC', 'FLM', 'FLO', 'FLL', 'FSL', 'FLT', 'FLG']
@@ -54,12 +53,7 @@ class Api:
         x = 0
         while x < len(siglas):
                 
-
-            raw_programas_docente_limpo = requests.get(f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}')
-            dados_programas_docentes_limpo = raw_programas_docente_limpo.json()
-            api_programas_docentes_limpo = dados_programas_docentes_limpo
-
-
+                
             # Dicionario com dados de pesquisa por departamento
             siglas_dic = {siglas[x] : dados_pesquisa.get(siglas[x])}
             print(siglas[x])
@@ -123,65 +117,13 @@ class Api:
                                 api_programas=lista_programas_departamentos, 
                                 api_programas_docente=lista_programas_docentes,
                                 api_pesquisa=siglas_dic, 
-                                api_pesquisa_parametros = lista_pesquisa_por_ano,
-                                api_programas_docente_limpo=api_programas_docentes_limpo)
+                                api_pesquisa_parametros = lista_pesquisa_por_ano)
             
             dados.save()
 
             x += 1
 
 
-
-
-
-    def pega_dados_docente(self):
-        print('Inicio')
-        res = requests.get('https://dados.fflch.usp.br/api/docentes')
-        dados = res.json()
-        df = pd.DataFrame(dados)
-        parametros = df['id_lattes'].to_list()
-        
-
-        z = 0
-        while z < len(parametros):
-            sleep(2)
-            parametro = parametros[z]
-
-            docentes = requests.get(url=self.api_programas_docentes + parametro)
-            programas = requests.get(url=self.api_programas)
-            
-            docentes_dados = docentes.json()
-            programas_dados = programas.json()
-
-            dados_departamentos = programas_dados['departamentos']
-            dados_programas = programas_dados['programas']
-
-            x = 0
-            lista_api = []
-            while x < len(dados_departamentos):
-                if parametro in dados_departamentos[x].get('id_lattes_docentes'):
-                    lista_api.append(dados_departamentos[x])
-                
-                x += 1
-            
-            if lista_api == []:
-                lista_api.append(dados_programas)
-                
-                #verifica = Docente.objects.filter(docente_id=parametros[z])
-
-                #verifica.update(api_programas=lista_api)
-                
-
-            
-
-            salva_json = Docente(docente_id=parametro,
-                                    api_docente=docentes_dados, api_programas=lista_api)
-
-            salva_json.save()
-            print(f'Salvou: {parametros[z]} | {z} de {len(parametros)}')
-            z += 1
-
-        
-
-            
-
+if __name__ == "__main__":
+    api = Api()
+    api.pega_dados_departamentos()

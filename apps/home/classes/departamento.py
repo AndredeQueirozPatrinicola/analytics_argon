@@ -8,22 +8,26 @@ from plotly.offline import plot
 
 from .apis import Api
 
+from apps.home.models import Departamento
+
 # api programas
 # api docentes
 # api pesquisa
 
 
-class Departamento():
+class DadosDepartamento():
 
     def __init__(self, sigla):
         self.sigla = sigla
 
     def tabela_docentes(self, sigla):
-        api = Api()
-        dados = api.pega_dados_programas()
-        dados_docentes = api.pega_dados_docentes()
+        api_programas = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
+        api_docentes = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
 
-        for i in dados['departamentos']:
+        dados_programas = api_programas[0][0]
+        dados_docentes = api_docentes[0][0]
+
+        for i in dados_programas:
             if i['sigla'] == sigla:
                 nome = i['nome']
                 id = i['id_lattes_docentes']
@@ -39,10 +43,11 @@ class Departamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        api = Api()
-        dados = api.pega_dados_programas()
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
+        dados = api[0][0]
+
         docentes, x, y, z = self.tabela_docentes(sigla)
-        df = pd.DataFrame(dados['departamentos'])
+        df = pd.DataFrame(dados)
 
         valor = df['sigla'].to_list().index(sigla)
         resultado = df['total_docentes'].iloc[valor]
@@ -79,20 +84,26 @@ class Departamento():
         return grafico_pizza, titulo
 
     def plota_tipo_vinculo_docente(self, sigla):
-        api = Api()
-        dados = api.pega_dados_docentes()
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
+        dados = api
+        dados = dados[0][0]
+        
+        x = 0
+        nomefnc = []
+        while x < len(dados):
+            nomefnc.append(dados[x].get('nomefnc'))
+            
+            x += 1
 
-        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
-                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+        df = pd.DataFrame(nomefnc)
 
-        df = pd.DataFrame(dados)
-        df = df[['nomset', 'nomefnc']]
-        df = df.loc[df['nomset'] == departamentos_siglas.get(sigla)]
+        lista_nomes = df.value_counts().index.to_list()
+        nomes = [i[0] for i in lista_nomes]
 
-        var = df['nomefnc'].value_counts()
-        df2 = pd.DataFrame(var)
+        lista_valores = df.value_counts().to_list()
 
-        fig = px.pie(df2, values='nomefnc', names=df2.index, color=df2.index,
+
+        fig = px.pie(values=lista_valores, names=nomes, color=nomes,
                      color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
         fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
             l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
@@ -105,9 +116,8 @@ class Departamento():
         return grafico_pizza, titulo
 
     def plota_prod_departamento(self, sigla):
-        api = Api()
-        dados = api.pega_dados_programas_docentes(sigla)
-
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente_limpo')
+        dados = api[0][0]
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(
         ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
@@ -140,9 +150,8 @@ class Departamento():
         return grafico, titulo
 
     def tabela_trabalhos(self, sigla):
-
-        api = Api()
-        dados = api.pega_dados_pesquisa()
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_pesquisa')
+        dados = api[0][0]
 
         df = pd.DataFrame(dados)
         df2 = pd.DataFrame(df[sigla])
@@ -169,14 +178,10 @@ class Departamento():
         return dic
 
     def plota_grafico_bolsa_sem(self):
-
-        api = Api()
-        dados = api.pega_dados_pesquisa('serie_historica', 2016, 2021, 'departamento')
-
-        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
-                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Linguística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
-
-        df = pd.DataFrame(dados[departamentos_siglas.get(self.sigla)])
+        api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
+        dados = api[0][0]
+        
+        df = pd.DataFrame(dados[0])
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
         df = df.rename(columns={
@@ -224,9 +229,10 @@ class Departamento():
 
     
     def plota_prod_serie_historica(self, sigla):
-        api = Api()
-        dados = api.pega_dados_programas_docentes(sigla)
-
+        #api = Api()
+        #dados = api.pega_dados_programas_docentes(sigla)
+        #api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
+        #dados = [0][0]
         anos = [2016,2017,2018,2019,2020,2021]
     
         resultados = []

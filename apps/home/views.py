@@ -14,7 +14,7 @@ from apps.home.models import Docente
 #from .utils import Docente, Departamento
 
 from .classes.docente import DadosDocente
-from .classes.departamento import Departamento
+from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 
 from .utils import Api
@@ -137,7 +137,7 @@ def docente(request, sigla, parametro):
 
 def docentes(request, sigla):
     
-    docentes = Departamento(sigla)
+    docentes = DadosDepartamento(sigla)
 
     df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
     numero_docentes = docentes.pega_numero_docentes(sigla)
@@ -220,21 +220,3 @@ def testes(request):
 
 
 
-# PERIGO
-def popula_db(request):
-    api = Api()
-    api.pega_dados_docente()
-    print('Foi')
-
-    return render(request, 'home/index.html')
-
-
-
-def deleta_db(request):
-    Docente.objects.all().delete()
-
-    return render(request, 'home/index.html')
-
-
-def popula_db_docentes(request):
-    pass

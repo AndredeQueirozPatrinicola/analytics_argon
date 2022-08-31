@@ -11,12 +11,6 @@ urlpatterns = [
     # The home page
     path('', views.index, name='home'),
 
-    path('teste', views.testes, name='testes'),
-
-    path('atualizadb/', views.popula_db, name='populadb'),
-
-    path('deletadb', views.deleta_db, name='deleta_db'),
-
     path('departamentos', views.departamentos, name='departamentos'),
 
     path('<str:sigla>/docente/<str:parametro>', views.docente, name='docente'),
