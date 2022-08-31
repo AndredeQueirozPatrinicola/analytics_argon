@@ -178,7 +178,7 @@ class Api:
                                     api_docente=docentes_dados, api_programas=lista_api)
 
             salva_json.save()
-            print('Salvou')
+            print(f'Salvou: {parametros[z]} | {z} de {len(parametros)}')
             z += 1
 
         
