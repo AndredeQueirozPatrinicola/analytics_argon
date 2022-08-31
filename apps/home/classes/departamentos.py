@@ -59,7 +59,7 @@ class Departamentos():
             'displaylogo': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = 'Relação entre tipos de vínculo de docente'
+        titulo = 'Percentual de professores por departamento'
 
 
         return grafico_pizza, titulo

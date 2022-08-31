@@ -36,11 +36,9 @@ class DadosDocente():
             api = Docente.objects.filter(docente_id=self.parametro).values_list()
             dados = api[0][3]
             dados_nome = api[0][2]
-
             self.nome_departamento = dados[0].get('nome')
 
         except:
-            print('oi')
             res = requests.get(url=API_PROGRAMAS)
             dados = res.json()
             
