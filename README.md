@@ -1,5 +1,9 @@
 # FFLCH Analytics
 
+Mysql:
+
+    sudo apt-get install python-dev default-libmysqlclient-dev
+
 Libraries instalation:
 
     python -m venv venv
@@ -8,14 +12,21 @@ Libraries instalation:
 
 Up django:
 
-    python manage.py runserver
+    python3 manage.py migrate
+    python3 manage.py runserver
 
-Participantes:
+Exemplo mysql core/settings.py:
 
-    - Thiago
-    - Teste
-    - André
-
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', 
+            'NAME': 'analytics',
+            'USER': 'admin',
+            'PASSWORD': 'admin',
+            'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+            'PORT': '3306',
+        }
+    }
 
 Scripts para popular db:
 
