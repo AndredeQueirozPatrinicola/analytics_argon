@@ -20,8 +20,8 @@ class DadosDocente():
 
 
     def linhas_de_pesquisa(self):
-        api = Docente.objects.filter(docente_id=self.parametro).values_list()
-        dados = api[0][2]
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
         linhas_titulo = {
@@ -63,8 +63,8 @@ class DadosDocente():
 
     def plota_grafico_historico(self, tipo):
         try:
-            api = Docente.objects.filter(docente_id=self.parametro).values_list()
-            dados = api[0][2]
+            api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+            dados = api[0][0]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
             ano = df_livros['ANO'].value_counts()
@@ -114,8 +114,8 @@ class DadosDocente():
             return None, None
 
     def plota_grafico_pizza(self):
-        api = Docente.objects.filter(docente_id=self.parametro).values_list()
-        dados = api[0][2]
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        dados = api[0][0]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
 
@@ -151,8 +151,8 @@ class DadosDocente():
             return None
 
     def tabela_orientandos(self):
-        api = Docente.objects.filter(docente_id=self.parametro).values_list()
-        dados = api[0][2]
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        dados = api[0][0]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
 
@@ -171,8 +171,8 @@ class DadosDocente():
             return None
 
     def tabela_ultimas_publicacoes(self):
-        api = Docente.objects.filter(docente_id=self.parametro).values_list()
-        dados = api[0][2]
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        dados = api[0][0]
         if dados['livros']:
             tabela = pd.DataFrame(dados['livros'])
             publicacoes = tabela.head(5)
