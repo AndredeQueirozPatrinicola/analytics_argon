@@ -7,6 +7,7 @@ from plotly.offline import plot
 
 from apps.home.models import Docente
 
+
 API = 'https://dados.fflch.usp.br/api/'
 API_PROGRAMAS = API + 'programas/'
 
