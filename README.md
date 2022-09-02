@@ -45,3 +45,4 @@ Scripts para popular db:
 Falta automatizar:
 
     DEBUG = False
+    SECRET_KEY = config('SECRET_KEY', default='TOKEN_SECRETO') # fflch/sti/sistemas/analytics/SECRET_KE
