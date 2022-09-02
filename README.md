@@ -42,4 +42,6 @@ Scripts para popular db:
     # Popula dados docentes:
     api.pega_dados_docente ()
 
+Falta automatizar:
 
+    DEBUG = False
