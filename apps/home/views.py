@@ -135,7 +135,7 @@ def docente(request, sigla, parametro):
     return render(request, 'home/docentes.html', context)
 
 
-def docentes(request, sigla):
+def departamento(request, sigla):
     
     docentes = DadosDepartamento(sigla)
 
