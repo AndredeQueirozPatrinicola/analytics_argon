@@ -177,7 +177,11 @@ class DadosDepartamento():
     def plota_grafico_bolsa_sem(self):
         api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
         dados = api[0][0]
+
+        anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos_str = [str(i) for i in anos]
         
+
         df = pd.DataFrame(dados[0])
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
@@ -187,7 +191,7 @@ class DadosDepartamento():
                                 'pesquisas_pos_doutorado_com_bolsa':'Pesquisas pós doutorado com bolsa', 
                                 'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
                                 })
-        fig = px.histogram(df, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
+        fig = px.histogram(df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
         barmode='group', height=400, color_discrete_map={
             "IC com bolsa": "#053787",
             "IC sem bolsa": "#264a87",
@@ -219,7 +223,7 @@ class DadosDepartamento():
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = "Relação entre IC's e Pesquisas de pós com e sem bolsa - (2016-2021)"
+        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]}-{anos[-1]})"
 
         return grafico, titulo
 
@@ -230,8 +234,9 @@ class DadosDepartamento():
         #dados = api.pega_dados_programas_docentes(sigla)
         api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
         dados = api[0][0]
-        anos = [ '2016','2017', '2018', '2019', '2020', '2021']
-        anos_int = [2016, 2017, 2018, 2019, 2020, 2021]
+
+        anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos = [str(i) for i in anos_int]
 
         lista_livros = []
         lista_artigos = []
@@ -261,16 +266,16 @@ class DadosDepartamento():
         resultado_capitulos = []
 
         g = 0
-        f = len(dados[0].get('2016'))
+        f = len(dados[0].get(anos[0]))
 
-        while f < len(lista_livros) + len(dados[0].get('2016')):
+        while f < len(lista_livros) + len(dados[0].get(anos[0])):
             
             resultado_livros.append(sum(lista_livros[g:f]))
             resultado_artigos.append(sum(lista_artigos[g:f]))
             resultado_capitulos.append(sum(lista_capitulos[g:f]))
             
             g = f
-            f += len(dados[0].get('2016'))
+            f += len(dados[0].get(anos[0]))
             
             
         resultado = {}
@@ -288,7 +293,7 @@ class DadosDepartamento():
         df = pd.DataFrame(resultado)
         df = df.transpose()
         df = df.rename(columns = {'total_livros' : 'Livros', 'total_artigos' : 'Artigos', 'total_capitulos' : 'Capitulos'})
-        fig = px.histogram(df, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['Livros','Artigos','Capitulos'], height=478, barmode = 'group', color_discrete_map={
+        fig = px.histogram(df, x=anos, y=['Livros','Artigos','Capitulos'], height=478, barmode = 'group', color_discrete_map={
                     "Livros": "#053787",
                     "Artigos": "#9facc2",
                     "Capitulos": "#AFAFAF"
@@ -319,7 +324,7 @@ class DadosDepartamento():
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = "Produção do departamento - (2016-2021)"
+        titulo = f"Produção do departamento - ({anos[0]}-{anos[-1]})"
 
         return grafico, titulo
 
