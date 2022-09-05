@@ -42,4 +42,7 @@ Scripts para popular db:
     # Popula dados docentes:
     api.pega_dados_docente ()
 
+Falta automatizar:
 
+    DEBUG = False
+    SECRET_KEY = config('SECRET_KEY', default='TOKEN_SECRETO') # fflch/sti/sistemas/analytics/SECRET_KE
