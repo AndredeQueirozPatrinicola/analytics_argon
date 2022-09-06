@@ -10,9 +10,6 @@ from .apis import Api
 
 from apps.home.models import Departamento
 
-# api programas
-# api docentes
-# api pesquisa
 
 
 class DadosDepartamento():
@@ -180,7 +177,11 @@ class DadosDepartamento():
     def plota_grafico_bolsa_sem(self):
         api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
         dados = api[0][0]
+
+        anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos_str = [str(i) for i in anos]
         
+
         df = pd.DataFrame(dados[0])
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
@@ -190,7 +191,7 @@ class DadosDepartamento():
                                 'pesquisas_pos_doutorado_com_bolsa':'Pesquisas pós doutorado com bolsa', 
                                 'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
                                 })
-        fig = px.histogram(df, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
+        fig = px.histogram(df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
         barmode='group', height=400, color_discrete_map={
             "IC com bolsa": "#053787",
             "IC sem bolsa": "#264a87",
@@ -222,7 +223,7 @@ class DadosDepartamento():
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = "Relação entre IC's e Pesquisas de pós com e sem bolsa - (2016-2021)"
+        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]}-{anos[-1]})"
 
         return grafico, titulo
 
@@ -231,54 +232,76 @@ class DadosDepartamento():
     def plota_prod_serie_historica(self, sigla):
         #api = Api()
         #dados = api.pega_dados_programas_docentes(sigla)
-        #api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
-        #dados = [0][0]
-        anos = [2016,2017,2018,2019,2020,2021]
-    
-        resultados = []
-        y = 0
-        while y < len(anos):
-        
-            parametros = {
-                'tipo':'anual',
-                'ano' : anos[y],
-                'ano_ini' : '',
-                'ano_fim' : ''
-            }
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
+        dados = api[0][0]
 
-            api = requests.get(url = f'https://dados.fflch.usp.br/api/programas/docentes/{sigla}', params = parametros)
+        anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos = [str(i) for i in anos_int]
 
-            dados = api.json()
-
-            df = pd.DataFrame(dados)
-
-            somas = df['total_livros'].to_list(
-            ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
-
-            x = 0
-            lista_valores = []
-            while x < len(somas):
-                lista_valores_individuais = [int(i) for i in somas[x]]
-                lista_valores.append(sum(lista_valores_individuais))
-                x += 1
-                
-            resultados.append(lista_valores)
+        lista_livros = []
+        lista_artigos = []
+        lista_capitulos = []
+        x = 0
+        while x < len(anos):    
             
-            y += 1
+            z = 0
+            while z < len(dados[x].get(anos[x])):
+                lista_livros.append(dados[x].get(anos[x])[z].get('total_livros'))
+                lista_artigos.append(dados[x].get(anos[x])[z].get('total_artigos'))
+                lista_capitulos.append(dados[x].get(anos[x])[z].get('total_capitulos'))
+            
+                z += 1
+            
+            x += 1
 
 
-        df2 = pd.DataFrame(resultados, anos)
-        df2 = df2.rename(columns = {0 : 'Livros', 1 : 'Artigos', 2 : 'Capitulos'})
+            
+        lista_livros = [int(i) for i in lista_livros]
+        lista_artigos = [int(i) for i in lista_artigos]
+        lista_capitulos = [int(i) for i in lista_capitulos]
+            
+            
+        resultado_livros = []
+        resultado_artigos = []
+        resultado_capitulos = []
 
-        fig = px.histogram(df2, x=['2016', '2017', '2018', '2019', '2020', '2021'], y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode = 'group', color_discrete_map={
-            "Livros": "#053787",
-            "Artigos": "#9facc2",
-            "Capitulos": "#AFAFAF"
-            }, 
-            labels={
-                'x': '',
-                'variable': 'Legenda',
-            })
+        g = 0
+        f = len(dados[0].get(anos[0]))
+
+        while f < len(lista_livros) + len(dados[0].get(anos[0])):
+            
+            resultado_livros.append(sum(lista_livros[g:f]))
+            resultado_artigos.append(sum(lista_artigos[g:f]))
+            resultado_capitulos.append(sum(lista_capitulos[g:f]))
+            
+            g = f
+            f += len(dados[0].get(anos[0]))
+            
+            
+        resultado = {}
+        s = 0
+        while s < len(anos_int):
+            
+            resultado[anos_int[s]] = {
+                'total_livros' : resultado_livros[s],
+                'total_artigos' : resultado_artigos[s],
+                'total_capitulos' : resultado_capitulos[s]
+            }
+            
+            s += 1
+            
+        df = pd.DataFrame(resultado)
+        df = df.transpose()
+        df = df.rename(columns = {'total_livros' : 'Livros', 'total_artigos' : 'Artigos', 'total_capitulos' : 'Capitulos'})
+        fig = px.histogram(df, x=anos, y=['Livros','Artigos','Capitulos'], height=478, barmode = 'group', color_discrete_map={
+                    "Livros": "#053787",
+                    "Artigos": "#9facc2",
+                    "Capitulos": "#AFAFAF"
+                    }, 
+                    labels={
+                        'x': '',
+                        'variable': 'Legenda',
+                    })
 
         fig.update_layout({
             'paper_bgcolor': 'rgba(0, 0, 0, 0)',
@@ -301,7 +324,7 @@ class DadosDepartamento():
             'displayModeBar': False,
             'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        titulo = "Produção do departamento - (2016-2021)"
+        titulo = f"Produção do departamento - ({anos[0]}-{anos[-1]})"
 
         return grafico, titulo
 

@@ -1,12 +1,15 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from django.urls import path, re_path
+from django.conf.urls import url 
+from django.conf import settings
+from django.views.static import serve
+
+
+
 from apps.home import views
 
 urlpatterns = [
+
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 
     # The home page
     path('', views.index, name='home'),
