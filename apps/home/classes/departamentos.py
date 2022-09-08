@@ -8,6 +8,8 @@ from plotly.offline import plot
 
 from .apis import Api
 
+from apps.home.classes.graficos import Grafico
+
 
 class Departamentos():
 
@@ -17,22 +19,27 @@ class Departamentos():
     def tabela_todos_docentes(self):
         api = Api()
         dados = api.pega_dados_docentes()
-        #dados_programas = api.pega_dados_programas_docentes()
+
+
+        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
+                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+
+        siglas = list(departamentos_siglas.keys())
 
         df = pd.DataFrame(dados)
         df = df.drop(columns=['codset'])
-        #df2 = pd.DataFrame(dados_programas['departamentos'])
 
-        #x = 0
-        #siglas_codigos = {}
-       # while x < 11:
-        #    siglas_codigos[df2.iloc[x]['sigla']] = df2.iloc[x]['codigo']
+    
+        lista_siglas = []
+        for i in df['nomset']:
+            for j in siglas:
+                if i == departamentos_siglas.get(j):
+                    lista_siglas.append(j)
 
-        #    x += 1
-
-        #lista_valores = df.values.tolist()
-
+        df['sigset'] = lista_siglas
+        
         titulo = 'Todos os docentes da faculdade'
+
         return df, titulo
 
     def plota_relacao_cursos(self):
@@ -48,6 +55,16 @@ class Departamentos():
             nomes_cursos.append(df2.index[x])
             x += 1
 
+        titulo = 'Percentual de professores por departamento'
+
+        grafico = Grafico()
+
+        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, color=df2.index,
+                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
+
+        return grafico, titulo
+
+        '''
         fig = px.pie(values=valores_cursos, names=nomes_cursos, color=df2.index,
                      color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
 
@@ -63,3 +80,4 @@ class Departamentos():
 
 
         return grafico_pizza, titulo
+        '''

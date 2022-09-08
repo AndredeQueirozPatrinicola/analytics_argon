@@ -1,8 +1,7 @@
-
 <div class="col-xl-8">
-    <div class="row align-items-center">
-    
-        </div>
+    <div class="row align-items-center titulo-tabela-todos">
+        {{ titulo_tabela_todos_docentes }}
+    </div>
     <div class="table-responsive">
         <table class="table align-items-center table-flush" id="tabelas-dinamicas">
             <thead class="thead-light">
@@ -17,8 +16,14 @@
             <tbody>
                 {% for index, row in df_docentes.iterrows %}
                 <tr>
-                    <td>{% if row.id_lattes != "0" %}<a href='{{ sigla_departamento }}/docente/{{ row.id_lattes }}'>
-                        {{ row.nompes }}</a>{% else %}{{ row.nompes }}{% endif %}</td>
+
+                    <td>{% if row.id_lattes != "0" %}
+                        <a href='{{ row.sigset }}/docente/{{ row.id_lattes }}'>
+                            {{ row.nompes }}</a>
+                        {% else %}
+                        {{ row.nompes }}
+                        {% endif %}
+                    </td>
                     <td>{{ row.email }}</td>
                     <td>{{ row.nomset }}</td>
                     <td>{% if row.id_lattes != "0" %}<a href='http://lattes.cnpq.br/{{ row.id_lattes }}'
@@ -30,4 +35,3 @@
         </table>
     </div>
 </div>
-
