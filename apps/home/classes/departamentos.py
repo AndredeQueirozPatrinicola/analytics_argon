@@ -1,10 +1,6 @@
-from unicodedata import name
-import numpy as np
 import pandas as pd
 import requests
-import plotly.express as px
 from datetime import datetime
-from plotly.offline import plot
 
 from .apis import Api
 
@@ -20,7 +16,6 @@ class Departamentos():
         api = Api()
         dados = api.pega_dados_docentes()
 
-
         departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
                                 'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
 
@@ -29,7 +24,6 @@ class Departamentos():
         df = pd.DataFrame(dados)
         df = df.drop(columns=['codset'])
 
-    
         lista_siglas = []
         for i in df['nomset']:
             for j in siglas:
@@ -37,7 +31,7 @@ class Departamentos():
                     lista_siglas.append(j)
 
         df['sigset'] = lista_siglas
-        
+
         titulo = 'Todos os docentes da faculdade'
 
         return df, titulo
@@ -51,7 +45,7 @@ class Departamentos():
 
         x = 0
         nomes_cursos = []
-        while x < len(df2):
+        while x < len(df2): 
             nomes_cursos.append(df2.index[x])
             x += 1
 
@@ -59,25 +53,9 @@ class Departamentos():
 
         grafico = Grafico()
 
-        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, color=df2.index,
-                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
+        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos,margin=dict(l=10,r=10,t=10,b=5),x=0.5, y=-0.5 ,color=df2.index, height=700,
+                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF", '#0958D9', '#4C84DF', "#0744A6", "#090fba", "#216fcf"])
 
         return grafico, titulo
 
-        '''
-        fig = px.pie(values=valores_cursos, names=nomes_cursos, color=df2.index,
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
 
-        fig.update_layout(legend=dict(y=0.5))
-        
-        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=20, t=20, b=20), legend=dict(orientation="v", yanchor="bottom", y=1.02, xanchor="right", x=1))
-        grafico_pizza = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
-
-        titulo = 'Percentual de professores por departamento'
-
-
-        return grafico_pizza, titulo
-        '''

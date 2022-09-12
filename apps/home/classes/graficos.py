@@ -1,9 +1,4 @@
-from unicodedata import name
-import numpy as np
-import pandas as pd
-import requests
 import plotly.express as px
-from datetime import datetime
 from plotly.offline import plot
 
 
@@ -13,18 +8,11 @@ class Grafico():
 
         graph = plot(fig, output_type="div", config={
             'displaylogo': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
+            'modeBarButtonsToRemove': ['select2d', 'lasso2d','select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
         return graph
 
     def grafico_pizza(self, *args, **kwargs):
-        # values
-        # names
-        # colors
-        # color_discrete_sequence
-        # labels
-        # height
-        # margin
 
         values = kwargs.get('values')
         names = kwargs.get('names')
@@ -48,17 +36,7 @@ class Grafico():
         return grafico
 
     def grafico_linhas(self, *args, **kwargs):
-        # df ou nao
-        # x
-        # y
-        # colors
-        # color_discrete_sequence
-        # barmode
-        # labels
-        # height
-        # margin
-        # line,grid color
-
+        
         df = kwargs.get('df')
         color = kwargs.get('color')
         color_discrete_sequence = kwargs.get('color_discrete_sequence')
@@ -73,7 +51,7 @@ class Grafico():
 
         fig = px.line(df, x=x, y=y, height=height, labels=labels,
                       color=color, color_discrete_sequence=color_discrete_sequence)
-        
+
         fig.update_layout({
             'paper_bgcolor': 'rgba(0, 0, 0, 0)',
             'plot_bgcolor': 'rgba(0, 0, 0, 0)',
@@ -89,16 +67,49 @@ class Grafico():
 
         return grafico
 
-    def grafico_barras():
-        # df ou nao
-        # x
-        # y
-        # colors
-        # color_discrete_sequence
-        # barmode
-        # labels
-        # height
-        # margin
-        # line,grid color
+    def grafico_barras(self, *args, **kwargs):
 
-        pass
+        df = kwargs.get('df')
+        color = kwargs.get('color')
+        color_discrete_sequence = kwargs.get('color_discrete_sequence')
+        color_discrete_map = kwargs.get('color_discrete_map')
+        height = kwargs.get('height')
+        x = kwargs.get('x')
+        y = kwargs.get('y')
+        legend_orientation = kwargs.get('legend_orientation')
+        labels = kwargs.get('labels')
+        margin = kwargs.get('margin')
+        font_color = kwargs.get('font_color')
+        showlegend = kwargs.get('showlegend')
+        barmode = kwargs.get('barmode')
+        legend = kwargs.get('legend')
+        bargroupgap = kwargs.get('bargroupgap')
+        bargap = kwargs.get('bargap')
+        autosize = kwargs.get('autosize')
+        yaxis_title = kwargs.get('yaxis_title')
+        linecolor = kwargs.get('linecolor')
+        gridcolor = kwargs.get('gridcolor')
+
+        if barmode:
+            fig = px.bar(df, x=x, y=y,
+                                height=height, color=color, color_discrete_sequence=color_discrete_sequence, color_discrete_map=color_discrete_map,
+                            labels=labels, barmode=barmode)
+        else:
+            fig = px.bar(df, x=x, y=y,
+                    height=height, color=color, color_discrete_sequence=color_discrete_sequence, color_discrete_map=color_discrete_map,
+                labels=labels)
+
+
+        fig.update_layout({
+            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        }, margin=margin, showlegend=showlegend,font_color=font_color, legend=legend, bargroupgap=bargroupgap, bargap=bargap, autosize=autosize, yaxis_title=yaxis_title)
+
+        fig.update_xaxes(showline=True, linewidth=1, linecolor=linecolor,
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor=gridcolor, automargin=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor=linecolor,
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor=gridcolor, automargin=True)
+
+        grafico = self.plota(fig)
+
+        return grafico
