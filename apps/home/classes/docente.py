@@ -100,36 +100,46 @@ class DadosDocente():
         api = Docente.objects.filter(
             docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
+
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
 
             nivpgm = list(df['nivpgm'])
-            tipos = ['ME', 'DO']
+            tipos = ['ME', 'DO', "DD"]
 
             nivel = []
-            x, y = 0, 0
+            x, y, z = 0, 0, 0
             for i in nivpgm:
                 if i == 'ME':
                     x += 1
                 if i == 'DO':
                     y += 1
+                if i == "DD":
+                    z += 1
 
             nivel.append(x)
             nivel.append(y)
+            nivel.append(z)
+
+            titulo = [
+                {
+                    'titulo' : 'Relação entre mestrandos e doutorandos'
+                }
+            ]
 
             figura = Grafico()
 
             figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
-                        color_discrete_sequence=["#052e70", "#AFAFAF"], 
+                        color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
                         labels={
                             'values': 'Valor',
                             'names': 'Tipo',
                             'color': 'Cor'
-                        }, height=490, margin=dict(l=10, r=0, t=0, b=0))
+                        }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
 
-            return figura
+            return figura, titulo
         else:
-            return None
+            return None, None
 
     def tabela_orientandos(self):
         api = Docente.objects.filter(
@@ -142,15 +152,25 @@ class DadosDocente():
             nivpgm = list(df['nivpgm'])
             nomare = list(df['nomare'])
 
-            lis = []
+            resultado = []
             x = 0
             while x < len(nomep):
-                lis.append([f'{nomep[x]}', f'{nivpgm[x]}', f'{nomare[x]}'])
+                resultado.append([f'{nomep[x]}', f'{nivpgm[x]}', f'{nomare[x]}'])
                 x += 1
 
-            return lis
+
+            tabela_header = [
+                {
+                    'titulo' : 'Orientandos Ativos',
+                    'nome' : 'Nome',
+                    'nivel' : 'Nivel',
+                    'programa' : 'Programa'
+                }
+            ]          
+
+            return resultado, tabela_header
         else:
-            return None
+            return None, None
 
     def tabela_ultimas_publicacoes(self):
         api = Docente.objects.filter(
@@ -161,6 +181,16 @@ class DadosDocente():
             publicacoes = tabela.head(5)
             titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
             publicacao_com_ano = titulo_ano.values.tolist()
-            return publicacao_com_ano
+
+            tabela_publicacoes = [
+                {
+                    'titulo' : 'Ultimas publicações',
+                    'titulo_trabalho' : 'Titulo',
+                    'ano' : 'Ano'
+                }
+            ]
+
+            return publicacao_com_ano, tabela_publicacoes
+
         else:
             return None
