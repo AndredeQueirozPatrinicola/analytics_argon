@@ -48,7 +48,7 @@ class DadosDocente():
         caminho = [
             {
                 'text': self.nome_departamento,
-                'url': "/" + self.sigla + "/docentes"
+                'url': "/departamentos/" + self.sigla
             },
             {
                 'text': dados_nome.get('nome'),
