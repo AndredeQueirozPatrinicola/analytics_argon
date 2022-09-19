@@ -52,6 +52,7 @@ def pages(request):
 
 
 def docente(request, sigla, parametro):
+
     docente = DadosDocente(parametro, sigla)
 
     tabela_orientandos, tabela_header = docente.tabela_orientandos()
@@ -168,11 +169,22 @@ def departamentos(request):
     df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
     grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
 
+    grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
+
+    tabela_trabalhos, titulo_tabela_trabalhos = departamentos.tabela_trabalhos()
+
+    departamentos.prod_todos_departamentos()
+
     context = {
         'df_docentes' : df_docentes,
         'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
         'grafico_relacao_cursos' :  grafico_relacao_cursos,
-        'titulo_relacao_cursos' : titulo_relacao_cursos
+        'titulo_relacao_cursos' : titulo_relacao_cursos,
+        'grafico_bolsas' : grafico_bolsas,
+        'titulo_bolsas' : titulo_grafico_bolsas,
+        'tabela_trabalhos' : tabela_trabalhos,
+        'titulo_tabela_trabalhos' : titulo_tabela_trabalhos
+
     }
 
 

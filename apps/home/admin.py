@@ -14,7 +14,7 @@ from .models import Docente, Departamento
 
 
 class DocenteAdmin(admin.ModelAdmin):
-    list_display = ('docente_id','api_docente', 'api_programas' )
+    list_display = ('docente_id','api_docente', 'api_programas', 'api_docentes' )
 
 
 admin.site.register(Docente, DocenteAdmin)
