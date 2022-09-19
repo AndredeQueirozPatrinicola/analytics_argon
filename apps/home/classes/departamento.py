@@ -196,7 +196,7 @@ class DadosDepartamento():
         ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
             linecolor='white', gridcolor='#4d4b46')
 
-        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]}-{anos[-1]})"
+        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
 
@@ -283,6 +283,6 @@ class DadosDepartamento():
         ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
         linecolor='#e0dfda', gridcolor='#e0dfda')
         
-        titulo = f"Produção do departamento - ({anos[0]}-{anos[-1]})"
+        titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
