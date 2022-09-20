@@ -9,14 +9,16 @@
       <div class="table-responsive">
         <table class="table align-items-center table-flush">
           <thead class="thead-light">
+            
             <tr>
-              <th scope="col">{{ i.nome }}Titulos</th>
-              <th scope="col">{{ i.nivel }}Valores</th>
-
+              {% for item in titulo_tabela_bolsas %}
+              <th scope="col">{{ item }}</th>
+              {% endfor %}
             </tr>
+            
           </thead>
           <tbody>
-                {% for tabela in tabela_trabalhos %}
+                {% for tabela in tabela_bolsas %}
                 <tr>
                   {% for item in tabela %}
                   <td>
