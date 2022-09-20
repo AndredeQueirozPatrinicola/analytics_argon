@@ -118,7 +118,7 @@ def departamento(request, sigla):
     grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
     grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
     grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
-    tabela_trabalhos = docentes.tabela_trabalhos(sigla)
+    tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
 
     caminho = [
         {
@@ -149,7 +149,8 @@ def departamento(request, sigla):
         'grafico_prod_docentes' : grafico_prod_docentes, 
         'titulo_prod_docentes' : titulo_prod_docentes,
 
-        'tabela_trabalhos' : tabela_trabalhos,
+        'tabela_bolsas' : tabela_bolsas,
+        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
 
         'grafico_bolsas' : grafico_bolsas,
         'titulo_bolsas': titulo_bolsas,
@@ -171,9 +172,11 @@ def departamentos(request):
 
     grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
 
-    tabela_trabalhos, titulo_tabela_trabalhos = departamentos.tabela_trabalhos()
+    tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
 
-    departamentos.prod_todos_departamentos()
+    grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
+
+    
 
     context = {
         'df_docentes' : df_docentes,
@@ -182,9 +185,10 @@ def departamentos(request):
         'titulo_relacao_cursos' : titulo_relacao_cursos,
         'grafico_bolsas' : grafico_bolsas,
         'titulo_bolsas' : titulo_grafico_bolsas,
-        'tabela_trabalhos' : tabela_trabalhos,
-        'titulo_tabela_trabalhos' : titulo_tabela_trabalhos
-
+        'tabela_bolsas' : tabela_bolsas,
+        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+        'grafico_prod_docentes' : grafico_prod,
+        'titulo_prod_docentes' : titulo_prod
     }
 
 

@@ -150,13 +150,15 @@ class DadosDepartamento():
         valores = df2[sigla].to_list()
 
         x = 0
-        dic = []
+        dados_tabela = []
         while x < len(indices):
             tabela_dados = [indices[x], valores[x]]
-            dic.append(tabela_dados)
+            dados_tabela.append(tabela_dados)
             x += 1
 
-        return dic
+        headers = ['Nomes', 'Valores']
+
+        return dados_tabela, headers
 
     def plota_grafico_bolsa_sem(self):
         api = Departamento.objects.filter(

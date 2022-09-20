@@ -106,7 +106,7 @@ class Departamentos():
 
         grafico = Grafico()
 
-        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=5), x=0.5, y=-0.5, color=df2.index, height=700,
+        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=0, r=0, t=0, b=0), x=0.5, y=-0.5, color=df2.index, height=700,
                                         color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
 
         return grafico, titulo
@@ -183,11 +183,36 @@ class Departamentos():
         return lista_valores, titulos
 
 
-    def prod_todos_departamentos(self):
+    def prod_total_departamentos(self):
+        dados = Departamento.objects.all().values('api_programas_docente_limpo')
 
-        dados = Departamento.objects.all().values('api_programas_docente')
+        x = 0
+        resultado_livros = []
+        resultado_artigos = []
+        resultado_capitulos = []
+        while x < len(dados):
+            
 
-        print(dados)
+            for i in range(len(dados[x].get('api_programas_docente_limpo'))):
+            
+                resultado_livros.append(dados[x].get('api_programas_docente_limpo')[i].get('total_livros'))
+                resultado_artigos.append(dados[x].get('api_programas_docente_limpo')[i].get('total_artigos'))
+                resultado_capitulos.append(dados[x].get('api_programas_docente_limpo')[i].get('total_capitulos'))
 
+            x += 1
 
+        resultado_livros = [int(i) for i in resultado_livros]
+        resultado_artigos = [int(i) for i in resultado_artigos]
+        resultado_capitulos = [int(i) for i in resultado_capitulos]
 
+        resultado = [sum(resultado_livros), sum(resultado_artigos), sum(resultado_capitulos)]
+        
+        fig = Grafico()
+        fig = fig.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=resultado, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
+                     linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
+            l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False, labels={'x': ''})
+
+        titulo = 'Produção total da faculdade'
+
+        return fig, titulo
