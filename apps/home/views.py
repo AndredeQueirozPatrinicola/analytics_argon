@@ -169,26 +169,30 @@ def departamentos(request):
 
     df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
     grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
-
     grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
-
     tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
-
     grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
-
     
+    grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
 
     context = {
         'df_docentes' : df_docentes,
         'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
+
         'grafico_relacao_cursos' :  grafico_relacao_cursos,
         'titulo_relacao_cursos' : titulo_relacao_cursos,
+
         'grafico_bolsas' : grafico_bolsas,
         'titulo_bolsas' : titulo_grafico_bolsas,
+
         'tabela_bolsas' : tabela_bolsas,
         'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+
         'grafico_prod_docentes' : grafico_prod,
-        'titulo_prod_docentes' : titulo_prod
+        'titulo_prod_docentes' : titulo_prod,
+
+        'grafico_historico_prod' : grafico_prod_historico,
+        'titulo_historico_prod' : titulo_prod_historico,
     }
 
 

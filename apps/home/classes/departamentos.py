@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from functools import reduce
 
 
 from apps.home.classes.graficos import Grafico
@@ -57,7 +58,6 @@ class Departamentos():
 
         return resultado
 
-
     def tabela_todos_docentes(self):
         dados = Docente.objects.raw(
             'SELECT id, api_docentes from home_docente;')
@@ -106,7 +106,7 @@ class Departamentos():
 
         grafico = Grafico()
 
-        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=0, r=0, t=0, b=0), x=0.5, y=-0.5, color=df2.index, height=700,
+        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=0), x=0.6, y=-0.5, color=df2.index, height=700,
                                         color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
 
         return grafico, titulo
@@ -120,7 +120,7 @@ class Departamentos():
         anos = [str(i) for i in range(
             (datetime.now().year - 6), datetime.now().year)]
 
-        resultado = self.trata_dados_ic(dados,anos)
+        resultado = self.trata_dados_ic(dados, anos)
 
         df = pd.DataFrame(resultado)
         df = df.transpose()
@@ -146,10 +146,9 @@ class Departamentos():
         ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
             linecolor='white', gridcolor='#4d4b46')
 
-        titulo = "IC's e Pós Doutorado com e sem bolsas"
+        titulo = "Relação entre IC's e Pós Doutorado com e sem bolsas"
 
         return fig, titulo
-
 
     def tabela_trabalhos(self):
         dados = Departamento.objects.raw(
@@ -160,16 +159,16 @@ class Departamentos():
         anos = [str(i) for i in range(
             (datetime.now().year - 6), datetime.now().year)]
 
-        resultado = self.trata_dados_ic(dados,anos)
+        resultado = self.trata_dados_ic(dados, anos)
 
         df = pd.DataFrame(resultado)
-        df = df.rename(index={0: "IC's com bolsa", 1: "IC's sem bolsa", 2: "Pesquisadores colaboradores ativos", 3 : "Projetos de pesquisa dos Docentes",
+        df = df.rename(index={0: "IC's com bolsa", 1: "IC's sem bolsa", 2: "Pesquisadores colaboradores ativos", 3: "Projetos de pesquisa dos Docentes",
                        4: "Pos Doutorado com bolsa", 5: "Pos Doutorado sem bolsa"})
 
-        
         lista_valores = df.values.tolist()
 
-        nomes = ["IC's com bolsa", "IC's sem bolsa", "Pesquisadores colaboradores ativos", "Projetos de pesquisa dos Docentes", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"]
+        nomes = ["IC's com bolsa", "IC's sem bolsa", "Pesquisadores colaboradores ativos",
+                 "Projetos de pesquisa dos Docentes", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"]
 
         x = 0
         for i in lista_valores:
@@ -182,7 +181,6 @@ class Departamentos():
 
         return lista_valores, titulos
 
-
     def prod_total_departamentos(self):
         dados = Departamento.objects.all().values('api_programas_docente_limpo')
 
@@ -191,13 +189,15 @@ class Departamentos():
         resultado_artigos = []
         resultado_capitulos = []
         while x < len(dados):
-            
 
             for i in range(len(dados[x].get('api_programas_docente_limpo'))):
-            
-                resultado_livros.append(dados[x].get('api_programas_docente_limpo')[i].get('total_livros'))
-                resultado_artigos.append(dados[x].get('api_programas_docente_limpo')[i].get('total_artigos'))
-                resultado_capitulos.append(dados[x].get('api_programas_docente_limpo')[i].get('total_capitulos'))
+
+                resultado_livros.append(dados[x].get(
+                    'api_programas_docente_limpo')[i].get('total_livros'))
+                resultado_artigos.append(dados[x].get('api_programas_docente_limpo')[
+                                         i].get('total_artigos'))
+                resultado_capitulos.append(dados[x].get('api_programas_docente_limpo')[
+                                           i].get('total_capitulos'))
 
             x += 1
 
@@ -205,14 +205,111 @@ class Departamentos():
         resultado_artigos = [int(i) for i in resultado_artigos]
         resultado_capitulos = [int(i) for i in resultado_capitulos]
 
-        resultado = [sum(resultado_livros), sum(resultado_artigos), sum(resultado_capitulos)]
-        
+        resultado = [sum(resultado_livros), sum(
+            resultado_artigos), sum(resultado_capitulos)]
+
         fig = Grafico()
         fig = fig.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=resultado, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
-                     linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
+                                 color_discrete_sequence=[
+                                     "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
+                                 linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
             l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False, labels={'x': ''})
 
-        titulo = 'Produção total da faculdade'
+        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade'
 
         return fig, titulo
+
+    def prod_historica_total(self):
+
+        def soma_lista(a: int, b: int):
+            return int(a) + int(b)
+
+        dados = Departamento.objects.all().values_list('api_programas_docente')
+
+        anos = [str(i)
+                for i in range(datetime.now().year - 6, datetime.now().year)]
+
+        resultado = []
+        tipos = ['total_livros', 'total_artigos', 'total_capitulos']
+
+        s = 0
+        while s < len(tipos):
+
+            dados_primeiro_ano = []
+            dados_segundo_ano = []
+            dados_terceiro_ano = []
+            dados_quarto_ano = []
+            dados_quinto_ano = []
+            dados_sexto_ano = []
+            x = 0
+            while x < len(dados):
+
+                y = 0
+                while y < len(dados[x][0]):
+
+                    z = 0
+                    while z < len(dados[x][0][y].get(anos[y])):
+
+                        dados_gerais = dados[x][0][y].get(
+                            anos[y])[z].get(tipos[s])
+
+                        if anos[y] == anos[0]:
+                            dados_primeiro_ano.append(dados_gerais)
+                        if anos[y] == anos[1]:
+                            dados_segundo_ano.append(dados_gerais)
+                        if anos[y] == anos[2]:
+                            dados_terceiro_ano.append(dados_gerais)
+                        if anos[y] == anos[3]:
+                            dados_quarto_ano.append(dados_gerais)
+                        if anos[y] == anos[4]:
+                            dados_quinto_ano.append(dados_gerais)
+                        if anos[y] == anos[5]:
+                            dados_sexto_ano.append(dados_gerais)
+
+                        z += 1
+
+                    y += 1
+
+                x += 1
+            resultado.append([reduce(soma_lista, dados_primeiro_ano), reduce(soma_lista, dados_segundo_ano), reduce(
+                soma_lista, dados_terceiro_ano), reduce(soma_lista, dados_quarto_ano), reduce(soma_lista, dados_quinto_ano), reduce(soma_lista, dados_sexto_ano)])
+            s += 1
+
+
+        w = 0
+        dado = {}
+        while w < len(anos):
+
+            dado[anos[w]] = {
+                'Livros' : resultado[0][w],
+                'Artigos' : resultado[1][w],
+                'Capitulos' : resultado[2][w]
+            }
+
+            w += 1
+
+        df = pd.DataFrame(dado)
+        df = df.transpose()
+
+        grafico = Grafico()
+        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', 
+                                        color_discrete_map={
+                                            "Livros": "#053787",
+                                            "Artigos": "#9facc2",
+                                            "Capitulos": "#AFAFAF"
+                                        },
+                                            labels={
+                                            'x': '',
+                                            'variable': 'Legenda',
+                                        }, margin=dict(
+                                            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
+                                            yanchor="top",
+                                            y=0.99,
+                                            xanchor="left",
+                                            x=0.01
+                                        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
+                                        linecolor='#e0dfda', gridcolor='#e0dfda')
+                                        
+        titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
+
+        return grafico, titulo
