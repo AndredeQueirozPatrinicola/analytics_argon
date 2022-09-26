@@ -208,3 +208,52 @@
   font-weight: bold;
   font-size: 20px;
   }
+
+
+  .botao-drop{
+    display: none;
+    color: #052e70;
+  }
+
+  .nav-bar-div{
+    justify-content: space-between;
+  }
+
+  .regulador-drop-r{
+    display: none;
+  }
+
+
+
+  @media only screen and (max-width: 1198px) {
+    .botao-drop{
+      display: flex;
+      color: #f7fafc;
+      border-radius: 50px;
+      border: 1px solid #f7fafc;
+      background-color: #052e70;
+    }
+    #sidenav-main{
+      display: none;
+    }
+  }
+
+
+  @media only screen and (max-width: 575px){
+    .nav-bar-div{
+      justify-content: end;
+    }
+  }
+
+
+  @media only screen and (max-width: 430px){
+    .regulador-drop{
+      display: none;
+    }
+    .regulador-drop-r{
+      display: flex;
+    }
+    .nav-bar-div{
+      justify-content: left;
+    }
+  }

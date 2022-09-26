@@ -5313,9 +5313,9 @@ button.bg-darker:focus {
   display: block;
   clear: both;
   content: ""; }
-
+/* 
 .d-none {
-  display: none !important; }
+  display: none !important; } */
 
 .d-inline {
   display: inline !important; }
