@@ -17,6 +17,15 @@ class DadosDocente():
         self.parametro = parametro
         self.sigla = sigla
 
+    def pega_vinculo(self):
+        dados = Docente.objects.filter(docente_id = self.parametro).values_list('api_docentes')
+
+        dados = dados[0][0]
+
+        vinculo = dados.get('nomefnc')
+
+        return vinculo
+
     def linhas_de_pesquisa(self):
         api = Docente.objects.filter(
             docente_id=self.parametro).values_list('api_docente')

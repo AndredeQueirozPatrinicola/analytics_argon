@@ -25,8 +25,6 @@ def index(request):
 
 def pages(request):
     context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
     try:
 
         load_template = request.path.split('/')[-1]
@@ -63,6 +61,8 @@ def docente(request, sigla, parametro):
     tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
     titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
+
+    tipo_vinculo = docente.pega_vinculo()
 
     docente = [
         {
@@ -101,6 +101,7 @@ def docente(request, sigla, parametro):
         'linhas_pesquisa' : linhas_pesquisa,
         'titulo_linhas' : titulo_linhas,
 
+        'tipo_vinculo' : tipo_vinculo
 
     }
 
