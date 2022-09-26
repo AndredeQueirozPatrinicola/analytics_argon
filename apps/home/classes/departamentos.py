@@ -15,17 +15,10 @@ class Departamentos():
 
     def trata_dados_ic(self, dados, anos):
         lista_todos_numeros = []
-        x = 0
+
         for i in dados:
-
-            y = 0
             for j in anos:
-
                 lista_todos_numeros.append(list(i.get(j).values()))
-
-                y += 1
-
-            x += 1
 
         z = 0
         valor = z
@@ -130,21 +123,21 @@ class Departamentos():
 
         fig = Grafico()
         fig = fig.grafico_barras(df=df, x=[i for i in anos], y=["IC's com bolsa", "IC's sem bolsa", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"], barmode='group', height=400, color_discrete_map={
-            "IC's com bolsa": "#053787",
-            "IC's sem bolsa": "#264a87",
-            "Pos Doutorado com bolsa": "#9facc2",
-            "Pos Doutorado sem bolsa": "#AFAFAF"},
-            labels={
-                'x': '',
-                'variable': 'Legenda',
-        }, margin=dict(
-            l=0, r=30, t=20, b=50), font_color="white", legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-            linecolor='white', gridcolor='#4d4b46')
+                                    "IC's com bolsa": "#053787",
+                                    "IC's sem bolsa": "#264a87",
+                                    "Pos Doutorado com bolsa": "#9facc2",
+                                    "Pos Doutorado sem bolsa": "#AFAFAF"},
+                                    labels={
+                                        'x': '',
+                                        'variable': 'Legenda',
+                                }, margin=dict(
+                                    l=0, r=30, t=20, b=50), font_color="white", legend=dict(
+                                    yanchor="top",
+                                    y=0.99,
+                                    xanchor="left",
+                                    x=0.01
+                                ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
+                                    linecolor='white', gridcolor='#4d4b46')
 
         titulo = "Relação entre IC's e Pós Doutorado com e sem bolsas"
 
@@ -229,9 +222,9 @@ class Departamentos():
         anos = [str(i)
                 for i in range(datetime.now().year - 6, datetime.now().year)]
 
-        resultado = []
         tipos = ['total_livros', 'total_artigos', 'total_capitulos']
 
+        resultado = []
         s = 0
         while s < len(tipos):
 
