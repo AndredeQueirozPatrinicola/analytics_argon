@@ -80,8 +80,7 @@ class Departamentos():
         return df, titulo
 
     def plota_relacao_cursos(self):
-        dados = Docente.objects.raw(
-            "SELECT id, api_docentes FROM analytics.home_docente hd ;")
+        dados = Docente.objects.raw("SELECT id, api_docentes FROM analytics.home_docente hd ;")
 
         dados = [i.api_docentes for i in dados]
 
@@ -154,14 +153,14 @@ class Departamentos():
 
         resultado = self.trata_dados_ic(dados, anos)
 
-        df = pd.DataFrame(resultado)
-        df = df.rename(index={0: "IC's com bolsa", 1: "IC's sem bolsa", 2: "Pesquisadores colaboradores ativos", 3: "Projetos de pesquisa dos Docentes",
-                       4: "Pos Doutorado com bolsa", 5: "Pos Doutorado sem bolsa"})
-
-        lista_valores = df.values.tolist()
-
         nomes = ["IC's com bolsa", "IC's sem bolsa", "Pesquisadores colaboradores ativos",
                  "Projetos de pesquisa dos Docentes", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"]
+
+        df = pd.DataFrame(resultado)
+        df = df.rename(index={0: nomes[0], 1: nomes[1], 2: nomes[2], 3: nomes[2],
+                       4: nomes[3], 5: nomes[4]})
+
+        lista_valores = df.values.tolist()
 
         x = 0
         for i in lista_valores:

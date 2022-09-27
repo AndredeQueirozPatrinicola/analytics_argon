@@ -138,8 +138,8 @@ class DadosDepartamento():
         dados = api[0][0]
 
         df = pd.DataFrame(dados)
-        df2 = pd.DataFrame(df[sigla])
-        df2 = df2.rename(index={
+        df = pd.DataFrame(df[sigla])
+        df = df.rename(index={
             'nome_departamento': "Nome do departamento",
             'ic_com_bolsa': "IC com bolsa",
             'ic_sem_bolsa': "IC sem bolsa",
@@ -148,9 +148,9 @@ class DadosDepartamento():
             'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa',
             'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
         })
-        indices = df2.index
+        indices = df.index
         indices.to_list()
-        valores = df2[sigla].to_list()
+        valores = df[sigla].to_list()
 
         x = 0
         dados_tabela = []

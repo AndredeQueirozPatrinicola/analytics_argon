@@ -223,6 +223,10 @@
     display: none;
   }
 
+  .card-nome{
+    height: 97.5px;
+  }
+
 
 
   @media only screen and (max-width: 1198px) {

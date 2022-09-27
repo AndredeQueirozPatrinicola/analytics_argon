@@ -25,11 +25,12 @@
             <div class="card card-stats">
               <!-- Card body -->
               {% if docente != None %}
-              <div class="card-body">
+              <div class="card-body card-nome">
                 {% for item in docente %}
                 <div class="row">
                   <div class="col">
-                    {{ item.nome }}{{ numero_docentes.texto }}
+                    <h5 class="card-title text-uppercase text-muted mb-0">Nome / Lattes</h5>
+                    <span class="font-weight-bold ">{{ item.nome }}{{ numero_docentes.texto }}</span>
                   </div>
                   <div class="col-auto">
                     {{ item.departamento }}{{ numero_docentes.numero }}
@@ -68,7 +69,8 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col">
-                    {{ titulo_linhas.text }}
+                    <h5 class="card-title text-uppercase text-muted mb-0"> {{ titulo_linhas.text }}</h5>
+    
                   </div>
 
                   <div class="col-auto">
@@ -76,11 +78,27 @@
                   </div>
 
                 </div>
-                {% for linha in linhas_pesquisa %}
-                <p class="mt-3 mb-0 text-sm">
-                  {{ linha }}
-                </p>
-                {% endfor %}
+                  <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Linhas
+                  </button>
+                  <div class="dropdown-menu">
+                    {% if linhas_pesquisa %}
+                      
+                      {% for linha in linhas_pesquisa %}
+                      <p class="mt-3 mb-0 text-sm dropdown-item">
+                        {{ linha }}
+                      </p>
+                      {% endfor %}
+
+                    {% else %}
+
+                    <p class="mt-3 mb-0 text-sm dropdown-item">
+                      Não existem linhas de pesquisa cadastradas!
+                    </p>
+
+                    {% endif %}
+                  </div>
+
               </div>
               {% endif %}
             </div>
@@ -93,16 +111,14 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col">
-                    <!-- <h5 class="card-title text-uppercase text-muted mb-0"></h5>
-                    <span class="h2 font-weight-bold mb-0"></span> -->
-                  Tipo de Vínculo 
+                  <h5 class="card-title text-uppercase text-muted mb-0">Tipo de Vínculo </h5>
+                    <span class="h2 font-weight-bold mb-0">{{ tipo_vinculo }}</span> 
                   </div>
                   <div class="col-auto">
                     
                   </div>
                 </div>
                 <p class="mt-3 mb-0 text-sm">
-                  {{ tipo_vinculo }}
                   <!-- <span class="text-success mr-2"></span>
                   <span class="text-nowrap"></span> -->
                 </p>
@@ -118,16 +134,16 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0"></h5>
-                    <span class="h2 font-weight-bold mb-0"></span>
+                    <h5 class="card-title text-uppercase text-muted mb-0">Situação</h5>
+                    <span class="h2 font-weight-bold mb-0">{{ situacao }}</span>
                   </div>
                   <div class="col-auto">
-  
+                    
                   </div>
                 </div>
                 <p class="mt-3 mb-0 text-sm"> 
-                  <span class="text-success mr-2"></span>
-                  <span class="text-nowrap"></span>
+                  <!-- <span class="text-success mr-2"></span> -->
+                  <!-- <span class="text-nowrap"></span> -->
                 </p>
               </div>
               {% endif %}

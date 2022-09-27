@@ -61,8 +61,7 @@ def docente(request, sigla, parametro):
     tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
     titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
-
-    tipo_vinculo = docente.pega_vinculo()
+    tipo_vinculo, situacao = docente.pega_vinculo_situacao()
 
     docente = [
         {
@@ -101,7 +100,8 @@ def docente(request, sigla, parametro):
         'linhas_pesquisa' : linhas_pesquisa,
         'titulo_linhas' : titulo_linhas,
 
-        'tipo_vinculo' : tipo_vinculo
+        'tipo_vinculo' : tipo_vinculo,
+        'situacao' : situacao,
 
     }
 
