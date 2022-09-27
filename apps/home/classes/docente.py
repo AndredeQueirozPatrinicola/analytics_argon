@@ -30,7 +30,7 @@ class DadosDocente():
         elif situacao == 'P':
             situacao = "Aposentado"
         else:
-            return 'Não Cadastrado'
+            return "Não informado"
 
         return vinculo, situacao
 
@@ -40,10 +40,11 @@ class DadosDocente():
         dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
-
         linhas_titulo = {
             'text': "Linhas de Pesquisa",
         }
+
+        linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
 
         return linhas_titulo, linhas_pesquisa
 
@@ -194,8 +195,13 @@ class DadosDocente():
         api = Docente.objects.filter(
             docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
+        if dados['livros']:
+            tabela = pd.DataFrame(dados['livros'])
+            publicacoes = tabela.head(5)
+            titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
+            publicacao_com_ano = titulo_ano.values.tolist()
 
-        tabela_publicacoes = [
+            tabela_publicacoes = [
                 {
                     'titulo' : 'Ultimas publicações',
                     'titulo_trabalho' : 'Titulo',
@@ -203,13 +209,7 @@ class DadosDocente():
                 }
             ]
 
-        if dados['livros']:
-            tabela = pd.DataFrame(dados['livros'])
-            publicacoes = tabela.head(5)
-            titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
-            publicacao_com_ano = titulo_ano.values.tolist()
-
             return publicacao_com_ano, tabela_publicacoes
 
         else:
-            return [['Não há publicações de livros registradas']], tabela_publicacoes
+            return None
