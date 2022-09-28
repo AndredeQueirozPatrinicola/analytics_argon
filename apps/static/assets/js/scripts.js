@@ -7,7 +7,7 @@ $(document).ready(function () {
     if(artigo === null){
         $('#capitulos').removeClass('show').removeClass('active');
         $('#grafico-livros').addClass('active')
-    }else if(livros === null){
+    }else if(livros === null && artigo === null){
         $('#grafico-capitulos').addClass('active')
     }else{
         $('#livros').removeClass('show').removeClass('active');
