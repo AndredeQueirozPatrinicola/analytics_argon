@@ -93,15 +93,19 @@ def docente(request, sigla, parametro):
         'grafico_capitulos' : grafico_capitulos,
         'grafico_titulo_capitulos' : grafico_titulo_capitulos,
 
-        'docente' : docente,
+        'docente' : docente,  # card 1
+        'card_1_titulo' : 'Nome / Lattes',
 
-        'sigla_departamento' : sigla,
+        'sigla_departamento' : sigla, 
         
-        'linhas_pesquisa' : linhas_pesquisa,
-        'titulo_linhas' : titulo_linhas,
+        'linhas_pesquisa' : linhas_pesquisa, # card 2
+        'card_2_titulo' : 'Linhas de pesquisa', # card 2
 
-        'tipo_vinculo' : tipo_vinculo,
-        'situacao' : situacao,
+        'card_3' : tipo_vinculo, # card 3
+        'card_3_titulo' : 'Tipo de vínculo',
+
+        'card_4' : situacao, # card 4
+        'card_4_titulo' : 'Situação atual',
 
     }
 
@@ -129,6 +133,8 @@ def departamento(request, sigla):
     ]
 
     context = {
+        'regulador' : 'regulador',
+
         'caminho' : caminho,
         'nome' : nome,
 

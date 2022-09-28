@@ -199,7 +199,7 @@ class DadosDocente():
 
         tabela_publicacoes = [
                 {
-                    'titulo' : 'Ultimas publicações',
+                    'titulo' : 'Ultimas publicações de livros',
                     'titulo_trabalho' : 'Titulo',
                     'ano' : 'Ano'
                 }
@@ -214,4 +214,4 @@ class DadosDocente():
             return publicacao_com_ano, tabela_publicacoes
 
         else:
-            return[[ 'Não existem publicações registradas']], tabela_publicacoes
+            return[[ 'Não existem publicações de livros registradas']], tabela_publicacoes

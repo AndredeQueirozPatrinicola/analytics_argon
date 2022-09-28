@@ -24,29 +24,25 @@
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats">
               <!-- Card body -->
-              {% if docente != None %}
+              {% if docente %}
               <div class="card-body card-head">
-                {% for item in docente %}
                 <div class="row">
+                  {% for item in docente %}
                   <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">Nome / Lattes</h5>
-                    <span class="h3 font-weight-bold mb-0">{{ item.nome }}{{ numero_docentes.texto }}</span>
+                    <h5 class="card-title text-uppercase text-muted mb-0">{{ card_1_titulo }}</h5>
+                    <span class="h3 font-weight-bold mb-0">{{ item.nome }}</span>
                   </div>
                   <div class="col-auto">
-                    {{ item.departamento }}{{ numero_docentes.numero }}
                     <a href='{{ item.link_lattes }}' target='_blank'>
                       <i class="ai ai-lattes ai-2x f-20"></i>
                     </a>
                   </div>
+                  {% endfor %}
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                  {{ item.programa }}
-                </p>
-                {% endfor %}
               </div>
               {% endif %}
-              {% if numero_docentes != None %}
-              <div class="card-body">
+              {% if regulador %}
+              <div class="card-body card-head">
                 <div class="row">
                   <div class="col texto-numero-docentes">
                     {{ numero_docentes.texto_ativos }}
@@ -58,7 +54,7 @@
                 <p class="mt-3 mb-0 text-sm">
                 </p>
               </div>
-              {% endif %}              
+              {% endif %}
             </div>
           </div>
           <!-- Celulas -->
@@ -69,7 +65,7 @@
               <div class="card-body card-head">
                 <div class="row">
                   <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0"> {{ titulo_linhas.text }}</h5>
+                    <h5 class="card-title text-uppercase text-muted mb-0"> {{ card_2_titulo }}</h5>
     
                   </div>
 
@@ -78,6 +74,7 @@
                   </div>
 
                 </div>
+                {% if docente %}
                   <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="h3 font-weight-bold mb-0"><i class="fas fa-angle-down mr-2"></i>Linhas</span>
                   </button>
@@ -98,7 +95,12 @@
 
                     {% endif %}
                   </div>
-
+                {% else %}
+                <p class="mt-3 mb-0 text-sm">
+                  <!-- <span class="text-success mr-2"></span>
+                  <span class="text-nowrap"></span> -->
+                </p>
+                {% endif %}  
               </div>
               {% endif %}
             </div>
@@ -111,8 +113,8 @@
               <div class="card-body card-head">
                 <div class="row">
                   <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Tipo de Vínculo </h5>
-                    <span class="h3 font-weight-bold mb-0">{{ tipo_vinculo }}</span> 
+                  <h5 class="card-title text-uppercase text-muted mb-0">{{ card_3_titulo }}</h5>
+                    <span class="h3 font-weight-bold mb-0">{{ card_3 }}</span> 
                   </div>
                   <div class="col-auto">
                     
@@ -134,8 +136,8 @@
               <div class="card-body card-head">
                 <div class="row">
                   <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">Situação</h5>
-                    <span class="h3 font-weight-bold mb-0">{{ situacao }}</span>
+                    <h5 class="card-title text-uppercase text-muted mb-0">{{ card_4_titulo }}</h5>
+                    <span class="h3 font-weight-bold mb-0">{{ card_4 }}</span>
                   </div>
                   <div class="col-auto">
                     
