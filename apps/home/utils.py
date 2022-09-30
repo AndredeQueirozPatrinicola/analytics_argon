@@ -132,9 +132,9 @@ class Api:
                     print("Api programas docente com diferença")
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas_docente=lista_programas_docentes)
                 
-                if verifica_api_pesquisa[0][0] != dados_docentes_filtrados:
+                if verifica_api_pesquisa[0][0] != dados_pesquisa_tratados:
                     print("Api pesquisa com diferença")
-                    Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa=dados_docentes_filtrados)
+                    Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa=dados_pesquisa_tratados)
 
                 if verifica_api_pesquisa_parametros[0][0] != lista_pesquisa_por_ano:
                     print("Api pesquisa por ano com diferença")
@@ -151,7 +151,7 @@ class Api:
                                      api_docentes=dados_docentes_filtrados,
                                      api_programas=lista_programas_departamentos,
                                      api_programas_docente=lista_programas_docentes,
-                                     api_pesquisa=dados_docentes_filtrados,
+                                     api_pesquisa=dados_pesquisa_tratados,
                                      api_pesquisa_parametros=lista_pesquisa_por_ano,
                                      api_programas_docente_limpo=api_programas_docentes_limpo)
 
