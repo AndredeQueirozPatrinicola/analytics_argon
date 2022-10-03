@@ -12,16 +12,15 @@ Mysql:
 
 Exemplo mysql core/settings.py:
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', 
-            'NAME': 'analytics',
-            'USER': 'admin',
-            'PASSWORD': 'admin',
-            'HOST': 'localhost',   # Ou IP onde o seu BD esta sendo hosteado
-            'PORT': '3306',
-        }
-    }
+    DEBUG=True
+
+    SECRET_KEY=yoursecretkey
+
+    DBNAME=analytics
+    DBUSER=admin
+    DBPASSWORD=admin
+    DBHOST=localhost  # Or an IP Address that your DB is hosted on
+    DBPORT=3306
 
 Up django:
 
