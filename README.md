@@ -10,7 +10,7 @@ Mysql:
 
     sudo apt-get install python-dev default-libmysqlclient-dev
 
-Exemplo mysql core/settings.py:
+Exemplo mysql .env:
 
     DEBUG=True
 
