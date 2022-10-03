@@ -1,13 +1,15 @@
 import requests
+import os, django
+import pandas as pd
+from time import sleep
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+django.setup()
 
 from apps.home.models import Departamento, Docente
 
-from time import sleep
-
-import pandas as pd
 
 api = 'https://dados.fflch.usp.br/api/'
-
 
 class Api:
 
@@ -19,8 +21,10 @@ class Api:
         self.api_pesquisa = self.api + 'pesquisa'
 
     def pega_dados_departamentos(self):
-        print("Inicio")
         print("Checando Apis...")
+
+        numero_total_mudanças = 0
+
         siglas = ['FLA', 'FLP', 'FLF', 'FLH', 'FLC',
                   'FLM', 'FLO', 'FLL', 'FSL', 'FLT', 'FLG']
         anos = [2016, 2017, 2018, 2019, 2020, 2021]
@@ -118,33 +122,52 @@ class Api:
 
             verifica_existencia = Departamento.objects.filter(sigla=siglas[x])
 
+            verifica_mudanca = False
+
             if verifica_existencia.exists():
 
                 if verifica_api_docentes[0][0] != dados_docentes_filtrados:
                     print("Api docentes com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_docentes=dados_docentes_filtrados)
 
                 if verifica_api_programas[0][0] != lista_programas_departamentos:
                     print("Api programas com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas=lista_programas_departamentos)
                 
                 if verifica_programas_docente[0][0] != lista_programas_docentes:
                     print("Api programas docente com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas_docente=lista_programas_docentes)
                 
                 if verifica_api_pesquisa[0][0] != dados_pesquisa_tratados:
                     print("Api pesquisa com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa=dados_pesquisa_tratados)
 
                 if verifica_api_pesquisa_parametros[0][0] != lista_pesquisa_por_ano:
                     print("Api pesquisa por ano com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa_parametros=lista_pesquisa_por_ano)
 
                 if verifica_api_programas_docente_limpo[0][0] != api_programas_docentes_limpo:
                     print("Api programas docente limpo com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas_docente_limpo=api_programas_docentes_limpo)
 
-                print(f"{siglas[x]} atualizado com sucesso")
+
+                if verifica_mudanca == True:
+                    print(f"{siglas[x]} atualizado com sucesso")
+
+                else:
+                    print(f"{siglas[x]} não teve mudanças")
 
             else:
                 dados = Departamento(sigla=siglas[x],
@@ -159,17 +182,23 @@ class Api:
                 print(f"{siglas[x]} salvo com sucesso")
 
             x += 1
+        
+        print(f"Houveram {numero_total_mudanças} mudanças")
 
     def pega_dados_docente(self):
-        print('Inicio')
+        print("Checando Apis...")
+
+        numero_total_mudanças = 0
+
         res = requests.get('https://dados.fflch.usp.br/api/docentes')
         dados = res.json()
         df = pd.DataFrame(dados)
         parametros = df['id_lattes'].to_list()
+        parametros = [i for i in parametros if i != "0"]
 
         z = 0
         while z < len(parametros):
-            sleep(3)
+            sleep(2)
             parametro = parametros[z]
 
             docentes = requests.get(
@@ -205,21 +234,33 @@ class Api:
 
             verifica_existencia = Docente.objects.filter(docente_id = parametros[z])
 
-            if verifica_existencia.exists():
+            verifica_mudanca = False
+
+            if verifica_existencia.exists() and parametros[z] != "0":
 
                 if docentes_dados != verifica_api_docente[0][0]:
                     print("Api docente: Atualizada!")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     verifica_api_docente = Docente.objects.filter(docente_id=parametros[z]).update(api_docente=docentes_dados)
 
                 if lista_api != verifica_api_programas[0][0]:
                     print("Api programas: Atualizada!")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     verifica_api_docente = Docente.objects.filter(docente_id=parametros[z]).update(api_programas=lista_api)
 
                 if dados_api_docentes != verifica_api_docentes[0][0]:
                     print("Api docentes: Atualizada!")
+                    verifica_mudanca = True
+                    numero_total_mudanças += 1
                     verifica_api_docente = Docente.objects.filter(docente_id=parametros[z]).update(api_docentes=dados_api_docentes)
 
-                print(f'Atualizou: {parametros[z]} | {z+1} de {len(parametros)}')
+
+                if verifica_mudanca == True:
+                    print(f'Atualizou: {parametros[z]} | {z+1} de {len(parametros)}')
+                else:
+                    print(f"Sem mudanças: {parametros[z]} | {z+1} de {len(parametros)}")
 
             else:
                 salva_json = Docente(docente_id=parametro,
@@ -231,3 +272,13 @@ class Api:
                 print(f'Salvou: {parametros[z]} | {z+1} de {len(parametros)}')
 
             z += 1
+
+        print(f"Houveram {numero_total_mudanças} mudanças")
+
+
+
+if __name__ == '__main__':
+    api = Api()
+    api.pega_dados_departamentos()
+    api.pega_dados_docente()
+    print('Banco de dados populado com sucesso')
