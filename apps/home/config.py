@@ -19,7 +19,7 @@ def config(request):
 
         menu_departamentos.append({
             'text': nome,
-            'url' : '/' + i['sigla'] + '/docentes' 
+            'url' : '/departamentos/' + i['sigla'] 
             })
 
 

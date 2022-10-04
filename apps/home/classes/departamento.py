@@ -1,15 +1,9 @@
-from unicodedata import name
-import numpy as np
 import pandas as pd
-import requests
-import plotly.express as px
 from datetime import datetime
-from plotly.offline import plot
 
-from .apis import Api
 
 from apps.home.models import Departamento
-
+from apps.home.classes.graficos import Grafico
 
 
 class DadosDepartamento():
@@ -18,8 +12,10 @@ class DadosDepartamento():
         self.sigla = sigla
 
     def tabela_docentes(self, sigla):
-        api_programas = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
-        api_docentes = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
+        api_programas = Departamento.objects.filter(
+            sigla=sigla).values_list('api_programas')
+        api_docentes = Departamento.objects.filter(
+            sigla=sigla).values_list('api_docentes')
 
         dados_programas = api_programas[0][0]
         dados_docentes = api_docentes[0][0]
@@ -40,7 +36,8 @@ class DadosDepartamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
+        api = Departamento.objects.filter(
+            sigla=sigla).values_list('api_programas')
         dados = api[0][0]
 
         docentes, x, y, z = self.tabela_docentes(sigla)
@@ -68,28 +65,24 @@ class DadosDepartamento():
 
         titulo = 'Relação entre aposentados e ativos'
 
-        fig = px.pie(values=ativos_aposentados, names=tipos,
-                     color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"])
+        grafico = Grafico()
+        
+        grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
+                                        color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
 
-        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
-
-        grafico_pizza = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
-
-        return grafico_pizza, titulo
+        return grafico, titulo
 
     def plota_tipo_vinculo_docente(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
+        api = Departamento.objects.filter(
+            sigla=sigla).values_list('api_docentes')
         dados = api
         dados = dados[0][0]
-        
+
         x = 0
         nomefnc = []
         while x < len(dados):
             nomefnc.append(dados[x].get('nomefnc'))
-            
+
             x += 1
 
         df = pd.DataFrame(nomefnc)
@@ -99,21 +92,19 @@ class DadosDepartamento():
 
         lista_valores = df.value_counts().to_list()
 
-
-        fig = px.pie(values=lista_valores, names=nomes, color=nomes,
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
-        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=20, r=20, t=20, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
-        grafico_pizza = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
-
         titulo = 'Relação entre tipos de vínculo de docente'
 
-        return grafico_pizza, titulo
+        grafico = Grafico()
+        
+        grafico = grafico.grafico_pizza(values=lista_valores, names=nomes, color=nomes, legend_orientation='h',
+                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"], x=1, y=1.02,
+                                        margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
+
+        return grafico, titulo
 
     def plota_prod_departamento(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente_limpo')
+        api = Departamento.objects.filter(
+            sigla=sigla).values_list('api_programas_docente_limpo')
         dados = api[0][0]
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(
@@ -126,141 +117,126 @@ class DadosDepartamento():
             lista_valores.append(sum(lista_valores_individuais))
             x += 1
 
-        fig = px.bar(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=lista_valores, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"])
 
-        fig.update_yaxes(title='', showticklabels=True, showline=True, linewidth=1, linecolor='#e0dfda',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
-        fig.update_xaxes(title='', showticklabels=True, showline=True, linewidth=1, linecolor='#e0dfda',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
+        grafico = Grafico()
+        grafico = grafico.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=lista_valores, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
+                     linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
+                     l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False,
+                     labels={
+                        'x': ''
+                     }   )
 
-        fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)', 'plot_bgcolor': 'rgba(0, 0, 0, 0)', }, margin=dict(
-            l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False)
-
-        grafico = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'displayModeBar': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
         titulo = 'Produção total do departamento'
 
         return grafico, titulo
 
     def tabela_trabalhos(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_pesquisa')
+        api = Departamento.objects.filter(
+            sigla=sigla).values_list('api_pesquisa')
         dados = api[0][0]
 
         df = pd.DataFrame(dados)
-        df2 = pd.DataFrame(df[sigla])
-        df2 = df2.rename(index={
-                        'nome_departamento': "Nome do departamento", 
-                        'ic_com_bolsa': "IC com bolsa",
-                        'ic_sem_bolsa': "IC sem bolsa",
-                        'pesquisadores_colab': 'Pesquisadores colaboradores ativos',
-                        'projetos_pesquisa': 'Projetos de pesquisa dos Docentes',
-                        'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa', 
-                        'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
-                        })
-        indices = df2.index
+        df = pd.DataFrame(df[sigla])
+        df = df.rename(index={
+            'nome_departamento': "Nome do departamento",
+            'ic_com_bolsa': "IC com bolsa",
+            'ic_sem_bolsa': "IC sem bolsa",
+            'pesquisadores_colab': 'Pesquisadores colaboradores ativos',
+            'projetos_pesquisa': 'Projetos de pesquisa dos Docentes',
+            'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa',
+            'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
+        })
+        indices = df.index
         indices.to_list()
-        valores = df2[sigla].to_list()
+        valores = df[sigla].to_list()
 
         x = 0
-        dic = []
+        dados_tabela = []
         while x < len(indices):
             tabela_dados = [indices[x], valores[x]]
-            dic.append(tabela_dados)
+            dados_tabela.append(tabela_dados)
             x += 1
 
-        return dic
+        headers = ['Nomes', 'Valores']
+
+        return dados_tabela, headers
 
     def plota_grafico_bolsa_sem(self):
-        api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
+        api = Departamento.objects.filter(
+            sigla=self.sigla).values_list('api_pesquisa_parametros')
         dados = api[0][0]
 
-        anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos = [i for i in range(
+            int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
-        
 
         df = pd.DataFrame(dados[0])
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
         df = df.rename(columns={
-                                "ic_com_bolsa": "IC com bolsa", 
-                                "ic_sem_bolsa": "IC sem bolsa", 
-                                'pesquisas_pos_doutorado_com_bolsa':'Pesquisas pós doutorado com bolsa', 
-                                'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
-                                })
-        fig = px.histogram(df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa','Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'], 
-        barmode='group', height=400, color_discrete_map={
+            "ic_com_bolsa": "IC com bolsa",
+            "ic_sem_bolsa": "IC sem bolsa",
+            'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa',
+            'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
+        })
+
+        grafico = Grafico()
+        grafico = grafico.grafico_barras(df=df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa', 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'],
+                           barmode='group', height=400, color_discrete_map={
             "IC com bolsa": "#053787",
             "IC sem bolsa": "#264a87",
             "Pesquisas pós doutorado com bolsa": "#9facc2",
-            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"}, 
+            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"},
             labels={
                 'x': '',
                 'variable': 'Legenda',
-            })
-
-        fig.update_layout({
-            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
-            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
         }, margin=dict(
             l=0, r=30, t=20, b=50), font_color="white", legend=dict(
             yanchor="top",
             y=0.99,
             xanchor="left",
             x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="")
+        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
+            linecolor='white', gridcolor='#4d4b46')
 
-        fig.update_xaxes(showline=True, linewidth=1, linecolor='white',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#4d4b46', automargin=True)
-        fig.update_yaxes(showline=True, linewidth=1, linecolor='white',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#4d4b46', automargin=True)
-
-        grafico = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'displayModeBar': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
-
-        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]}-{anos[-1]})"
+        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
 
-
-    
     def plota_prod_serie_historica(self, sigla):
-        #api = Api()
-        #dados = api.pega_dados_programas_docentes(sigla)
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
+        api = Departamento.objects.filter(
+            sigla=sigla).values_list('api_programas_docente')
         dados = api[0][0]
 
-        anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
+        anos_int = [i for i in range(
+            int(datetime.now().year) - 6, datetime.now().year)]
         anos = [str(i) for i in anos_int]
 
         lista_livros = []
         lista_artigos = []
         lista_capitulos = []
         x = 0
-        while x < len(anos):    
-            
+        while x < len(anos):
+
             z = 0
             while z < len(dados[x].get(anos[x])):
-                lista_livros.append(dados[x].get(anos[x])[z].get('total_livros'))
-                lista_artigos.append(dados[x].get(anos[x])[z].get('total_artigos'))
-                lista_capitulos.append(dados[x].get(anos[x])[z].get('total_capitulos'))
-            
+                lista_livros.append(dados[x].get(anos[x])[
+                                    z].get('total_livros'))
+                lista_artigos.append(dados[x].get(anos[x])[
+                                     z].get('total_artigos'))
+                lista_capitulos.append(dados[x].get(
+                    anos[x])[z].get('total_capitulos'))
+
                 z += 1
-            
+
             x += 1
 
-
-            
         lista_livros = [int(i) for i in lista_livros]
         lista_artigos = [int(i) for i in lista_artigos]
         lista_capitulos = [int(i) for i in lista_capitulos]
-            
-            
+
         resultado_livros = []
         resultado_artigos = []
         resultado_capitulos = []
@@ -269,63 +245,49 @@ class DadosDepartamento():
         f = len(dados[0].get(anos[0]))
 
         while f < len(lista_livros) + len(dados[0].get(anos[0])):
-            
+
             resultado_livros.append(sum(lista_livros[g:f]))
             resultado_artigos.append(sum(lista_artigos[g:f]))
             resultado_capitulos.append(sum(lista_capitulos[g:f]))
-            
+
             g = f
             f += len(dados[0].get(anos[0]))
-            
-            
+
         resultado = {}
         s = 0
         while s < len(anos_int):
-            
+
             resultado[anos_int[s]] = {
-                'total_livros' : resultado_livros[s],
-                'total_artigos' : resultado_artigos[s],
-                'total_capitulos' : resultado_capitulos[s]
+                'total_livros': resultado_livros[s],
+                'total_artigos': resultado_artigos[s],
+                'total_capitulos': resultado_capitulos[s]
             }
-            
+
             s += 1
-            
+
         df = pd.DataFrame(resultado)
         df = df.transpose()
-        df = df.rename(columns = {'total_livros' : 'Livros', 'total_artigos' : 'Artigos', 'total_capitulos' : 'Capitulos'})
-        fig = px.histogram(df, x=anos, y=['Livros','Artigos','Capitulos'], height=478, barmode = 'group', color_discrete_map={
-                    "Livros": "#053787",
-                    "Artigos": "#9facc2",
-                    "Capitulos": "#AFAFAF"
-                    }, 
-                    labels={
-                        'x': '',
-                        'variable': 'Legenda',
-                    })
-
-        fig.update_layout({
-            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
-            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        df = df.rename(columns={'total_livros': 'Livros',
+                       'total_artigos': 'Artigos', 'total_capitulos': 'Capitulos'})
+        
+        grafico = Grafico()
+        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', color_discrete_map={
+            "Livros": "#053787",
+            "Artigos": "#9facc2",
+            "Capitulos": "#AFAFAF"
+        },
+            labels={
+            'x': '',
+            'variable': 'Legenda',
         }, margin=dict(
             l=0, r=30, t=20, b=50), font_color="black", legend=dict(
             yanchor="top",
             y=0.99,
             xanchor="left",
             x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="")
-
-        fig.update_xaxes(showline=True, linewidth=1, linecolor='#e0dfda',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
-        fig.update_yaxes(showline=True, linewidth=1, linecolor='#e0dfda',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#e0dfda', automargin=True)
-
-        grafico = plot(fig, output_type='div', config={
-            'displaylogo': False,
-            'displayModeBar': False,
-            'modeBarButtonsToRemove': ['select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
-
-        titulo = f"Produção do departamento - ({anos[0]}-{anos[-1]})"
+        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
+        linecolor='#e0dfda', gridcolor='#e0dfda')
+        
+        titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
-
-

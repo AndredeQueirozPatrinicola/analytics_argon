@@ -1,4 +1,3 @@
-from multiprocessing import context
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -6,18 +5,12 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, render
 
-import requests
-import pandas as pd
-
 from apps.home.models import Docente
-
-#from .utils import Docente, Departamento
 
 from .classes.docente import DadosDocente
 from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 
-from .utils import Api
 
 def index(request):
 
@@ -32,8 +25,6 @@ def index(request):
 
 def pages(request):
     context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
     try:
 
         load_template = request.path.split('/')[-1]
@@ -59,21 +50,18 @@ def pages(request):
 
 
 def docente(request, sigla, parametro):
+
     docente = DadosDocente(parametro, sigla)
 
-
-
-    tabela = docente.tabela_orientandos()
-    grafico_ori = docente.plota_grafico_pizza()
+    tabela_orientandos, tabela_header = docente.tabela_orientandos()
+    grafico_mestre_dout, titulo_mestr_dout = docente.plota_grafico_pizza()
     grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico('artigos')
     grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico('livros')
     grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico('capitulos')
-    tabela_publi = docente.tabela_ultimas_publicacoes()
+    tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
     caminho = docente.pega_caminho()
     titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
-
-
-
+    tipo_vinculo, situacao = docente.pega_vinculo_situacao()
 
     docente = [
         {
@@ -84,58 +72,47 @@ def docente(request, sigla, parametro):
         }
     ]
 
-
-    grafico_pizza_titulo = [
-        {
-            'titulo' : 'Relação entre mestrandos e doutorandos'
-        }
-    ]
-    
-
-    tabela_header = [
-        {
-            'titulo' : 'Orientandos Ativos',
-            'nome' : 'Nome',
-            'nivel' : 'Nivel',
-            'programa' : 'Programa'
-        }
-    ]
-
-    tabela_publicacoes = [
-        {
-            'titulo' : 'Ultimas publicações',
-            'titulo_trabalho' : 'Titulo',
-            'ano' : 'Ano'
-        }
-    ]
-
-
     context = {
-        'tabela_header' : tabela_header,
         'caminho' : caminho,
-        'tabela' : tabela,
-        'grafico_ori' : grafico_ori,
-        'tabela_pu' : tabela_publi,
-        'tabela_publicacoes' : tabela_publicacoes,
+
+        'tabela' : tabela_orientandos,
+        'tabela_header' : tabela_header,
+
+        'grafico_ori' : grafico_mestre_dout,
+        'grafico_pizza_titulo' : titulo_mestr_dout,
+
+        'tabela_pu' : tabela_publicacoes,
+        'tabela_publicacoes' : titulo_publicacoes,
+
         'grafico_artigos' : grafico_artigos,
         'grafico_titulo_artigos' : grafico_titulo_artigos,
+
         'grafico_livros' : grafico_livros,
         'grafico_titulo_livros' : grafico_titulo_livros,
-        'grafico_pizza_titulo' : grafico_pizza_titulo,
+
         'grafico_capitulos' : grafico_capitulos,
         'grafico_titulo_capitulos' : grafico_titulo_capitulos,
-        'docente' : docente,
-        'sigla_departamento' : sigla,
-        'linhas_pesquisa' : linhas_pesquisa,
-        'titulo_linhas' : titulo_linhas,
 
+        'docente' : docente,  # card 1
+        'card_1_titulo' : 'Nome / Lattes',
+
+        'sigla_departamento' : sigla, 
+        
+        'linhas_pesquisa' : linhas_pesquisa, # card 2
+        'card_2_titulo' : 'Linhas de pesquisa', # card 2
+
+        'card_3' : tipo_vinculo, # card 3
+        'card_3_titulo' : 'Tipo de vínculo',
+
+        'card_4' : situacao, # card 4
+        'card_4_titulo' : 'Situação atual',
 
     }
 
     return render(request, 'home/docentes.html', context)
 
 
-def docentes(request, sigla):
+def departamento(request, sigla):
     
     docentes = DadosDepartamento(sigla)
 
@@ -146,7 +123,7 @@ def docentes(request, sigla):
     grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
     grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
     grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
-    tabela_trabalhos = docentes.tabela_trabalhos(sigla)
+    tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
 
     caminho = [
         {
@@ -156,24 +133,35 @@ def docentes(request, sigla):
     ]
 
     context = {
+        'regulador' : 'regulador',
+
         'caminho' : caminho,
         'nome' : nome,
+
         'id_lattes' : id,
         'docentes' : docentes,
         'df' : df,
         'lattes_id' : id_lattes,
         'tabela' : 'docentes',
         'sigla_departamento' : sigla,
+
         'numero_docentes' : numero_docentes,
+
         'grafico_aposentados_ativos' : grafico_pizza_aposentados_ativos,
         'titulo_aposentados_ativos' : titulo_aposentados_ativos,
+
         'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo,
         'titulo_tipo_vinculo' : titulo_tipo_vinculo,
+
         'grafico_prod_docentes' : grafico_prod_docentes, 
         'titulo_prod_docentes' : titulo_prod_docentes,
-        'tabela_trabalhos' : tabela_trabalhos,
+
+        'tabela_bolsas' : tabela_bolsas,
+        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+
         'grafico_bolsas' : grafico_bolsas,
         'titulo_bolsas': titulo_bolsas,
+
         'grafico_historico_prod' : grafico_historico_prod,
         'titulo_historico_prod' : titulo_historico_prod
 
@@ -188,12 +176,30 @@ def departamentos(request):
 
     df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
     grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
+    grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
+    tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
+    grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
+    
+    grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
 
     context = {
         'df_docentes' : df_docentes,
         'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
+
         'grafico_relacao_cursos' :  grafico_relacao_cursos,
-        'titulo_relacao_cursos' : titulo_relacao_cursos
+        'titulo_relacao_cursos' : titulo_relacao_cursos,
+
+        'grafico_bolsas' : grafico_bolsas,
+        'titulo_bolsas' : titulo_grafico_bolsas,
+
+        'tabela_bolsas' : tabela_bolsas,
+        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+
+        'grafico_prod_docentes' : grafico_prod,
+        'titulo_prod_docentes' : titulo_prod,
+
+        'grafico_historico_prod' : grafico_prod_historico,
+        'titulo_historico_prod' : titulo_prod_historico,
     }
 
 
@@ -205,7 +211,6 @@ def testes(request):
     parametro = '9156992025883151'
 
     teste = Docente.objects.filter(docente_id=parametro).values_list()
-
 
     teste = teste[0][2]
 

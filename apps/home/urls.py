@@ -16,10 +16,11 @@ urlpatterns = [
 
     path('departamentos', views.departamentos, name='departamentos'),
 
+    path('departamentos/<str:sigla>', views.departamento, name='docentes'),
+
     path('<str:sigla>/docente/<str:parametro>', views.docente, name='docente'),
 
-    path('<str:sigla>/docentes', views.docentes, name='docentes'),
-
+    path('teste/', views.testes),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),

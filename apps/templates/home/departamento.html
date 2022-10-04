@@ -15,9 +15,6 @@
 <!-- Page content -->
 <div class="container-fluid mt--6">
 
-  <br><br><br><br>
-
-  <h3 class="titulo-sessao-departamentos"><i class="fas fa-angle-right mr-2"></i>Produção do departamento</h3>
 
   <div class="row">
 
@@ -58,6 +55,40 @@
 <!-- Specific JS goes HERE -->
 {% block javascripts %}
 
+<script>
 
+$(document).ready(function(){
+    $('#tabelas-dinamicas').DataTable({responsive: true,
+// "bSort": false,
+"aaSorting": [],
+"pageLength": 16,
+"language": {
+    "decimal": "",
+    "emptyTable": "Sem dados disponíveis",
+    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+    "infoEmpty": "Mostrando de 0 até 0 de 0 registros",
+    "infoFiltered": "(filtrado de _MAX_ registros no total)",
+    "infoPostFix": "",
+    "thousands": ",",
+    "lengthMenu": "Mostrar _MENU_ Registros",
+    "loadingRecords": "A carregar dados...",
+    "processing": "A processar...",
+    "search": "Procurar:",
+    "zeroRecords": "Não foram encontrados resultados",
+    "paginate": {
+        "first": "Primeiro",
+        "last": "Último",
+        "next": "",
+        "previous": ""
+    },
+    "aria": {
+        "sortAscending": ": ordem crescente",
+        "sortDescending": ": ordem decrescente"
+    }
+}});
+});
+
+
+</script>
 
 {% endblock javascripts %}

@@ -1,48 +1,34 @@
 # FFLCH Analytics
 
+Libraries instalation:
+
+    python3 -m venv venv
+    source venv/bin/activate 
+    pip install -r requirements.txt
+
 Mysql:
 
     sudo apt-get install python-dev default-libmysqlclient-dev
 
-Libraries instalation:
+Exemplo mysql .env:
 
-    python -m venv venv
-    source venv/Scripts/activate (linux: source venv/bin/activate)
-    pip install -r requirements.txt
+    DEBUG=True
+
+    SECRET_KEY=yoursecretkey
+
+    DBNAME=analytics
+    DBUSER=admin
+    DBPASSWORD=admin
+    DBHOST=localhost  # Or an IP Address that your DB is hosted on
+    DBPORT=3306
 
 Up django:
 
+    python3 manage.py makemigrations
     python3 manage.py migrate
     python3 manage.py runserver
 
-Exemplo mysql core/settings.py:
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', 
-            'NAME': 'analytics',
-            'USER': 'admin',
-            'PASSWORD': 'admin',
-            'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-            'PORT': '3306',
-        }
-    }
-
 Scripts para popular db:
 
-    python manage.py shell
+    python3 populadb.py 
 
-    from apps.home.utils import Api
-
-    api = Api()
-
-    # Popula dados de departamentos:
-    api.pega_dados_departamentos()
-
-    # Popula dados docentes:
-    api.pega_dados_docente ()
-
-Falta automatizar:
-
-    DEBUG = False
-    SECRET_KEY = config('SECRET_KEY', default='TOKEN_SECRETO') # fflch/sti/sistemas/analytics/SECRET_KE
