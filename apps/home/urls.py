@@ -20,8 +20,6 @@ urlpatterns = [
 
     path('<str:sigla>/docente/<str:parametro>', views.docente, name='docente'),
 
-    path('teste/', views.testes),
-
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
 
