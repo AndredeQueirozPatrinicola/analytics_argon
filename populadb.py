@@ -49,13 +49,17 @@ class Api:
             'serie_historica_tipo': ''
         }
 
-        raw_programas = requests.get(
-            'https://dados.fflch.usp.br/api/programas')
-        raw_docentes = requests.get('https://dados.fflch.usp.br/api/docentes')
-        raw_pesquisa = requests.get(
-            url='https://dados.fflch.usp.br/api/pesquisa', params=parametros_vazios)
-        raw_pesquisa_parametros = requests.get(
-            url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+        try:
+            raw_programas = requests.get(
+                'https://dados.fflch.usp.br/api/programas')
+            raw_docentes = requests.get('https://dados.fflch.usp.br/api/docentes')
+            raw_pesquisa = requests.get(
+                url='https://dados.fflch.usp.br/api/pesquisa', params=parametros_vazios)
+            raw_pesquisa_parametros = requests.get(
+                url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+        except:
+            print("Houve um problema na requisição de dados das APIs")
+            raise Exception()
 
         dados_programas = raw_programas.json()  
         dados_docentes = raw_docentes.json()   
@@ -65,8 +69,13 @@ class Api:
         x = 0
         while x < len(siglas):
 
-            raw_programas_docente_limpo = requests.get(
+            try:
+                raw_programas_docente_limpo = requests.get(
                 f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}')
+            except:
+                print("Houve um problema na requisição de dados das APIs")
+                raise Exception()
+            
             dados_programas_docentes_limpo = raw_programas_docente_limpo.json()
             api_programas_docentes_limpo = dados_programas_docentes_limpo
 
@@ -100,9 +109,13 @@ class Api:
                 parametros_programas = {
                     'tipo': 'anual', 'ano': anos[y], 'ano_ini': '', 'ano_fim': ''}
 
-                print(f"Dados de {anos[y]} salvos")
-                raw_programas_docentes = requests.get(
-                    url=f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}', params=parametros_programas)
+                try:
+                    raw_programas_docentes = requests.get(
+                        url=f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}', params=parametros_programas)
+                    print(f"{anos[y]} - {y + 1}/{len(anos)}")
+                except:
+                    print("Houve um problema na requisição de dados das APIs")
+                    raise Exception()
 
                 dados_programas_docentes = raw_programas_docentes.json()  
 
@@ -279,6 +292,12 @@ class Api:
 
 if __name__ == '__main__':
     api = Api()
-    api.pega_dados_departamentos()
-    api.pega_dados_docente()
-    print('Banco de dados populado com sucesso')
+
+    try:
+        api.pega_dados_departamentos()
+        api.pega_dados_docente()
+        print('Banco de dados populado com sucesso')
+    except:
+        print("Não foi possivel popular o db, certifique-se que as migrations foram rodadas")
+
+
