@@ -23,10 +23,25 @@ class Api:
     def pega_dados_departamentos(self):
         print("Checando Apis...")
 
-        numero_total_mudanças = 0
+        numero_total_mudancas = 0
+
+        programas_dpto = {
+                'FLP' : [8131],
+                'FSL' : [8132],
+                'FLF' : [8133],
+                'FLA' : [8134],
+                'FLG' : [8135, 8136],
+                'FLH' : [8137, 8138],
+                'FLL' : [8139],
+                'FLC' : [8142, 8143, 8149, 8150, 8156, 8162],
+                'FLM' : [8144, 8145, 8146, 8147, 8148, 8158, 8160, 8163, 8164, 8165],
+                'FLT' : [8151],
+                'FLO' : [8155, 8157],
+        }
 
         siglas = ['FLA', 'FLP', 'FLF', 'FLH', 'FLC',
                   'FLM', 'FLO', 'FLL', 'FSL', 'FLT', 'FLG']
+
         anos = [2016, 2017, 2018, 2019, 2020, 2021]
 
         departamentos_siglas = {
@@ -50,13 +65,12 @@ class Api:
         }
 
         try:
-            raw_programas = requests.get(
-                'https://dados.fflch.usp.br/api/programas')
+            raw_programas = requests.get('https://dados.fflch.usp.br/api/programas')
             raw_docentes = requests.get('https://dados.fflch.usp.br/api/docentes')
-            raw_pesquisa = requests.get(
-                url='https://dados.fflch.usp.br/api/pesquisa', params=parametros_vazios)
-            raw_pesquisa_parametros = requests.get(
-                url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+            raw_pesquisa = requests.get(url='https://dados.fflch.usp.br/api/pesquisa', params=parametros_vazios)
+            raw_pesquisa_parametros = requests.get(url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+            raw_defesas = requests.get('https://dados.fflch.usp.br/api/defesas')
+        
         except:
             print("Houve um problema na requisição de dados das APIs")
             raise Exception()
@@ -65,20 +79,41 @@ class Api:
         dados_docentes = raw_docentes.json()   
         dados_pesquisa = raw_pesquisa.json()   
         dados_pesquisa_parametros = raw_pesquisa_parametros.json()
+        dados_defesas = raw_defesas.json()
+        
 
         x = 0
         while x < len(siglas):
 
             try:
-                raw_programas_docente_limpo = requests.get(
-                f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}')
+                raw_programas_docente_limpo = requests.get(f'https://dados.fflch.usp.br/api/programas/docentes/{siglas[x]}')
+                
+                dados_programas_docentes_limpo = raw_programas_docente_limpo.json()
+                api_programas_docentes_limpo = dados_programas_docentes_limpo
+
             except:
                 print("Houve um problema na requisição de dados das APIs")
                 raise Exception()
-            
-            dados_programas_docentes_limpo = raw_programas_docente_limpo.json()
-            api_programas_docentes_limpo = dados_programas_docentes_limpo
 
+
+
+            def get_key(val):
+                for key, value in programas_dpto.items():
+                    if val == value:
+                        return key
+
+            # Lista com dicionarios
+            dados_api_defesas = []
+            for i in dados_defesas:  
+                codare = dados_defesas[dados_defesas.index(i)].get('codare')
+                for j in programas_dpto:    
+                    dptm = programas_dpto.get(siglas[siglas.index(j)])
+                    if codare in dptm:
+                        regulador = get_key(dptm)
+                        if regulador == siglas[x]:
+                            dados_api_defesas.append(dados_defesas[dados_defesas.index(i)])
+
+            
             # Dicionario com dados de pesquisa por departamento
             dados_pesquisa_tratados = {siglas[x]: dados_pesquisa.get(siglas[x])}
             print(siglas[x])
@@ -132,6 +167,7 @@ class Api:
             verifica_api_pesquisa = Departamento.objects.filter(sigla = siglas[x]).values_list('api_pesquisa')
             verifica_api_pesquisa_parametros = Departamento.objects.filter(sigla = siglas[x]).values_list('api_pesquisa_parametros')
             verifica_api_programas_docente_limpo = Departamento.objects.filter(sigla = siglas[x]).values_list('api_programas_docente_limpo')
+            verifica_api_defesas = Departamento.objects.filter(sigla = siglas[x]).values_list('api_defesas')
 
             verifica_existencia = Departamento.objects.filter(sigla=siglas[x])
 
@@ -142,38 +178,44 @@ class Api:
                 if verifica_api_docentes[0][0] != dados_docentes_filtrados:
                     print("Api docentes com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_docentes=dados_docentes_filtrados)
 
                 if verifica_api_programas[0][0] != lista_programas_departamentos:
                     print("Api programas com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas=lista_programas_departamentos)
                 
                 if verifica_programas_docente[0][0] != lista_programas_docentes:
                     print("Api programas docente com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas_docente=lista_programas_docentes)
                 
                 if verifica_api_pesquisa[0][0] != dados_pesquisa_tratados:
                     print("Api pesquisa com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa=dados_pesquisa_tratados)
 
                 if verifica_api_pesquisa_parametros[0][0] != lista_pesquisa_por_ano:
                     print("Api pesquisa por ano com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_pesquisa_parametros=lista_pesquisa_por_ano)
 
                 if verifica_api_programas_docente_limpo[0][0] != api_programas_docentes_limpo:
                     print("Api programas docente limpo com diferença")
                     verifica_mudanca = True
-                    numero_total_mudanças += 1
+                    numero_total_mudancas += 1
                     Departamento.objects.filter(sigla=siglas[x]).update(api_programas_docente_limpo=api_programas_docentes_limpo)
+
+                if verifica_api_defesas[0][0] != dados_api_defesas:
+                    print("Api defesas com diferença")
+                    verifica_mudanca = True
+                    numero_total_mudancas += 1
+                    Departamento.objects.filter(sigla=siglas[x]).update(api_defesas=dados_api_defesas)
 
 
                 if verifica_mudanca == True:
@@ -189,14 +231,15 @@ class Api:
                                      api_programas_docente=lista_programas_docentes,
                                      api_pesquisa=dados_pesquisa_tratados,
                                      api_pesquisa_parametros=lista_pesquisa_por_ano,
-                                     api_programas_docente_limpo=api_programas_docentes_limpo)
+                                     api_programas_docente_limpo=api_programas_docentes_limpo,
+                                     api_defesas=dados_api_defesas)
 
                 dados.save()
                 print(f"{siglas[x]} salvo com sucesso")
 
             x += 1
         
-        print(f"Houveram {numero_total_mudanças} mudanças")
+        print(f"Houveram {numero_total_mudancas} mudanças")
 
     def pega_dados_docente(self):
         print("Checando Apis...")

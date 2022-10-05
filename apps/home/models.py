@@ -20,4 +20,6 @@ class Departamento(models.Model):
     api_pesquisa = models.JSONField()  
     api_pesquisa_parametros = models.JSONField()                                # https://dados.fflch.usp.br/api/pesquisa + 'filtro=departamento&ano_ini=&ano_fim=&serie_historica_tipo='
     api_programas_docente_limpo = models.JSONField(null=True)
+    api_defesas = models.JSONField(null=True)
+
 
