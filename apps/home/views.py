@@ -14,10 +14,14 @@ from .classes.departamentos import Departamentos
 
 def index(request):
 
+    titulo = 'FFLCH | Analytics'
+  
     context = {
         'segment': 'index',
+        'landingpage' : 'landingpage',
+        'titulo' : titulo,          
     }
-
+  
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 

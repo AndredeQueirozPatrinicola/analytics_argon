@@ -190,9 +190,7 @@
 
 
  .texto-index{
-  margin: 50px;
-  margin-top: 10px;
-  width: 60%;
+  width: 100%;
   font-size: 16px;
   border: 1px solid #fff;
   padding: 40px;
@@ -227,6 +225,71 @@
     height: 100px;
   }
 
+  .card-landing{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    max-width: 1000px;
+    width: 680px;
+    background-color: #052e70;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  .div-img-land{
+    align-items: flex-end;
+  }
+
+  .img-land{
+    width: 70%;
+    height: 155px;
+  }
+
+  .img-logo-usp{
+    width: 200px;
+  }
+
+  .div-text-land{
+    width: -moz-available;
+    text-align: inherit;
+    justify-content: center;
+    align-items: normal;
+  }
+
+  .spacing-div{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p-text-logo{
+    width: 414px;
+    font-family: "Arial Narrow", "Arial" , Sans-serif;
+    color: #fff;
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .p-analytics-text-logo{
+    font-family: "Arial Narrow", "Arial" , Sans-serif;
+    color: #fff;
+    font-size: 3.3rem;
+    padding: 0;
+    margin-top: -28px;
+    margin-bottom: 22px;
+    text-align: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+  }
+
+  .span-landing{
+    padding: 1.2rem;
+    font-size: 3rem;
+    background-color: #052e70;
+    color: #fff;
+    border-radius: 10px;
+    }
+
 
 
   @media only screen and (max-width: 1198px) {
@@ -240,12 +303,20 @@
     #sidenav-main{
       display: none;
     }
+
+    .img-logo-usp{
+      display: none;
+    }
   }
 
 
   @media only screen and (max-width: 575px){
     .nav-bar-div{
       justify-content: end;
+    }
+
+    .p-text-logo, .p-analytics-text-logo{
+      display: none;
     }
   }
 
