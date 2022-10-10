@@ -65,7 +65,7 @@ def docente(request, sigla, parametro):
         grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico('capitulos')
         tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
         caminho = docente.pega_caminho()
-        titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
+        label_dropdown, linhas_pesquisa = docente.linhas_de_pesquisa()
         tipo_vinculo, situacao = docente.pega_vinculo_situacao()
 
         docente = [
@@ -103,7 +103,8 @@ def docente(request, sigla, parametro):
 
             'sigla_departamento' : sigla, 
             
-            'linhas_pesquisa' : linhas_pesquisa, # card 2
+            'informacoes_card' : linhas_pesquisa, # card 2
+            'dropdown_label' : label_dropdown,
             'card_2_titulo' : 'Linhas de pesquisa', # card 2
 
             'card_3' : tipo_vinculo, # card 3
@@ -133,6 +134,7 @@ def departamento(request, sigla):
         grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
         grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
         tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
+        programas_dpto, label_dropdown = docentes.pega_programa_departamento(sigla)
 
         caminho = [
             {
@@ -172,7 +174,11 @@ def departamento(request, sigla):
             'titulo_bolsas': titulo_bolsas,
 
             'grafico_historico_prod' : grafico_historico_prod,
-            'titulo_historico_prod' : titulo_historico_prod
+            'titulo_historico_prod' : titulo_historico_prod,
+
+            'informacoes_card' : programas_dpto,
+            'dropdown_label' : label_dropdown,
+            'card_2_titulo' : 'Programas do departamento'
 
         }
 
