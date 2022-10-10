@@ -205,7 +205,14 @@ class Departamentos():
                                  color_discrete_sequence=[
                                      "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
                                  linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-            l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False, labels={'x': ''})
+            l=15, r=15, t=15, b=0), legend=dict(
+                        yanchor="top",
+                        y=0.99,
+                        xanchor="left",
+                        x=0.01), labels={
+                                    'x': '',
+                                    'color': 'Legenda'
+                                    })
 
         titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade'
 
