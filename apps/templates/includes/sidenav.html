@@ -28,19 +28,6 @@
                 {% endfor %}
               </div>
             </li>
-            <li class="nav-item dropdown">
-              <a class="center-item break-word nav-link dropdown-toggle {% if 'index' in segment %} active {% endif %}" href=""  id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                
-                <span class="nav-link-text">{{ item.text2 }}</span>
-              </a>
-              <div class="dropdown-menu submenu" aria-labelledby="navbarDropdown">
-                {% for i in item.submenu %}
-                <a class="break-word dropdown-item {% if 'index' in segment %} active {% endif %}" href="{{ i.url }}" >
-                  <span class="nav-link-text">{{ i.text }}</span>
-                </a>
-                {% endfor %}
-              </div>
-            </li>
             {% else %}
             <li class="nav-item">
               <a class="break-word nav-link {% if 'index' in segment %} active {% endif %}" href="{{ item.url }}">
