@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 
-from apps.home.models import Departamento
+from apps.home.models import Departamento, Docente
 from apps.home.classes.graficos import Grafico
 
 
@@ -36,37 +36,40 @@ class DadosDepartamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_programas')
-        dados = api[0][0]
+        resultado = Docente.objects.all().values_list('api_docentes')
+        departamento = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
 
-        docentes, x, y, z = self.tabela_docentes(sigla)
-        df = pd.DataFrame(dados)
+        departamento = departamento[0][0][0]
 
-        valor = df['sigla'].to_list().index(sigla)
-        resultado = df['total_docentes'].iloc[valor]
+        total = 0
+        ativos = 0
+        aposentados = 0
+        
+        for i in resultado:
+            if i[0].get('nomset') == departamento.get('nome'):
+                total += 1
+                if i[0].get('sitatl') == 'A':
+                    ativos += 1
+                elif i[0].get('sitatl') == 'P':
+                    aposentados += 1
 
-        aposentados = len(docentes) - resultado
+        resultado = {
+            'texto_ativos' : 'Numero de docentes',
+            'numero_ativos' : { 
+                                'total' : f'Total: {total}',
+                                'ativos' : f'Ativos: {ativos}',
+                                'aposentados' : f'Aposentados: {aposentados}'
+                              }
+            }
 
-        conteudo = {
-            'texto_ativos': 'Numero de docentes(ativos): ',
-            'numero_ativos': resultado,
-            'texto_aposentados': 'Numero de docentes(aposentados): ',
-            'numero_aposentados': aposentados
-        }
-
-        return conteudo
+        return resultado, total, ativos, aposentados
 
     def plota_aposentados_ativos(self, sigla):
-        dados = self.pega_numero_docentes(sigla)
-        ativos_aposentados = [
-            dados.get('numero_ativos'), dados.get('numero_aposentados')]
+        x, y, ativos, aposentados = self.pega_numero_docentes(sigla)
+        ativos_aposentados = [ativos, aposentados]
         tipos = ['Ativos', "Aposentados"]
-
         titulo = 'Relação entre aposentados e ativos'
-
         grafico = Grafico()
-        
         grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
                                         color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
 

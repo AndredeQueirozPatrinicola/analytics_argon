@@ -13,6 +13,31 @@ class Departamentos():
     def __init__(self):
         pass
 
+    def pega_numero_docentes(self):
+        resultado = Docente.objects.count()
+        ativo_aposentado = Docente.objects.all().values_list('api_docentes')
+
+        ativo = 0
+        aposentado = 0
+
+        for i in ativo_aposentado:
+
+            if i[0].get('sitatl') == 'A':
+                ativo += 1
+            elif i[0].get('sitatl') == 'P':
+                aposentado += 1
+           
+        resultado = {
+            'texto_ativos' : 'Numero de docentes',
+            'numero_ativos' : { 
+                                'total' : f'Total: {resultado}',
+                                'ativos' : f'Ativos: {ativo}',
+                                'aposentados' : f'Aposentados: {aposentado}'
+                              }
+            }
+
+        return resultado
+
     def trata_dados_ic(self, dados, anos):
         lista_todos_numeros = []
 
