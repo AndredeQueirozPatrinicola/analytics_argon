@@ -123,114 +123,114 @@ def docente(request, sigla, parametro):
 
 
 def departamento(request, sigla):
-    # try:
-    docentes = DadosDepartamento(sigla)
+    try:
+        docentes = DadosDepartamento(sigla)
 
-    df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
-    numero_docentes, x,y,z = docentes.pega_numero_docentes(sigla)
-    grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
-    grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
-    grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
-    grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
-    grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
-    tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
-    programas_dpto, label_dropdown = docentes.pega_programa_departamento(sigla)
+        df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
+        numero_docentes, x,y,z = docentes.pega_numero_docentes(sigla)
+        grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
+        grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
+        grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
+        grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
+        grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
+        tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
+        programas_dpto, label_dropdown = docentes.pega_programa_departamento(sigla)
 
-    caminho = [
-        {
-            'text' : nome,
-            'url' : '/departamento/' + sigla
+        caminho = [
+            {
+                'text' : nome,
+                'url' : '/departamento/' + sigla
+            }
+        ]
+
+        context = {
+            'regulador' : 'regulador',
+
+            'caminho' : caminho,
+            'nome' : nome,
+
+            'id_lattes' : id,
+            'docentes' : docentes,
+            'df' : df,
+            'lattes_id' : id_lattes,
+            'tabela' : 'docentes',
+            'sigla_departamento' : sigla,
+
+            'numero_docentes' : numero_docentes,
+
+            'grafico_aposentados_ativos' : grafico_pizza_aposentados_ativos,
+            'titulo_aposentados_ativos' : titulo_aposentados_ativos,
+
+            'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo,
+            'titulo_tipo_vinculo' : titulo_tipo_vinculo,
+
+            'grafico_prod_docentes' : grafico_prod_docentes, 
+            'titulo_prod_docentes' : titulo_prod_docentes,
+
+            'tabela_bolsas' : tabela_bolsas,
+            'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+
+            'grafico_bolsas' : grafico_bolsas,
+            'titulo_bolsas': titulo_bolsas,
+
+            'grafico_historico_prod' : grafico_historico_prod,
+            'titulo_historico_prod' : titulo_historico_prod,
+
+            'informacoes_card' : programas_dpto,
+            'dropdown_label' : label_dropdown,
+            'card_2_titulo' : 'Programas do departamento'
+
         }
-    ]
 
-    context = {
-        'regulador' : 'regulador',
+        return render(request, 'home/departamento.html', context)
 
-        'caminho' : caminho,
-        'nome' : nome,
-
-        'id_lattes' : id,
-        'docentes' : docentes,
-        'df' : df,
-        'lattes_id' : id_lattes,
-        'tabela' : 'docentes',
-        'sigla_departamento' : sigla,
-
-        'numero_docentes' : numero_docentes,
-
-        'grafico_aposentados_ativos' : grafico_pizza_aposentados_ativos,
-        'titulo_aposentados_ativos' : titulo_aposentados_ativos,
-
-        'grafico_tipo_vinculo' : grafico_pizza_tipo_vinculo,
-        'titulo_tipo_vinculo' : titulo_tipo_vinculo,
-
-        'grafico_prod_docentes' : grafico_prod_docentes, 
-        'titulo_prod_docentes' : titulo_prod_docentes,
-
-        'tabela_bolsas' : tabela_bolsas,
-        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
-
-        'grafico_bolsas' : grafico_bolsas,
-        'titulo_bolsas': titulo_bolsas,
-
-        'grafico_historico_prod' : grafico_historico_prod,
-        'titulo_historico_prod' : titulo_historico_prod,
-
-        'informacoes_card' : programas_dpto,
-        'dropdown_label' : label_dropdown,
-        'card_2_titulo' : 'Programas do departamento'
-
-    }
-
-    return render(request, 'home/departamento.html', context)
-
-    # except:
-    #     context = {}
-    #     html_template = loader.get_template('home/page-500.html')
-    #     return HttpResponse(html_template.render(context, request))
+    except:
+        context = {}
+        html_template = loader.get_template('home/page-500.html')
+        return HttpResponse(html_template.render(context, request))
 
 
 
 def departamentos(request):
     departamentos = Departamentos()
 
+    try:
+        df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
+        grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
+        grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
+        tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
+        grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
+        grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
+        numero_docentes = departamentos.pega_numero_docentes()
+
+        context = {
+            'df_docentes' : df_docentes,
+            'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
+
+            'grafico_relacao_cursos' :  grafico_relacao_cursos,
+            'titulo_relacao_cursos' : titulo_relacao_cursos,
+
+            'grafico_bolsas' : grafico_bolsas,
+            'titulo_bolsas' : titulo_grafico_bolsas,
+
+            'tabela_bolsas' : tabela_bolsas,
+            'titulo_tabela_bolsas' : titulo_tabela_bolsas,
+
+            'grafico_prod_docentes' : grafico_prod,
+            'titulo_prod_docentes' : titulo_prod,
+
+            'grafico_historico_prod' : grafico_prod_historico,
+            'titulo_historico_prod' : titulo_prod_historico,
+
+            'regulador' : 'regulador',
+            'numero_docentes' : numero_docentes
+        }
+
+        return render(request, 'home/departamentos.html', context)
     
-    df_docentes, titulo_tabela_todos_docentes = departamentos.tabela_todos_docentes()
-    grafico_relacao_cursos, titulo_relacao_cursos = departamentos.plota_relacao_cursos()
-    grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
-    tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
-    grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
-    grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
-    numero_docentes = departamentos.pega_numero_docentes()
-
-    context = {
-        'df_docentes' : df_docentes,
-        'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
-
-        'grafico_relacao_cursos' :  grafico_relacao_cursos,
-        'titulo_relacao_cursos' : titulo_relacao_cursos,
-
-        'grafico_bolsas' : grafico_bolsas,
-        'titulo_bolsas' : titulo_grafico_bolsas,
-
-        'tabela_bolsas' : tabela_bolsas,
-        'titulo_tabela_bolsas' : titulo_tabela_bolsas,
-
-        'grafico_prod_docentes' : grafico_prod,
-        'titulo_prod_docentes' : titulo_prod,
-
-        'grafico_historico_prod' : grafico_prod_historico,
-        'titulo_historico_prod' : titulo_prod_historico,
-
-        'regulador' : 'regulador',
-        'numero_docentes' : numero_docentes
-    }
-
-    return render(request, 'home/departamentos.html', context)
-    
-    # except:
-    #     context = {}
-    #     html_template = loader.get_template('home/page-500.html')
-    #     return HttpResponse(html_template.render(context, request))
+    except:
+        context = {}
+        html_template = loader.get_template('home/page-500.html')
+        return HttpResponse(html_template.render(context, request))
 
 
