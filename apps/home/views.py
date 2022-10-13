@@ -203,7 +203,15 @@ def departamentos(request):
         grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
         numero_docentes = departamentos.pega_numero_docentes()
 
+        caminho = [
+            {
+                'text' : 'Departamentos',
+            }
+        ]
+        
         context = {
+            'caminho' : caminho,
+
             'df_docentes' : df_docentes,
             'titulo_tabela_todos_docentes' : titulo_tabela_todos_docentes,
 
