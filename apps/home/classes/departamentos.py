@@ -226,7 +226,7 @@ class Departamentos():
             resultado_artigos), sum(resultado_capitulos)]
 
         fig = Grafico()
-        fig = fig.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=resultado, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+        fig = fig.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=resultado, color=['Livros', 'Artigos', 'Capitulos'],
                                  color_discrete_sequence=[
                                      "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
                                  linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
