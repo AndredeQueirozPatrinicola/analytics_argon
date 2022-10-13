@@ -4,7 +4,7 @@ from datetime import datetime
 
 from apps.home.models import Departamento, Docente
 from apps.home.classes.graficos import Grafico
-
+from apps.home.utils import Utils
 
 class DadosDepartamento():
 
@@ -304,20 +304,8 @@ class DadosDepartamento():
         return grafico, titulo
 
     def pega_programa_departamento(self, sigla):
-        programas_dpto = {
-                'FLP' : ['Ciência Política'],
-                'FSL' : ['Sociologia'],
-                'FLF' : ['Filosofia'],
-                'FLA' : ['Antropologia Social'],
-                'FLG' : ['Geografia Física', 'Geografia Humana'],
-                'FLH' : ['História Econômica', 'História Social'],
-                'FLL' : ['Semiótica e Lingüística Geral'],
-                'FLC' : ['Filologia e Língua Portuguesa', 'Letras Clássicas', 'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 'Mestrado Profissional em Letras em Rede Nacional'],
-                'FLM' : ['Língua e Literatura Alemã', 'Língua Espanhola e Literaturas Espanhola e Hispano-Americana', 'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução'],
-                'FLT' : ['Teoria Literária e Literatura Comparada'],
-                'FLO' : ['Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa'],
-        }
-        programas_dpto = programas_dpto.get(sigla)
+        programas_dpto = Utils.pega_programas_departamento(sigla)
+        programas_dpto = programas_dpto.get('programas')
 
         label = 'Programas'
 

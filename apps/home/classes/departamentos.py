@@ -6,7 +6,7 @@ from functools import reduce
 
 from apps.home.classes.graficos import Grafico
 from apps.home.models import Docente, Departamento
-
+from apps.home.utils import Utils
 
 class Departamentos():
 
@@ -337,3 +337,6 @@ class Departamentos():
         titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
+
+    def pega_programas(self):
+        return Utils.pega_programas_departamento().get('programas'), 'Programas'

@@ -202,6 +202,7 @@ def departamentos(request):
         grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
         grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
         numero_docentes = departamentos.pega_numero_docentes()
+        programas_departamento, dropdown_label = departamentos.pega_programas()
 
         caminho = [
             {
@@ -231,11 +232,15 @@ def departamentos(request):
             'titulo_historico_prod' : titulo_prod_historico,
 
             'regulador' : 'regulador',
-            'numero_docentes' : numero_docentes
+            'numero_docentes' : numero_docentes,
+
+            'informacoes_card' : programas_departamento,
+            'dropdown_label' :  dropdown_label,
+            'card_2_titulo' : 'Programas da Faculdade'
         }
 
         return render(request, 'home/departamentos.html', context)
-    
+
     except:
         context = {}
         html_template = loader.get_template('home/page-500.html')
