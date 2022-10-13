@@ -44,11 +44,14 @@ class DadosDepartamento():
         total = 0
         ativos = 0
         aposentados = 0
-        
+
+
         for i in resultado:
-            if i[0].get('nomset') == departamento.get('nome'):
+
+            if i[0].get('nomset') == departamento.get('nome') or i[0].get('nomset') == 'Lingüística':
                 total += 1
                 if i[0].get('sitatl') == 'A':
+                    
                     ativos += 1
                 elif i[0].get('sitatl') == 'P':
                     aposentados += 1
