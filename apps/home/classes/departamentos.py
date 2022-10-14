@@ -15,7 +15,7 @@ class Departamentos():
 
     def pega_numero_docentes(self):
         resultado = Docente.objects.count()
-        ativo_aposentado = Docente.objects.all().values_list('api_docentes')
+        ativo_aposentado = Docente.objects.values_list('api_docentes')
 
         ativo = 0
         aposentado = 0
@@ -199,7 +199,7 @@ class Departamentos():
         return lista_valores, titulos
 
     def prod_total_departamentos(self):
-        dados = Departamento.objects.all().values('api_programas_docente_limpo')
+        dados = Departamento.objects.values('api_programas_docente_limpo')
 
         x = 0
         resultado_livros = []
@@ -248,7 +248,7 @@ class Departamentos():
         def soma_lista(a: int, b: int):
             return int(a) + int(b)
 
-        dados = Departamento.objects.all().values_list('api_programas_docente')
+        dados = Departamento.objects.values_list('api_programas_docente')
 
         anos = [str(i)
                 for i in range(datetime.now().year - 6, datetime.now().year)]

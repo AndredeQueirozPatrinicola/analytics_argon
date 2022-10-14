@@ -35,8 +35,7 @@ class DadosDocente():
         return vinculo, situacao
 
     def linhas_de_pesquisa(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
@@ -49,8 +48,7 @@ class DadosDocente():
 
     def pega_caminho(self):
         try:
-            api = Docente.objects.filter(
-                docente_id=self.parametro).values_list()
+            api = Docente.objects.filter(docente_id=self.parametro).values_list()
             dados = api[0][3]
             dados_nome = api[0][2]
             self.nome_departamento = dados[0].get('nome')
@@ -78,8 +76,7 @@ class DadosDocente():
 
     def plota_grafico_historico(self, tipo):
         try:
-            api = Docente.objects.filter(
-                docente_id=self.parametro).values_list('api_docente')
+            api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
             dados = api[0][0]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
@@ -115,8 +112,7 @@ class DadosDocente():
             return None, None
 
     def plota_grafico_pizza(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
 
         if dados['orientandos']:
@@ -160,8 +156,7 @@ class DadosDocente():
             return None, None
 
     def tabela_orientandos(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
@@ -191,8 +186,7 @@ class DadosDocente():
             return None, None
 
     def tabela_ultimas_publicacoes(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
 
         tabela_publicacoes = [
