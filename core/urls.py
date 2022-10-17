@@ -10,9 +10,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),          # Django admin route
     path("", include("apps.authentication.urls")), # Auth routes - login / register
     path("", include("apps.home.urls")),             # UI Kits Html files
-<<<<<<< Updated upstream
+    path("", include('apps.api.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
-=======
-    path("", include('apps.api.urls'))
->>>>>>> Stashed changes
 ]
