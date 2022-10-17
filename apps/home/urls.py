@@ -9,7 +9,7 @@ from apps.home import views
 
 urlpatterns = [
 
-    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
+    # url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 
     # The home page
     path('', views.index, name='home'),
@@ -20,7 +20,7 @@ urlpatterns = [
 
     path('<str:sigla>/docente/<str:parametro>', views.docente, name='docente'),
 
-    # Matches any html file
-    re_path(r'^.*\.*', views.pages, name='pages'),
+    # # Matches any html file
+    # re_path(r'^.*\.*', views.pages, name='pages'),
 
 ]
