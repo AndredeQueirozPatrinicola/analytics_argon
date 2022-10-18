@@ -69,7 +69,7 @@ class DadosDepartamento():
         x, y, ativos, aposentados = self.pega_numero_docentes(sigla)
         ativos_aposentados = [ativos, aposentados]
         tipos = ['Ativos', "Aposentados"]
-        titulo = 'Relação entre aposentados e ativos'
+        titulo = 'Percentual entre docentes aposentados e ativos'
         grafico = Grafico()
         grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
                                         color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
@@ -95,7 +95,7 @@ class DadosDepartamento():
 
         lista_valores = df.value_counts().to_list()
 
-        titulo = 'Relação entre tipos de vínculo de docente'
+        titulo = 'Percentual entre tipos de vínculo de docente'
 
         grafico = Grafico()
         
@@ -135,7 +135,7 @@ class DadosDepartamento():
                      })
 
 
-        titulo = 'Produção total do departamento'
+        titulo = 'Produção total do departamento registrada no Lattes'
 
         return grafico, titulo
 

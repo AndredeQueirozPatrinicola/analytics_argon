@@ -18,4 +18,7 @@ $(document).ready(function () {
 
 });
 
+const diminuirLanding = document.getElementById('diminuir-landing') 
+if (diminuirLanding){diminuirLanding.style.height = '10px'}
+
 
