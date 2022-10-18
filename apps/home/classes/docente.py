@@ -137,7 +137,7 @@ class DadosDocente():
 
             titulo = [
                 {
-                    'titulo' : 'Relação entre mestrandos e doutorandos'
+                    'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos(diretos)'
                 }
             ]
 

@@ -239,7 +239,7 @@ class Departamentos():
                                     'color': 'Legenda'
                                     })
 
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade'
+        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no lattes'
 
         return fig, titulo
 
