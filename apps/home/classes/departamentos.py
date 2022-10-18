@@ -13,6 +13,31 @@ class Departamentos():
     def __init__(self):
         pass
 
+    def pega_numero_docentes(self):
+        resultado = Docente.objects.count()
+        ativo_aposentado = Docente.objects.all().values_list('api_docentes')
+
+        ativo = 0
+        aposentado = 0
+
+        for i in ativo_aposentado:
+
+            if i[0].get('sitatl') == 'A':
+                ativo += 1
+            elif i[0].get('sitatl') == 'P':
+                aposentado += 1
+           
+        resultado = {
+            'texto_ativos' : 'Numero de docentes',
+            'numero_ativos' : { 
+                                'total' : f'Total: {resultado}',
+                                'ativos' : f'Ativos: {ativo}',
+                                'aposentados' : f'Aposentados: {aposentado}'
+                              }
+            }
+
+        return resultado
+
     def trata_dados_ic(self, dados, anos):
         lista_todos_numeros = []
 
@@ -205,7 +230,14 @@ class Departamentos():
                                  color_discrete_sequence=[
                                      "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
                                  linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-            l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False, labels={'x': ''})
+            l=15, r=15, t=15, b=0), legend=dict(
+                        yanchor="top",
+                        y=0.99,
+                        xanchor="left",
+                        x=0.01), labels={
+                                    'x': '',
+                                    'color': 'Legenda'
+                                    })
 
         titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade'
 

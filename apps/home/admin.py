@@ -21,7 +21,7 @@ admin.site.register(Docente, DocenteAdmin)
 
 
 class DepartamentoAdmin(admin.ModelAdmin):
-    list_display = ('sigla','api_docentes', 'api_programas', 'api_programas_docente', 'api_pesquisa', 'api_pesquisa_parametros', 'api_programas_docente_limpo' )
-
+    list_display = ('sigla','api_docentes', 'api_programas', 'api_programas_docente', 'api_pesquisa', 'api_pesquisa_parametros', 'api_programas_docente_limpo' , 'api_defesas')
+    search_fields = ('sigla',)
 
 admin.site.register(Departamento, DepartamentoAdmin)

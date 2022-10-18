@@ -10,6 +10,8 @@ class Docente(models.Model):
     api_programas = models.JSONField()                                          # https://dados.fflch.usp.br/api/programas
     api_docentes = models.JSONField(null=True)                                  # https://dados.fflch.usp.br/api/docentes
 
+    def __str__(self):
+        return self.docente_id
  
  
 class Departamento(models.Model):
@@ -20,4 +22,8 @@ class Departamento(models.Model):
     api_pesquisa = models.JSONField()  
     api_pesquisa_parametros = models.JSONField()                                # https://dados.fflch.usp.br/api/pesquisa + 'filtro=departamento&ano_ini=&ano_fim=&serie_historica_tipo='
     api_programas_docente_limpo = models.JSONField(null=True)
+    api_defesas = models.JSONField(null=True)
+
+    def __str__(self):
+        return self.sigla
 

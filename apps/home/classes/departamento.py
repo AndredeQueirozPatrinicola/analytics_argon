@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 
-from apps.home.models import Departamento
+from apps.home.models import Departamento, Docente
 from apps.home.classes.graficos import Grafico
 
 
@@ -36,37 +36,43 @@ class DadosDepartamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_programas')
-        dados = api[0][0]
+        resultado = Docente.objects.all().values_list('api_docentes')
+        departamento = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
 
-        docentes, x, y, z = self.tabela_docentes(sigla)
-        df = pd.DataFrame(dados)
+        departamento = departamento[0][0][0]
 
-        valor = df['sigla'].to_list().index(sigla)
-        resultado = df['total_docentes'].iloc[valor]
+        total = 0
+        ativos = 0
+        aposentados = 0
 
-        aposentados = len(docentes) - resultado
 
-        conteudo = {
-            'texto_ativos': 'Numero de docentes(ativos): ',
-            'numero_ativos': resultado,
-            'texto_aposentados': 'Numero de docentes(aposentados): ',
-            'numero_aposentados': aposentados
-        }
+        for i in resultado:
 
-        return conteudo
+            if i[0].get('nomset') == departamento.get('nome') or i[0].get('nomset') == 'Lingüística':
+                total += 1
+                if i[0].get('sitatl') == 'A':
+                    
+                    ativos += 1
+                elif i[0].get('sitatl') == 'P':
+                    aposentados += 1
+
+        resultado = {
+            'texto_ativos' : 'Numero de docentes',
+            'numero_ativos' : { 
+                                'total' : f'Total: {total}',
+                                'ativos' : f'Ativos: {ativos}',
+                                'aposentados' : f'Aposentados: {aposentados}'
+                              }
+            }
+
+        return resultado, total, ativos, aposentados
 
     def plota_aposentados_ativos(self, sigla):
-        dados = self.pega_numero_docentes(sigla)
-        ativos_aposentados = [
-            dados.get('numero_ativos'), dados.get('numero_aposentados')]
+        x, y, ativos, aposentados = self.pega_numero_docentes(sigla)
+        ativos_aposentados = [ativos, aposentados]
         tipos = ['Ativos', "Aposentados"]
-
         titulo = 'Relação entre aposentados e ativos'
-
         grafico = Grafico()
-        
         grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
                                         color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
 
@@ -119,13 +125,18 @@ class DadosDepartamento():
 
 
         grafico = Grafico()
-        grafico = grafico.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=lista_valores, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+        grafico = grafico.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=lista_valores, color=['Livros', 'Artigos', 'Capitulos'],
                      color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
                      linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-                     l=15, r=15, t=15, b=0), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), showlegend=False,
+                     l=15, r=15, t=15, b=0), legend=dict(
+                        yanchor="top",
+                        y=0.99,
+                        xanchor="left",
+                        x=0.01),
                      labels={
-                        'x': ''
-                     }   )
+                        'x': '',
+                        'color' : 'Legenda'
+                     })
 
 
         titulo = 'Produção total do departamento'
@@ -291,3 +302,23 @@ class DadosDepartamento():
         titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
+
+    def pega_programa_departamento(self, sigla):
+        programas_dpto = {
+                'FLP' : ['Ciência Política'],
+                'FSL' : ['Sociologia'],
+                'FLF' : ['Filosofia'],
+                'FLA' : ['Antropologia Social'],
+                'FLG' : ['Geografia Física', 'Geografia Humana'],
+                'FLH' : ['História Econômica', 'História Social'],
+                'FLL' : ['Semiótica e Lingüística Geral'],
+                'FLC' : ['Filologia e Língua Portuguesa', 'Letras Clássicas', 'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 'Mestrado Profissional em Letras em Rede Nacional'],
+                'FLM' : ['Língua e Literatura Alemã', 'Língua Espanhola e Literaturas Espanhola e Hispano-Americana', 'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução'],
+                'FLT' : ['Teoria Literária e Literatura Comparada'],
+                'FLO' : ['Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa'],
+        }
+        programas_dpto = programas_dpto.get(sigla)
+
+        label = 'Programas'
+
+        return programas_dpto, label

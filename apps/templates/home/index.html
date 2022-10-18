@@ -8,29 +8,44 @@
 
 {% block content %}
 
+    <div class="container-fluid mt--6">
 
-<h1 class="titulo-index">
-    FFLCH | Analytics
-</h1>
+        <div class="row">
+
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+
+                            <h6 class="texto-index text-align-justify">
+                                O projeto Analytics | FFLCH surge para disponibilizar ao público informações atualizadas em
+                                tempo real sobre a Faculdade
+                                de Filosofia, Letras e Ciências Humanas - FFLCH, unidade de ensino, pesquisa e extensão
+                                universitária que abrange as
+                                áreas de Filosofia, História, Geografia, Letras e Ciências Sociais da Universidade de São Paulo,
+                                de forma dinâmica e interativa. Os dados são consumidos através de APIs publicas
+                                disponibilizadas pelo Portal de dados | FFLCH.
+                            </h6>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'includes/graficos/grafico_prod_docentes.html' %}            
 
 
-<h6 class="texto-index">
-    O Portal de Dados surge a fim de disponibilizar ao público informações atualizadas em tempo real sobre a Faculdade
-    de Filosofia, Letras e Ciências Humanas - FFLCH, unidade de ensino, pesquisa e extensão universitária que abrange as
-    áreas de Filosofia, História, Geografia, Letras e Ciências Sociais da Universidade de São Paulo. Os dados
-    disponíveis podem ser acessados através do catálogo a seguir, organizado por categorias.
-</h6>
+        </div>
+    </div>
+
+    {% include "includes/footer.html" %}
 
 
-
-{% include "includes/footer.html" %}
-
-
-{% endblock content %}
+    {% endblock content %}
 
 
-<!-- Specific JS goes HERE -->
-{% block javascripts %}
+    <!-- Specific JS goes HERE -->
+    {% block javascripts %}
 
 
-{% endblock javascripts %}
+    {% endblock javascripts %}

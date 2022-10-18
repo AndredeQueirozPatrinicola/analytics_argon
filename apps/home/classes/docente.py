@@ -40,14 +40,12 @@ class DadosDocente():
         dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
-        linhas_titulo = {
-            'text': "Linhas de Pesquisa",
-        }
 
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
 
+        label = 'Linhas'
 
-        return linhas_titulo, linhas_pesquisa
+        return label, linhas_pesquisa
 
     def pega_caminho(self):
         try:

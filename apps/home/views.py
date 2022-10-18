@@ -14,10 +14,14 @@ from .classes.departamentos import Departamentos
 
 def index(request):
 
+    titulo = 'FFLCH | Analytics'
+  
     context = {
         'segment': 'index',
+        'landingpage' : 'landingpage',
+        'titulo' : titulo,          
     }
-
+  
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -61,7 +65,7 @@ def docente(request, sigla, parametro):
         grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico('capitulos')
         tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
         caminho = docente.pega_caminho()
-        titulo_linhas, linhas_pesquisa = docente.linhas_de_pesquisa()
+        label_dropdown, linhas_pesquisa = docente.linhas_de_pesquisa()
         tipo_vinculo, situacao = docente.pega_vinculo_situacao()
 
         docente = [
@@ -99,7 +103,8 @@ def docente(request, sigla, parametro):
 
             'sigla_departamento' : sigla, 
             
-            'linhas_pesquisa' : linhas_pesquisa, # card 2
+            'informacoes_card' : linhas_pesquisa, # card 2
+            'dropdown_label' : label_dropdown,
             'card_2_titulo' : 'Linhas de pesquisa', # card 2
 
             'card_3' : tipo_vinculo, # card 3
@@ -122,13 +127,14 @@ def departamento(request, sigla):
         docentes = DadosDepartamento(sigla)
 
         df, id_lattes, nome, id = docentes.tabela_docentes(sigla)
-        numero_docentes = docentes.pega_numero_docentes(sigla)
+        numero_docentes, x,y,z = docentes.pega_numero_docentes(sigla)
         grafico_pizza_aposentados_ativos, titulo_aposentados_ativos = docentes.plota_aposentados_ativos(sigla)
         grafico_pizza_tipo_vinculo, titulo_tipo_vinculo = docentes.plota_tipo_vinculo_docente(sigla)
         grafico_prod_docentes, titulo_prod_docentes = docentes.plota_prod_departamento(sigla)
         grafico_historico_prod, titulo_historico_prod = docentes.plota_prod_serie_historica(sigla)
         grafico_bolsas, titulo_bolsas = docentes.plota_grafico_bolsa_sem()
         tabela_bolsas, titulo_tabela_bolsas  = docentes.tabela_trabalhos(sigla)
+        programas_dpto, label_dropdown = docentes.pega_programa_departamento(sigla)
 
         caminho = [
             {
@@ -168,7 +174,11 @@ def departamento(request, sigla):
             'titulo_bolsas': titulo_bolsas,
 
             'grafico_historico_prod' : grafico_historico_prod,
-            'titulo_historico_prod' : titulo_historico_prod
+            'titulo_historico_prod' : titulo_historico_prod,
+
+            'informacoes_card' : programas_dpto,
+            'dropdown_label' : label_dropdown,
+            'card_2_titulo' : 'Programas do departamento'
 
         }
 
@@ -190,8 +200,8 @@ def departamentos(request):
         grafico_bolsas, titulo_grafico_bolsas = departamentos.grafico_bolsa_sem()
         tabela_bolsas, titulo_tabela_bolsas = departamentos.tabela_trabalhos()
         grafico_prod, titulo_prod = departamentos.prod_total_departamentos()
-        
         grafico_prod_historico, titulo_prod_historico = departamentos.prod_historica_total()
+        numero_docentes = departamentos.pega_numero_docentes()
 
         context = {
             'df_docentes' : df_docentes,
@@ -211,6 +221,9 @@ def departamentos(request):
 
             'grafico_historico_prod' : grafico_prod_historico,
             'titulo_historico_prod' : titulo_prod_historico,
+
+            'regulador' : 'regulador',
+            'numero_docentes' : numero_docentes
         }
 
         return render(request, 'home/departamentos.html', context)
