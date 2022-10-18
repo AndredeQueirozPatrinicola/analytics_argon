@@ -2,8 +2,9 @@ from rest_framework import serializers
 
 from apps.home.models import Docente
 
-class DocenteSerializer(serializers.Serializer):
+class GraficoSerializer(serializers.Serializer):
+    array_x = serializers.ListField(child=serializers.IntegerField())
+    array_y = serializers.ListField(child=serializers.IntegerField())
+    titulo = serializers.CharField()
+
     
-    class Meta:
-        model = Docente
-        fields = ['docente_id', 'api_docente', 'api_programas', 'api_docentes']
