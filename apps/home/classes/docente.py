@@ -39,7 +39,6 @@ class DadosDocente():
         dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
 
-
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
 
         label = 'Linhas'
