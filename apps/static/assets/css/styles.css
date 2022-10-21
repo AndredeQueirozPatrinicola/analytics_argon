@@ -295,6 +295,45 @@
       justify-content: center;
     }
 
+  .icone-login{
+    border: 1px solid #e6eaf1;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    background-color: #e6eaf1;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-bar-auth{
+    display: flex;
+    align-items: center;
+  }
+
+  .span-auth{
+    margin-right: 15px;
+    color: #d2d8e1;
+  }
+
+  .sidebar-items{
+    text-align: center;
+    color: #8d9cae;
+  }
+
+  .sidebar-items-items{
+    color: #8d9cae;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    
+  }
+
+  .sidebar-items-items:hover{
+    color: #535c66;
+  }
+
 
   @media only screen and (max-width: 1198px) {
     .botao-drop{
