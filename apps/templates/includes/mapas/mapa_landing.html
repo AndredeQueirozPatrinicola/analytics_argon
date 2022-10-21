@@ -1,0 +1,17 @@
+<div class="col-xl-8 mt-4 w-100">
+    <div class="card bg-default prod-hist h-100" style="margin-left:-13px; width: 102.5%;">
+      <div class="card-body card-body-grafico-docente">
+        <!-- Chart -->
+        <div class="chart tab-content chart-grafico-docente">
+          <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
+            <h5 class="h3 mb-0 ml-3 titulo-grafico-docente-tab">{{ titulo_historico_prod }}</h5>
+            {% autoescape off %}
+              {{ globo }}
+            {% endautoescape %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  

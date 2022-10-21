@@ -196,7 +196,8 @@
   padding: 40px;
   background-color: #fff;
   border-radius: 10px;
-
+  text-align: justify;
+  height: 198px;
  }
 
  .titulo-tabela-todos{

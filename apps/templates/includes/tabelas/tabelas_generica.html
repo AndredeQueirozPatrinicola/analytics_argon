@@ -1,0 +1,31 @@
+<div class="col-xl-4 mt-4 w-100">
+    <div class="card">
+      <div class="card-header border-0">
+        <div class="row align-items-center">   
+          <h3 class='titulo-tabela'>{{ titulo_destaques }}</h3>
+        </div>
+      </div>
+      <hr class="mt-0 mb-0 font-weight-bold">
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush tabela-publicacoes">
+          <thead class="thead-light">
+            
+            <tr>
+            </tr>
+            
+          </thead>
+          <tbody>
+            {% for i in destaques %}
+            <tr>
+                <td>
+
+                  {{ i }}
+
+                </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
