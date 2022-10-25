@@ -11,12 +11,12 @@ class Mapa:
 
     def plota_mapa():
         fig = go.Figure(go.Scattergeo(lat=[], lon=[]))
-        fig.update_geos(showcountries=True, projection_type="orthographic",
+        fig = fig.update_geos(showcountries=True, projection_type="orthographic",
                         projection_rotation=dict(lon=-56, lat=-13), )
-        fig.update_layout(height=550, margin={"r": 0, "t": 0, "l": 0, "b": 2})
+        fig = fig.update_layout(height=550, margin={"r": 0, "t": 0, "l": 0, "b": 2})
 
-        globo = plot(fig, output_type="div", config={
+        fig = plot(fig, output_type="div", config={
             'displaylogo': False,
             'modeBarButtonsToRemove': ['select2d', 'lasso2d', 'select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
-        return globo
+        return fig
