@@ -10,9 +10,8 @@ from apps.home.models import Docente
 from .classes.docente import DadosDocente
 from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
+from .classes.mapa import Mapa
 
-import plotly.graph_objects as go
-from plotly.offline import plot
 
 
 def index(request):
@@ -44,21 +43,13 @@ def index(request):
         """
     ]
 
-    fig = go.Figure(go.Scattergeo(lat=[], lon=[]))
-    fig.update_geos(showcountries=True, projection_type="orthographic",
-                    projection_rotation=dict(lon=-56, lat=-13), )
-    fig.update_layout(height=550, margin={"r": 0, "t": 0, "l": 0, "b": 2})
-
-    globo = plot(fig, output_type="div", config={
-        'displaylogo': False,
-        'modeBarButtonsToRemove': ['select2d', 'lasso2d', 'select', 'zoomIn', 'zoomOut', 'autoScale', 'resetScale', 'zoom', 'pan', 'toImage']})
 
     context = {
         'segment': 'index',
         'landingpage': 'landingpage',
         'titulo': titulo,
         'menu_table': menu_nav_table,
-        'globo': globo,
+        'globo': Mapa.plota_mapa(),
         'titulo_destaques' : titulo_destaques,
         'destaques' : destaques
     }
@@ -97,12 +88,9 @@ def docente(request, sigla, parametro):
 
         tabela_orientandos, tabela_header = docente.tabela_orientandos()
         grafico_mestre_dout, titulo_mestr_dout = docente.plota_grafico_pizza()
-        grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico(
-            'artigos')
-        grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico(
-            'livros')
-        grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico(
-            'capitulos')
+        grafico_artigos, grafico_titulo_artigos = docente.plota_grafico_historico('artigos')
+        grafico_livros, grafico_titulo_livros = docente.plota_grafico_historico('livros')
+        grafico_capitulos, grafico_titulo_capitulos = docente.plota_grafico_historico('capitulos')
         tabela_publicacoes, titulo_publicacoes = docente.tabela_ultimas_publicacoes()
         caminho = docente.pega_caminho()
         label_dropdown, linhas_pesquisa = docente.linhas_de_pesquisa()
