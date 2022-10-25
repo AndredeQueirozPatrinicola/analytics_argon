@@ -366,6 +366,10 @@
       height: 100px;
     }
 
+    .regulador-sobre-nos{
+      margin-top: 180px;
+    }
+
     .img-logo-usp{
       display: none;
     }
@@ -380,6 +384,10 @@
     .p-text-logo, .p-analytics-text-logo{
       display: none;
     }
+
+    .regulador-sobre-nos{
+      margin-top: 232px;
+    }
   }
 
 
@@ -390,6 +398,12 @@
     .regulador-drop-r{
       display: flex;
     }
+
+
+    .regulador-sobre-nos{
+      margin-top: 370px;
+    }
+
     .nav-bar-div{
       justify-content: left;
     }
