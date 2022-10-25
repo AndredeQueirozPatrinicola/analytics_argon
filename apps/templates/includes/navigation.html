@@ -15,6 +15,18 @@
           <span aria-hidden="true">×</span>
         </button>
       </form>
+
+      <div class="btn-group dropleft regulador-drop">
+
+        {% include 'includes/dropdown-nav.html' %}
+
+      </div>
+      <div class="btn-group dropdown regulador-drop-r">
+
+        {% include 'includes/dropdown-nav.html' %}
+
+      </div>
+
       <div class="nav-bar-auth">
         {% if user.is_authenticated %}
           <span class="span-auth">

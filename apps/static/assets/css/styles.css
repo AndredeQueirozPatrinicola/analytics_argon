@@ -334,6 +334,17 @@
     color: #535c66;
   }
 
+  @media only screen and (max-width: 1706px) {
+    .regula-altura{
+      height: 120px;
+    }
+  }
+
+  @media only screen and (max-width: 1303px) {
+    .regula-altura{
+      height: 160px;
+    }
+  }
 
   @media only screen and (max-width: 1198px) {
     .botao-drop{
@@ -345,6 +356,14 @@
     }
     #sidenav-main{
       display: none;
+    }
+
+    #navbarSupportedContent{
+      justify-content: space-around;
+    }
+
+    .regula-altura{
+      height: 100px;
     }
 
     .img-logo-usp{
@@ -373,5 +392,12 @@
     }
     .nav-bar-div{
       justify-content: left;
+    }
+  }
+
+
+  @media only screen and (max-width: 350px){
+    .texto-numero-docentes{
+      margin-top: -10px !important;
     }
   }
