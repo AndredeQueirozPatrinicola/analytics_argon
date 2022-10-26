@@ -272,3 +272,22 @@ def departamentos(request):
         context = {}
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
+
+
+def sobre_nos(request):
+    menu_nav_table = [
+        {
+            'titulo': 'Sobre nós',
+
+            'text1': 'Sobre o projeto',
+
+            'text2': 'Portal de dados',
+
+            'text3': 'Escritório de apoio institucional ao pesquisador - EAIP | FFLCH'
+        }
+    ]
+    context = {
+        'landingpage' : True,
+        'menu_table' : menu_nav_table
+    }
+    return render(request, 'home/sobre-nos.html', context)

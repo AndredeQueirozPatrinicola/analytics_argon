@@ -14,6 +14,8 @@ urlpatterns = [
     # The home page
     path('', views.index, name='home'),
 
+    path('sobre-nos', views.sobre_nos, name='sobre nos'),
+
     path('departamentos', views.departamentos, name='departamentos'),
 
     path('departamentos/<str:sigla>', views.departamento, name='docentes'),

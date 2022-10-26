@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid mt--6">
+
+    <div class="row">
+
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-header bg-transparent" id="diminuir-landing">
+                    <div class="row align-items-center">
+
+                        <h6 class="texto-index text-align-justify">
+                            O projeto Analytics | FFLCH surge para disponibilizar ao público informações atualizadas em
+                            tempo real sobre a Faculdade
+                            de Filosofia, Letras e Ciências Humanas - FFLCH, unidade de ensino, pesquisa e extensão
+                            universitária que abrange as
+                            áreas de Filosofia, História, Geografia, Letras e Ciências Sociais da Universidade de São Paulo,
+                            de forma dinâmica e interativa. Os dados são consumidos através de APIs publicas
+                            disponibilizadas pelo Portal de dados | FFLCH.
+                        </h6>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'includes/tabelas/tabela_sobrenos.html' %}            
+
+    </div>
+</div>
+
+{% include "includes/footer.html" %}
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}
