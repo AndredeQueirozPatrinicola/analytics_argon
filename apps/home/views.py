@@ -43,13 +43,15 @@ def index(request):
         """
     ]
 
+    globo, quantidade_alunos_sp = Mapa.plota_mapa_v2()
 
     context = {
         'segment': 'index',
         'landingpage': 'landingpage',
         'titulo': titulo,
         'menu_table': menu_nav_table,
-        'globo': Mapa.plota_mapa(),
+        'globo': globo,
+        'quantidade_alunos_sp' : quantidade_alunos_sp,
         'titulo_destaques' : titulo_destaques,
         'destaques' : destaques
     }
