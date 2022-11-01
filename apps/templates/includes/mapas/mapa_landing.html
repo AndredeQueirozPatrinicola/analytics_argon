@@ -1,5 +1,6 @@
 <div class="col-xl-8 mt-4 w-100">
     <div class="card bg-default prod-hist h-100" style="margin-left:-13px; width: 102.5%;">
+      {% if globo != None %}
       <div class="card-body card-body-grafico-docente">
         <h4 class="titulo-mapa-index text-center">Quantidade de Alunos de Gradução, Pós Graduação, Pós Doutorado e de Cultura e Extensão da FFLCH por estado(exceto São Paulo*).
           Sigla do estado onde foi expedido o documento de identificação.</h4>
@@ -12,8 +13,23 @@
             {% endautoescape %}
           </div>
         </div>
-        <p class="legenda-mapa-index">*A quantidade de alunos em SP é: {{ quantidade_alunos_sp }}</p>
+        <p class="legenda-mapa-index">
+            *A quantidade de alunos em SP é: {{ quantidade_alunos_sp }}<br>
+             Os alunos de SP foram retirados do mapa para preservar a escala de cores nos demais estados.
+        </p>
       </div>
+      {% else %}
+      <div class="d-flex justify-content-center align-items-center h-100">
+
+        <h5 class="text-center">
+
+            Houve um erro para renderizar o mapa, favor recarregar a pagina ou contactar o suporte:<br>
+            <span class="span-bold">eaipfflch@usp.br</span>
+
+        </h5>
+
+      </div>
+      {% endif %}
     </div>
   </div>
 

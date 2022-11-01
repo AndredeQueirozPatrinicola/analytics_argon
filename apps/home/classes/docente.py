@@ -18,6 +18,11 @@ class DadosDocente():
         self.sigla = sigla
 
     def pega_vinculo_situacao(self):
+        """
+            Pega dados no BD equivalentes à: https://dados.fflch.usp.br/api/docentes
+
+            Trata dados e retorna o vinculo e a situacao do docente. 
+        """
         dados = Docente.objects.filter(docente_id = self.parametro).values_list('api_docentes')
 
         dados = dados[0][0]

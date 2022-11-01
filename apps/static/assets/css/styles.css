@@ -317,6 +317,10 @@
     color: #d2d8e1;
   }
 
+  .span-bold{
+    font-weight: bold;
+  }
+
   .sidebar-items{
     text-align: center;
     color: #8d9cae;
@@ -342,6 +346,10 @@
   .legenda-mapa-index{
     text-align: center;
     margin-left: -120px;
+  }
+
+  .grafico-hist-min{
+    min-height: 270px;
   }
 
   @media only screen and (max-width: 1706px) {

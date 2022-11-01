@@ -42,8 +42,12 @@ def index(request):
             quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
         """
     ]
-
-    globo, quantidade_alunos_sp = Mapa.plota_mapa_v2()
+    mapa = Mapa()
+    try:
+        globo, quantidade_alunos_sp = mapa.plota_mapa_v2()
+    except:
+        globo = mapa.plota_mapa_v2()
+        quantidade_alunos_sp = None
 
     context = {
         'segment': 'index',
