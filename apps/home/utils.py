@@ -1,8 +1,11 @@
 
 class Utils:
 
-    def pega_programas_departamento(*departamento):
-        try:
+    def pega_programas_departamento(self, *departamento):
+        try:    
+            if len(departamento) > 1:
+                raise Exception("Não é possivel passar mais de 1 parametro")
+
             codigos = [
                         8131, 8132, 8133, 8134, 
                         8135, 8136, 8137, 8138, 
@@ -73,7 +76,7 @@ class Utils:
                 'FLG': 'Geografia'
                 }
 
-            if departamento:
+            if departamento != tuple():
                 programas_siglas = dpto_programas.get(departamento[0])
 
                 departamento_nome = departamentos_siglas.get(departamento[0])
@@ -95,7 +98,7 @@ class Utils:
             return 'Houve um erro para encontrar os dados do departamento'
 
         
-    def pega_departamento_programa(*programa):
+    def pega_departamento_programa(self, *programa):
         
         dpto_programas = {
                 'FLP' : [8131],
@@ -185,7 +188,7 @@ class Utils:
             return departamentos_siglas
 
 
-    def pega_codigo_estado(*estado):
+    def pega_codigo_estado(self, *estado):
 
         estados = {
             'AC' : 12, 	

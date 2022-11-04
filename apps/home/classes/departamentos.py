@@ -339,4 +339,5 @@ class Departamentos():
         return grafico, titulo
 
     def pega_programas(self):
-        return Utils.pega_programas_departamento().get('programas'), 'Programas'
+        utils = Utils()
+        return utils.pega_programas_departamento().get('programas'), 'Programas'

@@ -43,7 +43,8 @@ class Mapa:
             state_geo = response_base_dados.json()
             state_data = response_api.json()
 
-            estados = Utils.pega_codigo_estado()
+            estados = Utils()
+            estados = estados.pega_codigo_estado()
 
             state_data = pd.DataFrame(state_data, index=[0])
             state_data = state_data.drop('', axis=1)
