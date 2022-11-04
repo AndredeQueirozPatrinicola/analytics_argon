@@ -352,6 +352,27 @@
     min-height: 270px;
   }
 
+  .header-mapa{
+    background-color: #f5f8fb;
+    border-bottom: 1px solid #e3e9ee;
+    padding-left: 15px;
+  }
+
+  .cell-tabel-mapa{
+    border-bottom: 1px solid #e3e9ee;
+    padding-left: 15px;
+    font-size: 15px;
+  }
+
+  .tabela-mapa{
+    margin-top: 23px;
+    margin-left: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-width: 516px;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+  }
+
   @media only screen and (max-width: 1706px) {
     .regula-altura{
       height: 120px;

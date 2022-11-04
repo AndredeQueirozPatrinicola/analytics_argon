@@ -10,23 +10,12 @@ from apps.home.models import Docente
 from .classes.docente import DadosDocente
 from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
-from .classes.mapa import Mapa
+from .classes.index import Index
 
 
 
 def index(request):
-    titulo = 'FFLCH | Analytics'
-    menu_nav_table = [
-        {
-            'titulo': 'Sobre nós',
 
-            'text1': 'Sobre o projeto',
-
-            'text2': 'Portal de dados',
-
-            'text3': 'Escritório de apoio institucional ao pesquisador - EAIP | FFLCH'
-        }
-    ]
     titulo_destaques = 'Destaques'
     destaques = [
 
@@ -42,20 +31,27 @@ def index(request):
             quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
         """
     ]
-    mapa = Mapa()
+    index = Index()
     try:
-        globo, quantidade_alunos_sp = mapa.plota_mapa_v2()
+        globo, quantidade_alunos_sp = index.plota_mapa()
     except:
-        globo = mapa.plota_mapa_v2()
+        globo = index.plota_mapa()
         quantidade_alunos_sp = None
+
+    menu_nav_table, titulo_menu = index.tabela_sobrenos()
+    tabela_alunos_estados = index.tabela_alunos_estados()
 
     context = {
         'segment': 'index',
         'landingpage': 'landingpage',
-        'titulo': titulo,
+
+        'titulo': titulo_menu,
         'menu_table': menu_nav_table,
+
         'globo': globo,
         'quantidade_alunos_sp' : quantidade_alunos_sp,
+        'tabela_alunos_estados' : tabela_alunos_estados,
+        
         'titulo_destaques' : titulo_destaques,
         'destaques' : destaques
     }
