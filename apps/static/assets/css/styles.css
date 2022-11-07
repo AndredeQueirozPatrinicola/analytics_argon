@@ -362,15 +362,29 @@
     border-bottom: 1px solid #e3e9ee;
     padding-left: 15px;
     font-size: 15px;
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   .tabela-mapa{
+    display: flex;
+    flex-direction: column;
     margin-top: 23px;
     margin-left: 15px;
     background-color: #fff;
     border-radius: 10px;
-    min-width: 516px;
+    min-width: 520px;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+  }
+
+  .header-table-estados{
+    width: 100%;
+  }
+
+  .header-table-alunos{
+    width: 100%;
+    padding-right: 10px;
   }
 
   @media only screen and (max-width: 1706px) {
@@ -415,7 +429,7 @@
   }
 
 
-  @media only screen and (max-width: 575px){
+  @media only screen and (max-width: 600px){
     .nav-bar-div{
       justify-content: end;
     }
@@ -427,10 +441,19 @@
     .regulador-sobre-nos{
       margin-top: 232px;
     }
+
+    .texto-index{
+      height: 250px;
+    }
+
   }
 
 
-  @media only screen and (max-width: 430px){
+  @media only screen and (max-width: 450px){
+    .tabela-mapa{
+      min-width: 380px;
+    }
+
     .regulador-drop{
       display: none;
     }
@@ -438,9 +461,12 @@
       display: flex;
     }
 
+    .texto-index{
+      height: 370px;
+    }
 
     .regulador-sobre-nos{
-      margin-top: 370px;
+      margin-top: 350px;
     }
 
     .nav-bar-div{
@@ -453,4 +479,17 @@
     .texto-numero-docentes{
       margin-top: -10px !important;
     }
+
+    .regula-margem-mapa{
+      margin-left: 18px;
+    }
+
+    .texto-index{
+      height: 435px;
+    }
+
+    .regulador-sobre-nos{
+      margin-top: 405px;
+    }
+
   }
