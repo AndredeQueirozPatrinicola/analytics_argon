@@ -297,7 +297,8 @@ class DadosDepartamento():
         return grafico, titulo
 
     def pega_programa_departamento(self, sigla):
-        programas_dpto = Utils.pega_programas_departamento(sigla)
+        programas_dpto = Utils()
+        programas_dpto = programas_dpto.pega_programas_departamento(sigla)
         programas_dpto = programas_dpto.get('programas')
 
         label = 'Programas'
