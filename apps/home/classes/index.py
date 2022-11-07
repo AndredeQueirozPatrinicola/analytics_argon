@@ -72,10 +72,9 @@ class Index:
                 if os.path.exists('apps/static/assets/csv/data.csv'):
                     os.remove('apps/static/assets/csv/data.csv')
 
-                quantidade_alunos_sp = str(quantidade_alunos_sp)
-                numero = quantidade_alunos_sp[-3]
-                quantidade_alunos_sp = quantidade_alunos_sp.split(quantidade_alunos_sp[-3])
-                quantidade_alunos_sp = quantidade_alunos_sp[0] + "." + numero + quantidade_alunos_sp[1]
+                numero = quantidade_alunos_sp[0] + quantidade_alunos_sp[1]
+                quantidade_alunos_sp = numero + "." + quantidade_alunos_sp[-3] + quantidade_alunos_sp[-2] + quantidade_alunos_sp[-1]
+
 
                 fig = px.choropleth(
                                     state_data, 
