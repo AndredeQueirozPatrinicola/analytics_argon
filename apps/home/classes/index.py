@@ -32,7 +32,7 @@ class Index:
         return menu_nav_table, titulo
 
     def _trata_dados_api(self):
-        # try:
+        try:
             state_data = self.mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
 
             state_data = pd.DataFrame(state_data, index=[0])
@@ -41,8 +41,8 @@ class Index:
             state_data = state_data.rename(columns={0:"Alunos"})
 
             return state_data
-        # except:
-        #     raise Exception()
+        except:
+            raise Exception()
 
     def plota_mapa(self):
         """
@@ -113,19 +113,23 @@ class Index:
             
 
     def tabela_alunos_estados(self):
-        data = self._trata_dados_api()
-        estados = data.index.to_list()
-        alunos = data["Alunos"].to_list()
+        try:
+            data = self._trata_dados_api()
+            estados = data.index.to_list()
+            alunos = data["Alunos"].to_list()
 
-        x = 0
-        resultado = [] 
-        while x < len(estados):
-            
-            resultado.append([estados[x], alunos[x]])
-            
-            x += 1
-            
-        return resultado
+            x = 0
+            resultado = [] 
+            while x < len(estados):
+                
+                resultado.append([estados[x], alunos[x]])
+                
+                x += 1
+                
+            return resultado
+        except:
+            erro = "Houve um problema para fornecer o gráfico"
+            return erro
 
 
             
