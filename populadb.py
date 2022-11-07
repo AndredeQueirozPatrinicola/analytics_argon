@@ -385,8 +385,8 @@ if __name__ == '__main__':
     api = Api()
 
     try:
-        # api.pega_dados_departamentos()
-        # api.pega_dados_docente()
+        api.pega_dados_departamentos()
+        api.pega_dados_docente()
         api.pega_dados_mapas()
         print('Banco de dados populado com sucesso')
     except:
