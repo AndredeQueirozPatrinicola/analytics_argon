@@ -7,12 +7,14 @@ import os
 from time import sleep
 
 from apps.home.utils import Utils
+from apps.home.models import Mapa
 
 class Index:
 
     def __init__(self):
-        self.response_base_dados = requests.get(url = 'https://raw.githubusercontent.com/fititnt/gis-dataset-brasil/master/uf/geojson/uf.json')
-        self.response_api = requests.get(url = 'https://dados.fflch.usp.br/api/alunosAtivosEstado')
+        self.mapa_quantidade_alunos_estado_base = Mapa.objects.filter(nome="MapaIndexAlunos").values('base_de_dados')
+        self.mapa_quantidade_alunos_estado_dados = Mapa.objects.filter(nome="MapaIndexAlunos").values('dados_do_mapa')
+      
 
     def tabela_sobrenos(self):
         titulo = 'FFLCH | Analytics'
@@ -30,8 +32,8 @@ class Index:
         return menu_nav_table, titulo
 
     def _trata_dados_api(self):
-        if self.response_base_dados.status_code == 200 and self.response_api.status_code == 200:
-            state_data = self.response_api.json()
+        # try:
+            state_data = self.mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
 
             state_data = pd.DataFrame(state_data, index=[0])
             state_data = state_data.drop('', axis=1)
@@ -39,8 +41,8 @@ class Index:
             state_data = state_data.rename(columns={0:"Alunos"})
 
             return state_data
-        else:
-            raise EOFError
+        # except:
+        #     raise Exception()
 
     def plota_mapa(self):
         """
@@ -55,7 +57,7 @@ class Index:
         try:
                 estados = Utils()
                 estados = estados.pega_codigo_estado()
-                state_geo = self.response_base_dados.json()
+                state_geo = self.mapa_quantidade_alunos_estado_base[0].get('base_de_dados')
 
                 state_data = self._trata_dados_api()
                 state_data = state_data.sort_index(ascending=True)

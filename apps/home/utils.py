@@ -188,7 +188,7 @@ class Utils:
             return departamentos_siglas
 
 
-    def pega_codigo_estado(self, *estado):
+    def pega_codigo_estado(self, *estado):  
 
         estados = {
             'AC' : 12, 	
@@ -225,3 +225,13 @@ class Utils:
 
         elif estado:
             return [estados.get(i) for i in estados if i in estado]
+
+    
+    def verifica_json_vazio(json):
+
+        vazio = [[],{},[{}],]
+
+        if json in vazio:
+            return False
+        else:
+            return True

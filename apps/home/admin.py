@@ -7,7 +7,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Docente, Departamento
+from .models import Docente, Departamento, Mapa
 
 # Register your models here.
 
@@ -15,7 +15,6 @@ from .models import Docente, Departamento
 
 class DocenteAdmin(admin.ModelAdmin):
     list_display = ('docente_id','api_docente', 'api_programas', 'api_docentes' )
-
 
 admin.site.register(Docente, DocenteAdmin)
 
@@ -25,3 +24,10 @@ class DepartamentoAdmin(admin.ModelAdmin):
     search_fields = ('sigla',)
 
 admin.site.register(Departamento, DepartamentoAdmin)
+
+
+class MapaAdmin(admin.ModelAdmin):
+    list_display = ('id','nome', 'base_de_dados', 'dados_do_mapa')
+    search_fields = ('nome',)
+
+admin.site.register(Mapa, MapaAdmin)
