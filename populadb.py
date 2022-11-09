@@ -8,6 +8,8 @@ django.setup()
 
 from apps.home.utils import Utils
 from apps.home.models import Departamento, Docente, Mapa
+from services.populadb.Docentes import ApiDocente
+from services.populadb.Departamentos import ApiDepartamento
 
 
 api = 'https://dados.fflch.usp.br/api/'
@@ -120,8 +122,7 @@ class PopulaDB:
             print(siglas[x])
 
             # Lista com dicionario com dados dos docentes de cada departamento
-            dados_docentes_filtrados = [i for i in dados_docentes if i.get(
-                'nomset') == departamentos_siglas.get(siglas[x])]
+            dados_docentes_filtrados = [i for i in dados_docentes if i.get('nomset') == departamentos_siglas.get(siglas[x])]
 
             # Lista com dicionarios por ano
             for i in dados_pesquisa_parametros:
@@ -258,8 +259,7 @@ class PopulaDB:
             sleep(2)
             parametro = parametros[z]
 
-            docentes = requests.get(
-                url=self.api_programas_docentes + parametro)
+            docentes = requests.get(url=self.api_programas_docentes + parametro)
             programas = requests.get(url=self.api_programas)
 
             docentes_dados = docentes.json()
@@ -383,12 +383,91 @@ class PopulaDB:
             raise Exception()
 
 
+class PopulaDB2():
+
+    def pega_numeros_usp(self):
+        response = requests.get('https://dados.fflch.usp.br/api/docentes')
+        if response.status_code == 200:
+            df = response.json()
+            df = pd.DataFrame(df)
+
+            numeros_usp = df['id_lattes'].to_list()
+            numeros_usp = [i for i in numeros_usp if i != "0"]
+
+            return numeros_usp
+        else:
+            print("Algo de errado na requisição")
+
+
+    def informacoes_dps(self):
+        programas_dpto = {
+            'FLP' : [8131],
+            'FSL' : [8132],
+            'FLF' : [8133],
+            'FLA' : [8134],
+            'FLG' : [8135, 8136],
+            'FLH' : [8137, 8138],
+            'FLL' : [8139],
+            'FLC' : [8142, 8143, 8149, 8150, 8156, 8162],
+            'FLM' : [8144, 8145, 8146, 8147, 8148, 8158, 8160, 8163, 8164, 8165],
+            'FLT' : [8151],
+            'FLO' : [8155, 8157],
+        }
+
+        siglas = ['FLA', 'FLP', 'FLF', 'FLH', 'FLC', 'FLM', 'FLO', 'FLL', 'FSL', 'FLT', 'FLG']
+
+        anos = [2016, 2017, 2018, 2019, 2020, 2021]
+
+        
+
+
 if __name__ == '__main__':
     api = PopulaDB()
+    api2 = PopulaDB2()
+    utils = Utils()
 
     try:
-        api.pega_dados_departamentos()
-        api.pega_dados_docente()
+        numeros_usp = api2.pega_numeros_usp()
+        print("Começando a popular tabela de docentes")
+        for numero_usp in numeros_usp:
+
+            indice = numeros_usp.index(numero_usp)
+
+            docente = ApiDocente(numero_usp)
+            dados_api_docente = docente.pega_api_docente()
+            dados_api_programas = docente.pega_api_programas()
+            dados_api_docentes = docente.pega_api_docentes()
+
+            docente.atualiza_ou_cria_docente(dados_api_docente, dados_api_programas, dados_api_docentes)
+            print(f"Docente {numero_usp} salvo ou atualizado. {indice + 1}/{len(numeros_usp)}")
+            sleep(2)
+
+        siglas_departamentos = utils.siglas_departamentos('siglas')
+        print("Começando a popular tabela de departamentos")
+        for sigla in siglas_departamentos:
+            indice = siglas_departamentos.index(sigla)
+
+            departamento = ApiDepartamento(sigla)
+            api_docentes = departamento.pega_api_docentes()
+            api_programas = departamento.pega_api_programas()
+            api_pesquisa_vazio = departamento.pega_api_pesquisa_vazio()
+            api_pesquisa_parametros = departamento.pega_api_pesquisa_parametros()
+            api_defesas = departamento.pega_api_defesas()
+            api_programas_docentes = departamento.pega_api_programas_docentes()
+            api_programas_docentes_limpo = departamento.pega_api_programas_docentes_limpo()
+
+            departamento.atualiza_ou_cria_departamento(
+                                                    api_docentes,
+                                                    api_programas, 
+                                                    api_pesquisa_vazio, 
+                                                    api_pesquisa_parametros, 
+                                                    api_defesas, 
+                                                    api_programas_docentes, 
+                                                    api_programas_docentes_limpo,  
+                                                    )
+
+            # api.pega_dados_departamentos()
+            # api.pega_dados_docente()
         api.pega_dados_mapas()
         print('Banco de dados populado com sucesso')
     except:
