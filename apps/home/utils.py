@@ -227,11 +227,11 @@ class Utils:
             return [estados.get(i) for i in estados if i in estado]
 
     
-    def verifica_json_vazio(json):
+    def verifica_json_vazio(json=0):
 
         vazio = [[],{},[{}],]
 
         if json in vazio:
-            return False
-        else:
             return True
+        else:
+            return False

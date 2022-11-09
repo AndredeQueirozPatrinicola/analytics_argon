@@ -12,7 +12,7 @@ from apps.home.models import Departamento, Docente, Mapa
 
 api = 'https://dados.fflch.usp.br/api/'
 
-class Api:
+class PopulaDB:
 
     def __init__(self):
         self.api = api
@@ -354,10 +354,12 @@ class Api:
 
                 if verifica_existencia.exists():
 
-                    # Se por algum motivo a base de dados estiver vazia ele retorna False e não
-                    # salva no banco de dados.
+                    # Se por algum motivo a base de dados estiver 
+                    # vazia o metodo 'verifica_json_vazio'
+                    # retorna True e não salva no banco de dados.
+
                     protege_base_de_dados = Utils.verifica_json_vazio(raw_base_de_dados)
-                    if protege_base_de_dados:
+                    if not protege_base_de_dados:
 
                         Mapa.objects.filter(nome=nome).update(
                                                         base_de_dados=raw_base_de_dados,
@@ -382,7 +384,7 @@ class Api:
 
 
 if __name__ == '__main__':
-    api = Api()
+    api = PopulaDB()
 
     try:
         api.pega_dados_departamentos()
