@@ -151,6 +151,8 @@ class ApiDepartamento:
                 api_programas_docente_limpo=api_programas_docentes_limpo, 
             )
 
+            print("Dados atualizados com sucesso")
+
         else:
             departamento = Departamento(
                 api_docentes=api_docentes,
@@ -161,5 +163,7 @@ class ApiDepartamento:
                 api_programas_docente=api_programas_docentes, 
                 api_programas_docente_limpo=api_programas_docentes_limpo, 
             )
+
+            print("Departamento salvo com sucesso")
 
             departamento.save()
