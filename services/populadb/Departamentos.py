@@ -1,6 +1,5 @@
 import requests
 import os, django
-import pandas as pd
 from time import sleep
 from datetime import datetime
 
@@ -8,7 +7,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
 from apps.home.utils import Utils
-from apps.home.models import Departamento, Docente, Mapa
+from apps.home.models import Departamento
 
 
 class ApiDepartamento:
@@ -61,10 +60,10 @@ class ApiDepartamento:
         }
         raw_pesquisa_parametros = requests.get(url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
         dados_pesquisa_parametros = raw_pesquisa_parametros.json()
-
+        
         for i in dados_pesquisa_parametros:
-                if i == departamentos_siglas.get(self.sigla):
-                    lista_pesquisa_por_ano = [dados_pesquisa_parametros.get(i)]
+            if i == departamentos_siglas.get(self.sigla) or i == 'Linguística':
+                lista_pesquisa_por_ano = [dados_pesquisa_parametros.get(i)]
 
         return lista_pesquisa_por_ano
 

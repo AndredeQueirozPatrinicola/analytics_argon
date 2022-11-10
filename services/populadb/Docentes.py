@@ -1,14 +1,10 @@
 import requests
 import os, django
-import pandas as pd
-from time import sleep
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
-from apps.home.utils import Utils
-from apps.home.models import Departamento, Docente, Mapa
-
+from apps.home.models import Docente
 
 class ApiDocente:
 
