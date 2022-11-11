@@ -141,7 +141,7 @@ class DadosDocente():
         api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
 
-        if dados['orientandos']:
+        try:
             df = pd.DataFrame(dados['orientandos'])
 
             nivpgm = list(df['nivpgm'])
@@ -163,7 +163,7 @@ class DadosDocente():
 
             titulo = [
                 {
-                    'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos(diretos)'
+                    'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos'
                 }
             ]
 
@@ -178,7 +178,7 @@ class DadosDocente():
                         }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
 
             return figura, titulo
-        else:
+        except:
             return None, None
 
     def tabela_orientandos(self):
@@ -233,7 +233,7 @@ class DadosDocente():
                 }
             ]
 
-        if dados['livros']:
+        try:
             tabela = pd.DataFrame(dados['livros'])
             publicacoes = tabela.head(5)
             titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
@@ -241,5 +241,5 @@ class DadosDocente():
 
             return publicacao_com_ano, tabela_publicacoes
 
-        else:
+        except:
             return[[ 'Não existem publicações de livros registradas']], tabela_publicacoes

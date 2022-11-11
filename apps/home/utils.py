@@ -60,6 +60,7 @@ class Utils:
                 'FLT': "Teoria Literária e Literatura Comparada",
                 'FLG': 'Geografia'
             }
+            
         self.codigos = [
                 8131, 8132, 8133, 8134,
                 8135, 8136, 8137, 8138,
