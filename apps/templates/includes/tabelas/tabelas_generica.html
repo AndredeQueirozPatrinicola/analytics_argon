@@ -4,15 +4,17 @@
       <tr>
         <th scope="col" class="header-mapa header-table-estados">Estados</th>
         <th scope="col" class="header-mapa header-table-alunos">Alunos</th>
+        <th scope="col" class="header-mapa header-table-estados">Estados</th>
+        <th scope="col" class="header-mapa header-table-alunos">Alunos</th>
       </tr>
     </thead>
     <tbody>
       {% for tabela in tabela_alunos_estados %}
-      <tr>
+      <tr class="linha-tabela-mapa">
         {% for item in tabela %}
-        <td class="cell-tabel-mapa">
-          {{ item }}
-        </td>
+          <td class="cell-tabel-mapa">
+            {{ item }}
+          </td>
         {% endfor %}
       </tr>
       {% endfor %}
