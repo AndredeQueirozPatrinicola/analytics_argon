@@ -11,21 +11,17 @@ class DadosDepartamento():
     def __init__(self, sigla):
         self.sigla = sigla
 
-    def tabela_docentes(self, sigla):
-        api_programas = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
-        api_docentes = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
-
-        dados_programas = api_programas[0][0]
-        dados_docentes = api_docentes[0][0]
+    def tabela_docentes(self, api_programas, api_docentes):
+        dados_programas = api_programas
+        dados_docentes = api_docentes
 
         for i in dados_programas:
-            if i['sigla'] == sigla:
+            if i['sigla'] == self.sigla:
                 nome = i['nome']
                 id = i['id_lattes_docentes']
                 codset = i['codigo']
 
-        docentes = [i for i in dados_docentes if int(
-            i['codset']) == int(codset)]
+        docentes = [i for i in dados_docentes if int(i['codset']) == int(codset)]
 
         df = pd.DataFrame(docentes)
 
@@ -33,25 +29,21 @@ class DadosDepartamento():
 
         return df, id_lattes, nome, id
 
-    def pega_numero_docentes(self, sigla):
-        resultado = Docente.objects.values_list('api_docentes')
-        departamento = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
-
-        departamento = departamento[0][0][0]
+    def pega_numero_docentes(self, api_programas, api_docentes):
+        departamento = api_programas
+        resultado = api_docentes
 
         total = 0
         ativos = 0
         aposentados = 0
 
-
         for i in resultado:
-
-            if i[0].get('nomset') == departamento.get('nome') or i[0].get('nomset') == 'Lingüística':
+            if i.get('nomset') == departamento[0].get('nome') or i.get('nomset') == 'Lingüística':
                 total += 1
-                if i[0].get('sitatl') == 'A':
+                if i.get('sitatl') == 'A':
                     
                     ativos += 1
-                elif i[0].get('sitatl') == 'P':
+                elif i.get('sitatl') == 'P':
                     aposentados += 1
 
         resultado = {
@@ -62,11 +54,11 @@ class DadosDepartamento():
                                 'aposentados' : f'Aposentados: {aposentados}'
                               }
             }
-
+        
         return resultado, total, ativos, aposentados
 
-    def plota_aposentados_ativos(self, sigla):
-        x, y, ativos, aposentados = self.pega_numero_docentes(sigla)
+    def plota_aposentados_ativos(self, api_programas, api_docentes):
+        x, y, ativos, aposentados = self.pega_numero_docentes(api_programas, api_docentes)
         ativos_aposentados = [ativos, aposentados]
         tipos = ['Ativos', "Aposentados"]
         titulo = 'Percentual entre docentes aposentados e ativos'
@@ -76,10 +68,8 @@ class DadosDepartamento():
 
         return grafico, titulo
 
-    def plota_tipo_vinculo_docente(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
-        dados = api
-        dados = dados[0][0]
+    def plota_tipo_vinculo_docente(self, api_docentes):
+        dados = api_docentes
 
         x = 0
         nomefnc = []
@@ -105,9 +95,8 @@ class DadosDepartamento():
 
         return grafico, titulo
 
-    def plota_prod_departamento(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente_limpo')
-        dados = api[0][0]
+    def plota_prod_departamento(self, api_programas_docente_limpo):
+        dados = api_programas_docente_limpo
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(
         ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
@@ -139,12 +128,11 @@ class DadosDepartamento():
 
         return grafico, titulo
 
-    def tabela_trabalhos(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_pesquisa')
-        dados = api[0][0]
+    def tabela_trabalhos(self, api_pesquisa):
+        dados = api_pesquisa
 
         df = pd.DataFrame(dados)
-        df = pd.DataFrame(df[sigla])
+        df = pd.DataFrame(df[self.sigla])
         df = df.rename(index={
             'nome_departamento': "Nome do departamento",
             'ic_com_bolsa': "IC com bolsa",
@@ -156,7 +144,7 @@ class DadosDepartamento():
         })
         indices = df.index
         indices.to_list()
-        valores = df[sigla].to_list()
+        valores = df[self.sigla].to_list()
 
         x = 0
         dados_tabela = []
@@ -169,12 +157,10 @@ class DadosDepartamento():
 
         return dados_tabela, headers
 
-    def plota_grafico_bolsa_sem(self):
-        api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
-        dados = api[0][0]
+    def plota_grafico_bolsa_sem(self, api_pesquisa_parametros):
+        dados = api_pesquisa_parametros
 
-        anos = [i for i in range(
-            int(datetime.now().year) - 6, datetime.now().year)]
+        anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
 
         df = pd.DataFrame(dados[0])
@@ -210,12 +196,10 @@ class DadosDepartamento():
 
         return grafico, titulo
 
-    def plota_prod_serie_historica(self, sigla):
-        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
-        dados = api[0][0]
+    def plota_prod_serie_historica(self, api_programas_docente):
+        dados = api_programas_docente
 
-        anos_int = [i for i in range(
-            int(datetime.now().year) - 6, datetime.now().year)]
+        anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos = [str(i) for i in anos_int]
 
         lista_livros = []
@@ -296,9 +280,9 @@ class DadosDepartamento():
 
         return grafico, titulo
 
-    def pega_programa_departamento(self, sigla):
+    def pega_programa_departamento(self):
         programas_dpto = Utils()
-        programas_dpto = programas_dpto.pega_programas_departamento(sigla)
+        programas_dpto = programas_dpto.pega_programas_departamento(self.sigla)
         programas_dpto = programas_dpto.get('programas')
 
         label = 'Programas'
