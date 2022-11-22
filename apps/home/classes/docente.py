@@ -13,20 +13,30 @@ API_PROGRAMAS = API + 'programas/'
 
 class DadosDocente():
 
-    def __init__(self, parametro, sigla):
-        self.parametro = parametro
+    def __init__(self, numero_lattes, sigla):
+        self.numero_lattes = numero_lattes
         self.sigla = sigla
+
+
+    def pega_informacoes_basicas(self, dados, dados_nome):
+        caminho = self.pega_caminho(dados, dados_nome)
+
+        docente = [{
+                    'nome': caminho[1].get('text'),
+                    'programa': '',
+                    'departamento': '',
+                    'link_lattes': 'http://lattes.cnpq.br/' + self.numero_lattes
+                   }]
+
+        return docente
+
 
     def pega_vinculo_situacao(self, dados):
         """
             Pega dados no BD equivalentes à: https://dados.fflch.usp.br/api/docentes
 
             Trata dados e retorna o vinculo e a situacao do docente. 
-        # """
-        # dados = Docente.objects.filter(docente_id = self.parametro).values_list('api_docentes')
-
-        # dados = dados[0][0]
-
+        """
         vinculo = dados.get('nomefnc')
         situacao = dados.get('sitatl')
         
@@ -37,24 +47,30 @@ class DadosDocente():
         else:
             return "Não informado"
 
-        return vinculo, situacao
+        resultado = {
+            'vinculo' : vinculo,
+            'situacao' : situacao
+        }
+
+        return resultado
 
     def linhas_de_pesquisa(self, dados):
         """
-            Tenta buscar o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+            Tenta buscar o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.numero_lattes }}
 
             e retorna lista com as linhas de pesquisa cadastradas no Lattes.
 
         """
-        # api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
-        # dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
-
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
-
         label = 'Linhas'
 
-        return label, linhas_pesquisa
+        resultado = {
+            'label' : label,
+            'linhas_pesquisa' : linhas_pesquisa
+        }
+
+        return resultado
 
     def pega_caminho(self, dados, dados_nome):
         """
@@ -91,11 +107,11 @@ class DadosDocente():
 
     def plota_grafico_historico(self, tipo, dados):
         """
-            Recebe o parametro tipo -> "livro", "capitulo", "artigo" e
+            Recebe o numero_lattes tipo -> "livro", "capitulo", "artigo" e
             retorna gráfico de linhas com toda produção por ano do docente.
         """
         try:
-            # api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+            # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
             # dados = api[0][0]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
@@ -121,21 +137,22 @@ class DadosDocente():
                 '0': ''
             }, margin=dict(l=0, r=30, t=20, b=50), font_color="white", showlegend=False)
 
-            grafico_titulo = {
+            resultado = {
                 'titulo': f'Produção de {tipo} por ano ({df.index[0]}-{str(datetime.now().year)})',
-                'categoria': tipo
+                'categoria': tipo,
+                'grafico' : grafico
             }
 
-            return grafico, grafico_titulo
+            return resultado
         except:
-            return None, None
+            return None
 
-    def plota_grafico_pizza(self, dados):
+    def plota_grafico_orientandos(self, dados):
         """
-            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.numero_lattes }}
             e retorna um grafico de pizza com a proporção entre orientandos de Mestrado, Doutorado e Doutorado Direto.
         """
-        # api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
         # dados = api[0][0]
 
         try:
@@ -158,12 +175,6 @@ class DadosDocente():
             nivel.append(y)
             nivel.append(z)
 
-            titulo = [
-                {
-                    'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos'
-                }
-            ]
-
             figura = Grafico()
 
             figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
@@ -174,21 +185,27 @@ class DadosDocente():
                             'color': 'Cor'
                         }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
 
-            return figura, titulo
+            resultado = {
+                'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
+                'grafico' : figura
+            }
+
+            return resultado
         except:
-            return None, None
+            return None
+
 
     def tabela_orientandos(self, dados):
         """
-            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.numero_lattes }}
 
             retorna tabela com nome de todos os orientandos de Mestrado, Doutorado e Doutorado Direto
         """
-        # api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
+        # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
         # dados = api[0][0]
-        if dados['orientandos']:
-            df = pd.DataFrame(dados['orientandos'])
+        try:
 
+            df = pd.DataFrame(dados['orientandos'])
             nomep = list(df['nompes'])
             nivpgm = list(df['nivpgm'])
             nomare = list(df['nomare'])
@@ -199,44 +216,51 @@ class DadosDocente():
                 resultado.append([f'{nomep[x]}', f'{nivpgm[x]}', f'{nomare[x]}'])
                 x += 1
 
-
-            tabela_header = [
-                {
-                    'titulo' : 'Orientandos Ativos',
+            tabela_infos = {
+                    'title' : 'Orientandos Ativos',
                     'nome' : 'Nome',
                     'nivel' : 'Nivel',
                     'programa' : 'Programa'
                 }
-            ]          
 
-            return resultado, tabela_header
-        else:
-            return None, None
+            tabela = {
+                'tabela_infos' : tabela_infos,
+                'tabela_conteudo' : resultado
+            }          
+
+            return tabela
+        except:
+            return None
 
     def tabela_ultimas_publicacoes(self, dados):
         """
-            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.numero_lattes }}
 
             Retorna lista de listas com dados para tabela com as ultimas 5 publicações de Livros do docente. 
-        # """
-        # api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
-        # dados = api[0][0]
-
-        tabela_publicacoes = [
-                {
+        """
+        tabela_publicacoes = {
                     'titulo' : 'Ultimas publicações de livros',
                     'titulo_trabalho' : 'Titulo',
                     'ano' : 'Ano'
                 }
-            ]
 
         try:
             tabela = pd.DataFrame(dados['livros'])
             publicacoes = tabela.head(5)
             titulo_ano = publicacoes[['TITULO-DO-LIVRO', 'ANO']]
             publicacao_com_ano = titulo_ano.values.tolist()
+            resultado = {
+                'publicacoes' : publicacao_com_ano,
+                'tabela_infos' : tabela_publicacoes
+            }
 
-            return publicacao_com_ano, tabela_publicacoes
+            return resultado
 
         except:
-            return[[ 'Não existem publicações de livros registradas']], tabela_publicacoes
+
+            resultado = {
+                'publicacoes' : [[ 'Não existem publicações de livros registradas']],
+                'tabela_infos' : tabela_publicacoes
+            }
+
+            return resultado

@@ -17,24 +17,28 @@ class Departamentos():
         resultado = Docente.objects.count()
         ativo_aposentado = Docente.objects.values_list('api_docentes')
 
-        ativo = 0
-        aposentado = 0
-
+        ativos = 0
+        aposentados = 0
+        total = 0
         for i in ativo_aposentado:
-
+            total+=1
             if i[0].get('sitatl') == 'A':
-                ativo += 1
+                ativos += 1
             elif i[0].get('sitatl') == 'P':
-                aposentado += 1
+                aposentados += 1
            
         resultado = {
-            'texto_ativos' : 'Numero de docentes',
-            'numero_ativos' : { 
-                                'total' : f'Total: {resultado}',
-                                'ativos' : f'Ativos: {ativo}',
-                                'aposentados' : f'Aposentados: {aposentado}'
-                              }
-            }
+            'titulo' : 'Numero de docentes',
+            'texto_ativos' : { 
+                                'total' : f'Total: {total}',
+                                'ativos' : f'Ativos: {ativos}',
+                                'aposentados' : f'Aposentados: {aposentados}'
+                              },
+            'numeros' : {
+                'total' : total,
+                'ativos' : ativos,
+                'aposentados' : aposentados
+            }}
 
         return resultado
 
@@ -102,7 +106,12 @@ class Departamentos():
 
         titulo = 'Todos os docentes da faculdade'
 
-        return df, titulo
+        resultado = {
+            'titulo' : titulo,
+            'df' : df
+        }
+
+        return resultado
 
     def plota_relacao_cursos(self):
         dados = Docente.objects.raw("SELECT id, api_docentes FROM analytics.home_docente hd ;")
@@ -126,7 +135,12 @@ class Departamentos():
         grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=0), x=0.6, y=-0.5, color=df2.index, height=700,
                                         color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def grafico_bolsa_sem(self):
         dados = Departamento.objects.raw(
@@ -165,9 +179,14 @@ class Departamentos():
 
         titulo = "Relação entre IC's e Pós Doutorado com e sem bolsas"
 
-        return fig, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : fig
+        }
 
-    def tabela_trabalhos(self):
+        return resultado
+
+    def tabela_bolsas(self):
         dados = Departamento.objects.raw(
             "SELECT id, api_pesquisa_parametros FROM analytics.home_departamento hd;")
 
@@ -196,7 +215,12 @@ class Departamentos():
 
         titulos = ['Titulos', '2016', '2017', '2018', '2019', '2020', '2021']
 
-        return lista_valores, titulos
+        resultado = {
+            'headers' : titulos,
+            'tabelas' : lista_valores
+        }
+
+        return resultado
 
     def prod_total_departamentos(self):
         dados = Departamento.objects.values('api_programas_docente_limpo')
@@ -241,7 +265,12 @@ class Departamentos():
 
         titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no lattes'
 
-        return fig, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : fig
+        }
+
+        return resultado
 
     def prod_historica_total(self):
 
@@ -336,8 +365,17 @@ class Departamentos():
                                         
         titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def pega_programas(self):
         utils = Utils()
-        return utils.pega_programas_departamento().get('programas'), 'Programas'
+        resultado = {
+            'programas' : utils.pega_programas_departamento().get('programas'),
+            'label' : 'Programas'
+        }
+        return resultado

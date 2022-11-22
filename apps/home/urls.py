@@ -9,18 +9,18 @@ from apps.home import views
 
 urlpatterns = [
 
-    # url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 
     # The home page
     path('', views.IndexView.as_view(), name='home'),
 
-    path('sobre-nos', views.sobre_nos, name='sobre nos'),
+    path('sobre-nos', views.SobrenosView.as_view(), name='sobre-nos'),
 
     path('departamentos', views.DepartamentosView.as_view(), name='departamentos'),
 
     path('departamentos/<str:sigla>', views.DepartamentoView.as_view(), name='docentes'),
 
-    path('<str:sigla>/docente/<str:parametro>', views.DocenteView.as_view(), name='docente'),
+    path('<str:sigla>/docente/<str:numero_lattes>', views.DocenteView.as_view(), name='docente'),
 
     # # Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),

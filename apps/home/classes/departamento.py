@@ -26,8 +26,15 @@ class DadosDepartamento():
         df = pd.DataFrame(docentes)
 
         id_lattes = df['id_lattes']
+        print(id_lattes, id)
+        resultado = {
+            'df' : df,
+            'id_lattes' : id_lattes,
+            'nome' : nome,
+            'id' : id
+        }
 
-        return df, id_lattes, nome, id
+        return resultado
 
     def pega_numero_docentes(self, api_programas, api_docentes):
         departamento = api_programas
@@ -47,26 +54,35 @@ class DadosDepartamento():
                     aposentados += 1
 
         resultado = {
-            'texto_ativos' : 'Numero de docentes',
-            'numero_ativos' : { 
+            'titulo' : 'Numero de docentes',
+            'texto_ativos' : { 
                                 'total' : f'Total: {total}',
                                 'ativos' : f'Ativos: {ativos}',
                                 'aposentados' : f'Aposentados: {aposentados}'
-                              }
-            }
+                              },
+            'numeros' : {
+                'total' : total,
+                'ativos' : ativos,
+                'aposentados' : aposentados
+            }}
         
-        return resultado, total, ativos, aposentados
+        return resultado
 
     def plota_aposentados_ativos(self, api_programas, api_docentes):
-        x, y, ativos, aposentados = self.pega_numero_docentes(api_programas, api_docentes)
-        ativos_aposentados = [ativos, aposentados]
+        numero_docentes = self.pega_numero_docentes(api_programas, api_docentes)
+        ativos_aposentados = [numero_docentes.get('numeros').get('ativos'), numero_docentes.get('numeros').get('aposentados')]
         tipos = ['Ativos', "Aposentados"]
         titulo = 'Percentual entre docentes aposentados e ativos'
         grafico = Grafico()
         grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
                                         color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def plota_tipo_vinculo_docente(self, api_docentes):
         dados = api_docentes
@@ -82,18 +98,20 @@ class DadosDepartamento():
 
         lista_nomes = df.value_counts().index.to_list()
         nomes = [i[0] for i in lista_nomes]
-
         lista_valores = df.value_counts().to_list()
 
         titulo = 'Percentual entre tipos de vínculo de docente'
-
         grafico = Grafico()
-        
         grafico = grafico.grafico_pizza(values=lista_valores, names=nomes, color=nomes, legend_orientation='h',
                                         color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"], x=1, y=1.02,
                                         margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def plota_prod_departamento(self, api_programas_docente_limpo):
         dados = api_programas_docente_limpo
@@ -123,10 +141,14 @@ class DadosDepartamento():
                         'color' : 'Legenda'
                      })
 
-
         titulo = 'Produção total do departamento registrada no Lattes'
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def tabela_trabalhos(self, api_pesquisa):
         dados = api_pesquisa
@@ -155,7 +177,12 @@ class DadosDepartamento():
 
         headers = ['Nomes', 'Valores']
 
-        return dados_tabela, headers
+        resultado = {
+            'headers' : headers,
+            'tabelas' : dados_tabela
+        }
+
+        return resultado
 
     def plota_grafico_bolsa_sem(self, api_pesquisa_parametros):
         dados = api_pesquisa_parametros
@@ -194,7 +221,12 @@ class DadosDepartamento():
 
         titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]} - {anos[-1]})"
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico
+        }
+
+        return resultado
 
     def plota_prod_serie_historica(self, api_programas_docente):
         dados = api_programas_docente
@@ -210,12 +242,9 @@ class DadosDepartamento():
 
             z = 0
             while z < len(dados[x].get(anos[x])):
-                lista_livros.append(dados[x].get(anos[x])[
-                                    z].get('total_livros'))
-                lista_artigos.append(dados[x].get(anos[x])[
-                                     z].get('total_artigos'))
-                lista_capitulos.append(dados[x].get(
-                    anos[x])[z].get('total_capitulos'))
+                lista_livros.append(dados[x].get(anos[x])[z].get('total_livros'))
+                lista_artigos.append(dados[x].get(anos[x])[z].get('total_artigos'))
+                lista_capitulos.append(dados[x].get(anos[x])[z].get('total_capitulos'))
 
                 z += 1
 
@@ -278,7 +307,12 @@ class DadosDepartamento():
         
         titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
 
-        return grafico, titulo
+        resultado = {
+            'titulo' : titulo,
+            'grafico' : grafico 
+        }
+
+        return resultado
 
     def pega_programa_departamento(self):
         programas_dpto = Utils()
@@ -287,4 +321,9 @@ class DadosDepartamento():
 
         label = 'Programas'
 
-        return programas_dpto, label
+        resultado = {
+            'label' : label,
+            'programas_dpto' : programas_dpto
+        }
+
+        return resultado
