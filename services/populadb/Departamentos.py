@@ -54,8 +54,8 @@ class ApiDepartamento:
         departamentos_siglas = departamentos_siglas.siglas_departamentos('departamentos')
         parametros = {
             'filtro': 'serie_historica',
-            'ano_ini': 2016,
-            'ano_fim': 2021,
+            'ano_ini': datetime.now().year - 6,
+            'ano_fim': datetime.now().year - 1,
             'serie_historica_tipo': 'departamento'
         }
         raw_pesquisa_parametros = requests.get(url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
