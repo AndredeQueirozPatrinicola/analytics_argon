@@ -12,8 +12,8 @@ from apps.home.models import Mapa
 class Index:
 
     def __init__(self):
-        self.mapa_quantidade_alunos_estado_base = Mapa.objects.filter(nome="MapaIndexAlunos").values('base_de_dados')
-        self.mapa_quantidade_alunos_estado_dados = Mapa.objects.filter(nome="MapaIndexAlunos").values('dados_do_mapa')
+        self.__mapa_quantidade_alunos_estado_base = Mapa.objects.filter(nome="MapaIndexAlunos").values('base_de_dados')
+        self.__mapa_quantidade_alunos_estado_dados = Mapa.objects.filter(nome="MapaIndexAlunos").values('dados_do_mapa')
       
 
     def tabela_sobrenos(self):
@@ -33,7 +33,7 @@ class Index:
 
     def _trata_dados_api(self):
         try:
-            dados_api = self.mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
+            dados_api = self.__mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
             dados_api = pd.DataFrame(dados_api, index=[0])
             dados_api = dados_api.drop('', axis=1)
             dados_api = dados_api.transpose()
@@ -56,7 +56,7 @@ class Index:
         try:
             estados = Utils()
             estados = estados.pega_codigo_estado()
-            state_geo = self.mapa_quantidade_alunos_estado_base[0].get('base_de_dados')
+            state_geo = self.__mapa_quantidade_alunos_estado_base[0].get('base_de_dados')
 
             state_data = self._trata_dados_api()
             state_data = state_data.sort_index(ascending=True)
@@ -106,8 +106,7 @@ class Index:
 
             return fig, quantidade_alunos_sp
         except:
-            erro = "Houve um problema para fornecer o gráfico"
-            return erro
+            return None
             
 
     def tabela_alunos_estados(self):
@@ -127,7 +126,7 @@ class Index:
 
             return resultado
         except:
-            erro = "Houve um problema para fornecer o gráfico"
+            erro = [["Houve um problema para fornecer a tabela"]]
             return erro
 
 
