@@ -26,7 +26,6 @@ class DadosDepartamento():
         df = pd.DataFrame(docentes)
 
         id_lattes = df['id_lattes']
-        print(id_lattes, id)
         resultado = {
             'df' : df,
             'id_lattes' : id_lattes,
