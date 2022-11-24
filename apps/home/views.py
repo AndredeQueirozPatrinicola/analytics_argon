@@ -6,6 +6,8 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, render
 
+from services.populadb.Docentes import ApiDocente
+
 from apps.home.models import Docente, Departamento
 
 from .classes.docente import DadosDocente
@@ -83,12 +85,18 @@ class IndexView(View):
 class DocenteView(View):
 
     def queries(self, numero_lattes):
-        querie = Docente.objects.filter(docente_id=numero_lattes).values()
-        querie = querie[0]
+        try:
+            querie = Docente.objects.filter(docente_id=numero_lattes).values()
+            querie = querie[0]
 
-        api_docente = querie.get('api_docente')
-        api_programas = querie.get('api_programas')
-        api_docentes = querie.get('api_docentes')
+            api_docente = querie.get('api_docente')
+            api_programas = querie.get('api_programas')
+            api_docentes = querie.get('api_docentes')
+        except:
+            docente = ApiDocente(numero_lattes)
+            api_programas = docente.pega_api_programas()
+            api_docente = docente.pega_api_docente()
+            api_docentes = docente.pega_api_docentes()
 
         return api_docente, api_programas, api_docentes
 
