@@ -40,21 +40,6 @@ def pages(request):
 class IndexView(View):
 
     def get(self, request):
-        titulo_destaques = 'Destaques'
-        destaques = [
-
-            """
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            """,
-
-            """
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            """
-        ]
         index = Index()
         try:
             globo, quantidade_alunos_sp = index.plota_mapa()
@@ -75,13 +60,12 @@ class IndexView(View):
             'globo': globo,
             'quantidade_alunos_sp' : quantidade_alunos_sp,
             'tabela_alunos_estados' : tabela_alunos_estados,
-
-            'titulo_destaques' : titulo_destaques,
-            'destaques' : destaques
         }
 
         html_template = loader.get_template('home/index.html')
         return HttpResponse(html_template.render(context, request))
+
+        
 class DocenteView(View):
 
     def queries(self, numero_lattes):
