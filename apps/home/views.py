@@ -65,7 +65,7 @@ class IndexView(View):
         html_template = loader.get_template('home/index.html')
         return HttpResponse(html_template.render(context, request))
 
-        
+
 class DocenteView(View):
 
     def queries(self, numero_lattes):
@@ -152,22 +152,32 @@ class DepartamentoView(View):
         api_programas_docente_limpo = querie.get('api_programas_docente_limpo')
         api_defesas = querie.get('api_defesas')
 
-        return api_docentes, api_programas, api_programas_docente, api_pesquisa, api_pesquisa_parametros, api_programas_docente_limpo, api_defesas
+        queries = {
+            'api_docentes' : api_docentes, 
+            'api_programas' : api_programas,
+            'api_programas_docente' : api_programas_docente,
+            'api_pesquisa' : api_pesquisa,
+            'api_pesquisa_parametros' : api_pesquisa_parametros,
+            'api_programas_docente_limpo' : api_programas_docente_limpo,
+            'api_defesas' : api_defesas
+        }
+
+        return queries
     
     def get(self, request, sigla):
         try:
             docentes = DadosDepartamento(sigla)
 
-            api_docentes, api_programas, api_programas_docente, api_pesquisa, api_pesquisa_parametros, api_programas_docente_limpo, api_defesas = self.queries(sigla)
+            queries = self.queries(sigla)
 
-            tabela_docentes = docentes.tabela_docentes(api_programas, api_docentes)
-            numero_docentes = docentes.pega_numero_docentes(api_programas, api_docentes)
-            grafico_pizza_aposentados_ativos = docentes.plota_aposentados_ativos(api_programas, api_docentes)
-            grafico_pizza_tipo_vinculo = docentes.plota_tipo_vinculo_docente(api_docentes)
-            grafico_prod_docentes = docentes.plota_prod_departamento(api_programas_docente_limpo)
-            grafico_historico_prod = docentes.plota_prod_serie_historica(api_programas_docente)
-            grafico_bolsas = docentes.plota_grafico_bolsa_sem(api_pesquisa_parametros)
-            tabela_bolsas = docentes.tabela_trabalhos(api_pesquisa)
+            tabela_docentes = docentes.tabela_docentes(queries.get('api_programas'), queries.get('api_docentes'))
+            numero_docentes = docentes.pega_numero_docentes(queries.get('api_programas'), queries.get('api_docentes'))
+            grafico_pizza_aposentados_ativos = docentes.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
+            grafico_pizza_tipo_vinculo = docentes.plota_tipo_vinculo_docente(queries.get('api_docentes'))
+            grafico_prod_docentes = docentes.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
+            grafico_historico_prod = docentes.plota_prod_serie_historica(queries.get('api_programas_docente'))
+            grafico_bolsas = docentes.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
+            tabela_bolsas = docentes.tabela_trabalhos(queries.get('api_pesquisa'))
             programas_dpto = docentes.pega_programa_departamento()
 
             caminho = [
