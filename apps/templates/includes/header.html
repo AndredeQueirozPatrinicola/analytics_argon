@@ -9,8 +9,8 @@
         <div class="col-xl-3 col-md-6">
           <div class="card card-stats card-landing">
             <!-- Celulas -->
-            <div class="d-flex div-img-land">
 
+              <a class="d-flex div-img-land" href="/">
                 <img src="/static/assets/img/brand/fundoazul.png" class="img-land">
 
                 <div class="d-flex flex-column div-text-land">
@@ -21,8 +21,8 @@
                     Analytics
                   </p>
                 </div>
-              
-            </div>
+              </a>
+
           </div>
         </div>
         <div>
@@ -58,7 +58,7 @@
           <div class="card card-stats">
             <!-- Card body -->
             {% if docente %}
-            <div class="card-body card-head">
+            <div class="card-body card-head regula-altura">
               <div class="row">
                 {% for item in docente %}
                 <div class="col">
@@ -75,7 +75,7 @@
             </div>
             {% endif %}
             {% if regulador %}
-            <div class="card-body card-head">
+            <div class="card-body card-head regula-altura">
               <div class="row">
                 <div class="col texto-numero-docentes">
                   <h5 class="card-title text-uppercase text-muted mb-0">{{ numero_docentes.texto_ativos }}</h5>
@@ -100,7 +100,7 @@
           <div class="card card-stats">
 
             <!-- Card body -->
-            <div class="card-body card-head">
+            <div class="card-body card-head regula-altura">
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0"> {{ card_2_titulo }}</h5>
@@ -141,7 +141,7 @@
           <div class="card card-stats">
             {% if docente != None %}
             <!-- Card body -->
-            <div class="card-body card-head">
+            <div class="card-body card-head regula-altura">
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">{{ card_3_titulo }}</h5>
@@ -164,7 +164,7 @@
           <div class="card card-stats">
             {% if docente != None %}
             <!-- Card body -->
-            <div class="card-body card-head">
+            <div class="card-body card-head regula-altura">
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">{{ card_4_titulo }}</h5>

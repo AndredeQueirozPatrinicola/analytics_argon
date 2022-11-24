@@ -196,7 +196,8 @@
   padding: 40px;
   background-color: #fff;
   border-radius: 10px;
-
+  text-align: justify;
+  height: 198px;
  }
 
  .titulo-tabela-todos{
@@ -294,6 +295,109 @@
       justify-content: center;
     }
 
+  .icone-login{
+    border: 1px solid #e6eaf1;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    background-color: #e6eaf1;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-bar-auth{
+    display: flex;
+    align-items: center;
+  }
+
+  .span-auth{
+    margin-right: 15px;
+    color: #d2d8e1;
+  }
+
+  .span-bold{
+    font-weight: bold;
+  }
+
+  .sidebar-items{
+    text-align: center;
+    color: #8d9cae;
+  }
+
+  .sidebar-items-items{
+    color: #8d9cae;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    
+  }
+
+  .sidebar-items-items:hover{
+    color: #535c66;
+  }
+
+  .titulo-mapa-index{
+    margin: 6px 5px 6px 5px;
+    font-size: 1rem;
+  }
+
+  .legenda-mapa-index{
+    text-align: center;
+    margin-left: -120px;
+  }
+
+  .grafico-hist-min{
+    min-height: 270px;
+  }
+
+  .header-mapa{
+    background-color: #f5f8fb;
+    border-bottom: 1px solid #e3e9ee;
+    padding-left: 15px;
+  }
+
+  .cell-tabel-mapa{
+    border-bottom: 1px solid #e3e9ee;
+    padding-left: 15px;
+    font-size: 15px;
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .tabela-mapa{
+    display: flex;
+    flex-direction: column;
+    margin-top: 23px;
+    margin-left: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    min-width: 520px;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+  }
+
+  .header-table-estados{
+    width: 100%;
+  }
+
+  .header-table-alunos{
+    width: 100%;
+    padding-right: 10px;
+  }
+
+  @media only screen and (max-width: 1706px) {
+    .regula-altura{
+      height: 120px;
+    }
+  }
+
+  @media only screen and (max-width: 1303px) {
+    .regula-altura{
+      height: 160px;
+    }
+  }
 
   @media only screen and (max-width: 1198px) {
     .botao-drop{
@@ -307,13 +411,25 @@
       display: none;
     }
 
+    #navbarSupportedContent{
+      justify-content: space-around;
+    }
+
+    .regula-altura{
+      height: 100px;
+    }
+
+    .regulador-sobre-nos{
+      margin-top: 180px;
+    }
+
     .img-logo-usp{
       display: none;
     }
   }
 
 
-  @media only screen and (max-width: 575px){
+  @media only screen and (max-width: 600px){
     .nav-bar-div{
       justify-content: end;
     }
@@ -321,17 +437,59 @@
     .p-text-logo, .p-analytics-text-logo{
       display: none;
     }
+
+    .regulador-sobre-nos{
+      margin-top: 232px;
+    }
+
+    .texto-index{
+      height: 250px;
+    }
+
   }
 
 
-  @media only screen and (max-width: 430px){
+  @media only screen and (max-width: 450px){
+    .tabela-mapa{
+      min-width: 380px;
+    }
+
     .regulador-drop{
       display: none;
     }
     .regulador-drop-r{
       display: flex;
     }
+
+    .texto-index{
+      height: 370px;
+    }
+
+    .regulador-sobre-nos{
+      margin-top: 350px;
+    }
+
     .nav-bar-div{
       justify-content: left;
     }
+  }
+
+
+  @media only screen and (max-width: 350px){
+    .texto-numero-docentes{
+      margin-top: -10px !important;
+    }
+
+    .regula-margem-mapa{
+      margin-left: 18px;
+    }
+
+    .texto-index{
+      height: 435px;
+    }
+
+    .regulador-sobre-nos{
+      margin-top: 405px;
+    }
+
   }

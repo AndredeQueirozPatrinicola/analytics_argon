@@ -6,7 +6,7 @@ from functools import reduce
 
 from apps.home.classes.graficos import Grafico
 from apps.home.models import Docente, Departamento
-
+from apps.home.utils import Utils
 
 class Departamentos():
 
@@ -15,7 +15,7 @@ class Departamentos():
 
     def pega_numero_docentes(self):
         resultado = Docente.objects.count()
-        ativo_aposentado = Docente.objects.all().values_list('api_docentes')
+        ativo_aposentado = Docente.objects.values_list('api_docentes')
 
         ativo = 0
         aposentado = 0
@@ -199,7 +199,7 @@ class Departamentos():
         return lista_valores, titulos
 
     def prod_total_departamentos(self):
-        dados = Departamento.objects.all().values('api_programas_docente_limpo')
+        dados = Departamento.objects.values('api_programas_docente_limpo')
 
         x = 0
         resultado_livros = []
@@ -226,7 +226,7 @@ class Departamentos():
             resultado_artigos), sum(resultado_capitulos)]
 
         fig = Grafico()
-        fig = fig.grafico_barras(x=['Total de livros', 'Total de artigos', 'Total de capitulos'], y=resultado, color=['Total de livros', 'Total de artigos', 'Total de capitulos'],
+        fig = fig.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=resultado, color=['Livros', 'Artigos', 'Capitulos'],
                                  color_discrete_sequence=[
                                      "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
                                  linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
@@ -239,7 +239,7 @@ class Departamentos():
                                     'color': 'Legenda'
                                     })
 
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade'
+        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no lattes'
 
         return fig, titulo
 
@@ -248,7 +248,7 @@ class Departamentos():
         def soma_lista(a: int, b: int):
             return int(a) + int(b)
 
-        dados = Departamento.objects.all().values_list('api_programas_docente')
+        dados = Departamento.objects.values_list('api_programas_docente')
 
         anos = [str(i)
                 for i in range(datetime.now().year - 6, datetime.now().year)]
@@ -337,3 +337,7 @@ class Departamentos():
         titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
 
         return grafico, titulo
+
+    def pega_programas(self):
+        utils = Utils()
+        return utils.pega_programas_departamento().get('programas'), 'Programas'

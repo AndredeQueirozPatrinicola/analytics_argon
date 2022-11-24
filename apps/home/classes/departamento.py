@@ -4,7 +4,7 @@ from datetime import datetime
 
 from apps.home.models import Departamento, Docente
 from apps.home.classes.graficos import Grafico
-
+from apps.home.utils import Utils
 
 class DadosDepartamento():
 
@@ -12,10 +12,8 @@ class DadosDepartamento():
         self.sigla = sigla
 
     def tabela_docentes(self, sigla):
-        api_programas = Departamento.objects.filter(
-            sigla=sigla).values_list('api_programas')
-        api_docentes = Departamento.objects.filter(
-            sigla=sigla).values_list('api_docentes')
+        api_programas = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
+        api_docentes = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
 
         dados_programas = api_programas[0][0]
         dados_docentes = api_docentes[0][0]
@@ -36,7 +34,7 @@ class DadosDepartamento():
         return df, id_lattes, nome, id
 
     def pega_numero_docentes(self, sigla):
-        resultado = Docente.objects.all().values_list('api_docentes')
+        resultado = Docente.objects.values_list('api_docentes')
         departamento = Departamento.objects.filter(sigla=sigla).values_list('api_programas')
 
         departamento = departamento[0][0][0]
@@ -71,7 +69,7 @@ class DadosDepartamento():
         x, y, ativos, aposentados = self.pega_numero_docentes(sigla)
         ativos_aposentados = [ativos, aposentados]
         tipos = ['Ativos', "Aposentados"]
-        titulo = 'Relação entre aposentados e ativos'
+        titulo = 'Percentual entre docentes aposentados e ativos'
         grafico = Grafico()
         grafico = grafico.grafico_pizza(values=ativos_aposentados, names=tipos,
                                         color=tipos, color_discrete_sequence=["#052e70", "#AFAFAF"], margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
@@ -79,8 +77,7 @@ class DadosDepartamento():
         return grafico, titulo
 
     def plota_tipo_vinculo_docente(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_docentes')
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_docentes')
         dados = api
         dados = dados[0][0]
 
@@ -98,7 +95,7 @@ class DadosDepartamento():
 
         lista_valores = df.value_counts().to_list()
 
-        titulo = 'Relação entre tipos de vínculo de docente'
+        titulo = 'Percentual entre tipos de vínculo de docente'
 
         grafico = Grafico()
         
@@ -109,8 +106,7 @@ class DadosDepartamento():
         return grafico, titulo
 
     def plota_prod_departamento(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_programas_docente_limpo')
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente_limpo')
         dados = api[0][0]
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(
@@ -139,13 +135,12 @@ class DadosDepartamento():
                      })
 
 
-        titulo = 'Produção total do departamento'
+        titulo = 'Produção total do departamento registrada no Lattes'
 
         return grafico, titulo
 
     def tabela_trabalhos(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_pesquisa')
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_pesquisa')
         dados = api[0][0]
 
         df = pd.DataFrame(dados)
@@ -175,8 +170,7 @@ class DadosDepartamento():
         return dados_tabela, headers
 
     def plota_grafico_bolsa_sem(self):
-        api = Departamento.objects.filter(
-            sigla=self.sigla).values_list('api_pesquisa_parametros')
+        api = Departamento.objects.filter(sigla=self.sigla).values_list('api_pesquisa_parametros')
         dados = api[0][0]
 
         anos = [i for i in range(
@@ -217,8 +211,7 @@ class DadosDepartamento():
         return grafico, titulo
 
     def plota_prod_serie_historica(self, sigla):
-        api = Departamento.objects.filter(
-            sigla=sigla).values_list('api_programas_docente')
+        api = Departamento.objects.filter(sigla=sigla).values_list('api_programas_docente')
         dados = api[0][0]
 
         anos_int = [i for i in range(
@@ -304,20 +297,9 @@ class DadosDepartamento():
         return grafico, titulo
 
     def pega_programa_departamento(self, sigla):
-        programas_dpto = {
-                'FLP' : ['Ciência Política'],
-                'FSL' : ['Sociologia'],
-                'FLF' : ['Filosofia'],
-                'FLA' : ['Antropologia Social'],
-                'FLG' : ['Geografia Física', 'Geografia Humana'],
-                'FLH' : ['História Econômica', 'História Social'],
-                'FLL' : ['Semiótica e Lingüística Geral'],
-                'FLC' : ['Filologia e Língua Portuguesa', 'Letras Clássicas', 'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 'Mestrado Profissional em Letras em Rede Nacional'],
-                'FLM' : ['Língua e Literatura Alemã', 'Língua Espanhola e Literaturas Espanhola e Hispano-Americana', 'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução'],
-                'FLT' : ['Teoria Literária e Literatura Comparada'],
-                'FLO' : ['Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa'],
-        }
-        programas_dpto = programas_dpto.get(sigla)
+        programas_dpto = Utils()
+        programas_dpto = programas_dpto.pega_programas_departamento(sigla)
+        programas_dpto = programas_dpto.get('programas')
 
         label = 'Programas'
 

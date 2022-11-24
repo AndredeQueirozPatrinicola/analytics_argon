@@ -18,6 +18,11 @@ class DadosDocente():
         self.sigla = sigla
 
     def pega_vinculo_situacao(self):
+        """
+            Pega dados no BD equivalentes à: https://dados.fflch.usp.br/api/docentes
+
+            Trata dados e retorna o vinculo e a situacao do docente. 
+        """
         dados = Docente.objects.filter(docente_id = self.parametro).values_list('api_docentes')
 
         dados = dados[0][0]
@@ -35,11 +40,15 @@ class DadosDocente():
         return vinculo, situacao
 
     def linhas_de_pesquisa(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        """
+            Tenta buscar o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+
+            e retorna lista com as linhas de pesquisa cadastradas no Lattes.
+
+        """
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
         linhas_pesquisa = dados.get('linhas_pesquisa')
-
 
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
 
@@ -48,9 +57,16 @@ class DadosDocente():
         return label, linhas_pesquisa
 
     def pega_caminho(self):
+        """
+            Tenta obter os dados necessários do banco de dados e caso não
+            consiga visita a api para pega-los. 
+            
+            Docentes aposentados necessitam da visita na API.
+
+            Retorna lista de dicionários com caminho
+        """
         try:
-            api = Docente.objects.filter(
-                docente_id=self.parametro).values_list()
+            api = Docente.objects.filter(docente_id=self.parametro).values_list()
             dados = api[0][3]
             dados_nome = api[0][2]
             self.nome_departamento = dados[0].get('nome')
@@ -77,9 +93,12 @@ class DadosDocente():
         return caminho
 
     def plota_grafico_historico(self, tipo):
+        """
+            Recebe o parametro tipo -> "livro", "capitulo", "artigo" e
+            retorna gráfico de linhas com toda produção por ano do docente.
+        """
         try:
-            api = Docente.objects.filter(
-                docente_id=self.parametro).values_list('api_docente')
+            api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
             dados = api[0][0]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
@@ -115,8 +134,11 @@ class DadosDocente():
             return None, None
 
     def plota_grafico_pizza(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        """
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+            e retorna um grafico de pizza com a proporção entre orientandos de Mestrado, Doutorado e Doutorado Direto.
+        """
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
 
         if dados['orientandos']:
@@ -141,7 +163,7 @@ class DadosDocente():
 
             titulo = [
                 {
-                    'titulo' : 'Relação entre mestrandos e doutorandos'
+                    'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos(diretos)'
                 }
             ]
 
@@ -160,8 +182,12 @@ class DadosDocente():
             return None, None
 
     def tabela_orientandos(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        """
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+
+            retorna tabela com nome de todos os orientandos de Mestrado, Doutorado e Doutorado Direto
+        """
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
         if dados['orientandos']:
             df = pd.DataFrame(dados['orientandos'])
@@ -191,8 +217,12 @@ class DadosDocente():
             return None, None
 
     def tabela_ultimas_publicacoes(self):
-        api = Docente.objects.filter(
-            docente_id=self.parametro).values_list('api_docente')
+        """
+            Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.parametro }}
+
+            Retorna lista de listas com dados para tabela com as ultimas 5 publicações de Livros do docente. 
+        """
+        api = Docente.objects.filter(docente_id=self.parametro).values_list('api_docente')
         dados = api[0][0]
 
         tabela_publicacoes = [

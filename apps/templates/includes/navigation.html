@@ -26,6 +26,30 @@
         {% include 'includes/dropdown-nav.html' %}
 
       </div>
+
+      <div class="nav-bar-auth">
+        {% if user.is_authenticated %}
+          <span class="span-auth">
+            11253372 - André de Queiroz
+          </span>
+
+          <div class="icone-login">
+            <a href="logout/">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>  
+          </div>
+        {% else %}
+        <span class="span-auth">
+          Não autenticado.
+        </span>
+
+        <div class="icone-login">
+          <a href="#">
+            <i class="fas fa-sign-in-alt"></i>
+          </a>  
+        </div>
+        {% endif %}
+      </div>
       <!-- Navbar links -->
     </div>
   </div>

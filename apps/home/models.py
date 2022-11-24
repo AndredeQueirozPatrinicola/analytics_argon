@@ -27,3 +27,11 @@ class Departamento(models.Model):
     def __str__(self):
         return self.sigla
 
+
+class Mapa(models.Model):
+    nome = models.CharField(max_length=255)
+    base_de_dados = models.JSONField(null=True)
+    dados_do_mapa = models.JSONField(null=True)
+
+    def __str__(self) -> str:
+        return self.nome
