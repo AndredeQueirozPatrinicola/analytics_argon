@@ -81,11 +81,11 @@ class Departamentos():
         return resultado
 
     def tabela_todos_docentes(self):
+        utils = Utils()
         dados = Docente.objects.raw(
             'SELECT id, api_docentes from home_docente;')
 
-        departamentos_siglas = {'FLA': 'Antropologia', 'FLP': 'Ciência Política', 'FLF': 'Filosofia', 'FLH': 'História', 'FLC': "Letras Clássicas e Vernáculas",
-                                'FLM': "Letras Modernas", 'FLO': 'Letras Orientais', 'FLL': 'Lingüística', 'FSL': 'Sociologia', 'FLT': "Teoria Literária e Literatura Comparada", 'FLG': 'Geografia'}
+        departamentos_siglas = utils.dptos_siglas
 
         siglas = list(departamentos_siglas.keys())
 
