@@ -167,14 +167,6 @@ class Utils:
         elif estado:
             return [estados.get(i) for i in estados if i in estado]
 
-    def verifica_json_vazio(json=0):
-
-        vazio = [[], {}, [{}], ]
-
-        if json in vazio:
-            return True
-        else:
-            return False
 
     def siglas_departamentos(self, siglas_departamentos):
 

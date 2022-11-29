@@ -21,23 +21,19 @@ class ApiMapas:
             response_api = requests.get(url = 'https://dados.fflch.usp.br/api/alunosAtivosEstado')
             nome = 'MapaIndexAlunos'
 
-            raw_dados_api = response_api.json()
-            raw_base_de_dados = response_base_dados.json()
+            dados_api = response_api.json()
+            base_de_dados = response_base_dados.json()
 
             verifica_existencia = Mapa.objects.filter(nome=nome)
             if verifica_existencia.exists():
-                # Se por algum motivo a base de dados estiver 
-                # vazia o metodo 'verifica_json_vazio'
-                # retorna True e não salva no banco de dados.
-                protege_base_de_dados = Utils.verifica_json_vazio(raw_base_de_dados)
-                if not protege_base_de_dados:
+                if response_base_dados:
                     Mapa.objects.filter(nome=nome).update(
-                                                    base_de_dados=raw_base_de_dados,
-                                                    dados_do_mapa=raw_dados_api    
+                                                    base_de_dados=base_de_dados,
+                                                    dados_do_mapa=dados_api    
                                                     )
                 else:
                     Mapa.objects.filter(nome=nome).update(
-                                                    dados_do_mapa=raw_dados_api    
+                                                    dados_do_mapa=dados_api    
                                                     )
             else:
                 salva_dados = Mapa(
