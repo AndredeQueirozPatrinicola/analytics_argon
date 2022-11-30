@@ -8,12 +8,12 @@ class Utils:
             'FLF': [8133],
             'FLA': [8134],
             'FLG': [8135, 8136],
-            'FLH': [8137, 8138],
+            'FLH': [8137, 8138, 8161],
             'FLL': [8139],
             'FLC': [8142, 8143, 8149, 8150, 8156, 8162],
             'FLM': [8144, 8145, 8146, 8147, 8148, 8158, 8160, 8163, 8164, 8165],
             'FLT': [8151],
-            'FLO': [8155, 8157],
+            'FLO': [8155, 8157, 8159],
         }
         self.codigo_programas = {
                 8131: 'Ciência Política',
@@ -43,8 +43,9 @@ class Utils:
                 8165: 'Estudos da Tradução',
                 8151: 'Teoria Literária e Literatura Comparada',
                 8155: 'Literatura e Cultura Russa',
-                8157: 'Língua, Literatura e Cultura Japonesa'
-
+                8157: 'Língua, Literatura e Cultura Japonesa',
+                8159: 'Estudos Árabes',
+                8161: 'Humanidades, Direitos e Outras Legitimidades'
             }
 
         self.dptos_siglas = {
@@ -68,7 +69,7 @@ class Utils:
                 8150, 8156, 8162, 8144,
                 8145, 8146, 8147, 8148,
                 8158, 8160, 8163, 8164,
-                8165, 8151, 8155, 8157
+                8165, 8151, 8155, 8157, 8159, 8161
             ]
 
     def pega_programas_departamento(self, *departamento):
@@ -105,8 +106,7 @@ class Utils:
             if len(programa) == 1:
 
                 if type(programa[0]) == int:
-                    depart = [i for i in self.dptos_programas if programa[0]
-                              in self.dptos_programas.get(i)]
+                    depart = [i for i in self.dptos_programas if programa[0] in self.dptos_programas.get(i)]
                     depart_nome = self.dptos_siglas.get(depart[0])
 
                 if type(programa[0]) == str:
