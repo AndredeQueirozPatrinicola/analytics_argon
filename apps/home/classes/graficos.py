@@ -48,20 +48,24 @@ class Grafico():
         margin = kwargs.get('margin')
         font_color = kwargs.get('font_color')
         showlegend = kwargs.get('showlegend')
+        linecolor = kwargs.get('linecolor')
+        gridcolor = kwargs.get('gridcolor')
+        tickmode = kwargs.get('tickmode')
 
         fig = px.line(df, x=x, y=y, height=height, labels=labels,
                       color=color, color_discrete_sequence=color_discrete_sequence)
 
         fig.update_layout({
-            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
-            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
-        }, margin=margin, font_color=font_color, showlegend=showlegend)
+                                'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+                                'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+                            }, margin=margin, font_color=font_color, showlegend=showlegend,
+                            xaxis = dict(tickmode=tickmode))
 
         fig.update_layout(autosize=True)
-        fig.update_xaxes(showline=True, linewidth=1, linecolor='white',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#4d4b46', automargin=True)
-        fig.update_yaxes(showline=True, linewidth=1, linecolor='white',
-                         mirror=True, showgrid=True, gridwidth=1, gridcolor='#4d4b46', automargin=True)
+        fig.update_xaxes(showline=True, linewidth=1, linecolor=linecolor,
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor=gridcolor, automargin=True)
+        fig.update_yaxes(showline=True, linewidth=1, linecolor=linecolor,
+                         mirror=True, showgrid=True, gridwidth=1, gridcolor=gridcolor, automargin=True)
 
         grafico = self.plota(fig)
 

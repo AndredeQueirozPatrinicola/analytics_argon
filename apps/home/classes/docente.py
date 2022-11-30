@@ -111,8 +111,6 @@ class DadosDocente():
             retorna gráfico de linhas com toda produção por ano do docente.
         """
         try:
-            # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
-            # dados = api[0][0]
             livros = dados.get(tipo)
             df_livros = pd.DataFrame(livros)
             ano = df_livros['ANO'].value_counts()
@@ -135,7 +133,7 @@ class DadosDocente():
             grafico = grafico.grafico_linhas(df=df, x=eixo_x, y=0, height=390, labels={
                 'index': '',
                 '0': ''
-            }, margin=dict(l=0, r=30, t=20, b=50), font_color="white", showlegend=False)
+            }, margin=dict(l=0, r=30, t=20, b=50), font_color="white", showlegend=False, linecolor='#747474', gridcolor='#4d4d4d')
 
             resultado = {
                 'titulo': f'Produção de {tipo} por ano ({df.index[0]}-{str(datetime.now().year)})',

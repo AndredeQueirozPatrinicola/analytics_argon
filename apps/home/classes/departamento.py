@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+import requests
 
 
 from apps.home.models import Departamento, Docente
@@ -115,8 +116,7 @@ class DadosDepartamento():
     def plota_prod_departamento(self, api_programas_docente_limpo):
         dados = api_programas_docente_limpo
         df = pd.DataFrame(dados)
-        somas = df['total_livros'].to_list(
-        ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
+        somas = df['total_livros'].to_list(), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
 
         x = 0
         lista_valores = []
@@ -326,3 +326,97 @@ class DadosDepartamento():
         }
 
         return resultado
+    
+    def grafico_defesas(self, api_defesas):
+        utils = Utils()
+        meses = [mes for mes in range(1, 13)]
+        dados = {key : value*0 for (key, value) in zip(meses, meses) }
+        ano_atual = datetime.now().year - 1
+
+        for defesa in api_defesas:
+            
+            data = defesa.get('data')
+            verifica_mes = int(data.split('/')[1])
+            dados[verifica_mes] = dados.get(verifica_mes) + 1
+
+        
+        df = pd.DataFrame(dados, index = [0])
+        df = df.transpose()
+        df = df.rename(columns = {0:'Numero defesas'})
+
+        grafico = Grafico()
+        grafico = grafico.grafico_linhas(df=df, x=df.index, y='Numero defesas', height=450, tickmode='linear',labels={
+                'index': 'Mês',
+            }, margin=dict(l=0, r=30, t=20, b=50), font_color="black", showlegend=False, linecolor='#e0dfda', gridcolor='#e0dfda')
+
+        resultado = {
+            'titulo' : f'Defesas realizadas no ano de {ano_atual}',
+            'grafico' : grafico,
+        }
+
+        return resultado
+        
+
+    
+    def pega_tabela_defesas(self, api_defesas):
+        utils = Utils()          
+
+        resultado = []
+        for defesa in api_defesas:
+            
+            codigo_departamento = defesa.get('codare')
+            verifica_departamento = utils.pega_departamento_programa(codigo_departamento)
+
+            if verifica_departamento.get('sigla') == self.sigla:
+                    resultado.append(
+                    [
+                        defesa.get('titulo'),
+                        defesa.get('nome'),
+                        defesa.get('nivel'),
+                        defesa.get('nomare'),
+                        defesa.get('data'),
+                    ]
+                )
+
+        resultado = {
+            'headers' : ['Titulo', 'Nome', 'Nivel', 'Programa', 'Data'],
+            'tabela' : resultado
+        }
+
+        return resultado
+
+    def defesas_mestrado_doutorado(self, api_defesas):
+        tipos = ['ME', 'DO', 'DD']
+
+        x, y, z = 0, 0, 0
+        nivel = []
+        for defesa in api_defesas:  
+
+            if defesa.get('nivel') == 'ME':
+                x += 1
+            if defesa.get('nivel') == 'DO':
+                y += 1
+            if defesa.get('nivel') == 'DD':
+                z += 1
+
+        nivel.append(x)
+        nivel.append(y)
+        nivel.append(z)
+
+        figura = Grafico()
+        figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
+                    color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
+                    labels={
+                        'values': 'Valor',
+                        'names': 'Tipo',
+                        'color': 'Cor'
+                    }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
+
+        resultado = {
+            'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
+            'grafico' : figura
+        }
+
+        return resultado
+            
+

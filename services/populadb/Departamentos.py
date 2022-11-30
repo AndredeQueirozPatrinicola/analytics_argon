@@ -68,28 +68,23 @@ class ApiDepartamento:
         return lista_pesquisa_por_ano
 
     def pega_api_defesas(self):
-        def get_key(val):
-                for key, value in utils.dptos_programas.items():
-                    if val == value:
-                        return key
-
-        raw_defesas = requests.get('https://dados.fflch.usp.br/api/defesas')
-        dados_defesas = raw_defesas.json()
         utils = Utils()
+        ano_atual = datetime.now().year - 1
+        api_defesas = requests.get(f'https://dados.fflch.usp.br/api/defesas?ano={ano_atual}&codcur=')
+        api_defesas = api_defesas.json()
 
-        # Lista com dicionarios
-        dados_api_defesas = []
-        for i in dados_defesas:  
-            codare = dados_defesas[dados_defesas.index(i)].get('codare')
-            for j in utils.dptos_programas:    
-                dptm = utils.dptos_programas.get(self.sigla)
-                if codare in dptm:
-                    regulador = get_key(dptm)
-                    if regulador == self.sigla:
-                        dados_api_defesas.append(dados_defesas[dados_defesas.index(i)])
+        defesas = []
+        for defesa in api_defesas:
+
+            codigo_programa = defesa.get('codare')  
+            programa_para_departamento = utils.pega_departamento_programa(codigo_programa)
+
+            if programa_para_departamento.get('sigla') == self.sigla:
+                defesas.append(defesa)
+
+        return defesas
 
 
-        return dados_api_defesas
 
     def pega_api_programas_docentes(self):
         anos = [int(i) for i in range(datetime.now().year - 6, datetime.now().year)]
