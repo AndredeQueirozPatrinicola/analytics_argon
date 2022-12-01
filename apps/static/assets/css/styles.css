@@ -2,6 +2,13 @@
     padding: 10px 0 0 25px;
     margin-bottom: 5px;
   }
+
+  .titulo-tabela-defesas{
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #32325d;
+  }
   
   .titulo-tabela-publi{
     padding: 10px;
