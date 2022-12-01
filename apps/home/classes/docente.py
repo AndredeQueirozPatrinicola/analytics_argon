@@ -150,9 +150,6 @@ class DadosDocente():
             Visita o equivalente à: https://dados.fflch.usp.br/api/programas/docente/{{ self.numero_lattes }}
             e retorna um grafico de pizza com a proporção entre orientandos de Mestrado, Doutorado e Doutorado Direto.
         """
-        # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
-        # dados = api[0][0]
-
         try:
             df = pd.DataFrame(dados['orientandos'])
 
@@ -199,8 +196,6 @@ class DadosDocente():
 
             retorna tabela com nome de todos os orientandos de Mestrado, Doutorado e Doutorado Direto
         """
-        # api = Docente.objects.filter(docente_id=self.numero_lattes).values_list('api_docente')
-        # dados = api[0][0]
         try:
 
             df = pd.DataFrame(dados['orientandos'])
