@@ -7,12 +7,101 @@ class UtilsPegaProgramasDepartamentoTestCase(TestCase):
 
     def setUp(self):
         self.utils_teste = Utils()
-        self.valores = {'programas': ['Ciência Política', 'Sociologia', 'Filosofia', 'Antropologia Social', 'Geografia Física', 'Geografia Humana', 'História Econômica', 'História Social', 'Semiótica e Linguística Geral', 'Filologia e Língua Portuguesa', 'Letras Clássicas', 'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 'Mestrado Profissional em Letras em Rede Nacional', 'Língua e Literatura Alemã',
-                                      'Língua Espanhola e Literaturas Espanhola e Hispano-Americana', 'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução', 'Teoria Literária e Literatura Comparada', 'Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa']}
+        self.valores ={
+            'programas': 
+                    [
+                        'Ciência Política', 'Sociologia', 'Filosofia', 'Antropologia Social', 
+                        'Geografia Física', 'Geografia Humana', 'História Econômica', 'História Social', 
+                        'Semiótica e Linguística Geral', 'Filologia e Língua Portuguesa', 'Letras Clássicas', 
+                        'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 
+                        'Mestrado Profissional em Letras em Rede Nacional', 'Língua e Literatura Alemã', 
+                        'Língua Espanhola e Literaturas Espanhola e Hispano-Americana', 'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 
+                        'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 
+                        'Humanidades, Direitos e Outras Legitimidades', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução', 
+                        'Teoria Literária e Literatura Comparada', 'Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa', 'Estudos Árabes'
+                    ]}
+
         self.departamentos = ['FLA', 'FLP', 'FLH', 'FLF',
-                              'FLC', "FLM", "FLO", "FLL", "FSL", "FLT", "FLG"]
-        self.programas = [{'sigla': ('FLA',), 'nome': 'Antropologia', 'programas': ['Antropologia Social']}, {'sigla': ('FLP',), 'nome': 'Ciência Política', 'programas': ['Ciência Política']}, {'sigla': ('FLH',), 'nome': 'História', 'programas': ['História Econômica', 'História Social']}, {'sigla': ('FLF',), 'nome': 'Filosofia', 'programas': ['Filosofia']}, {'sigla': ('FLC',), 'nome': 'Letras Clássicas e Vernáculas', 'programas': ['Filologia e Língua Portuguesa', 'Letras Clássicas', 'Literatura Brasileira', 'Literatura Portuguesa', 'Estudos Comparados de Literaturas de Língua Portuguesa', 'Mestrado Profissional em Letras em Rede Nacional']}, {'sigla': ('FLM',), 'nome': 'Letras Modernas', 'programas': ['Língua e Literatura Alemã', 'Língua Espanhola e Literaturas Espanhola e Hispano-Americana',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 'Estudos Lingüísticos e Literários em Inglês', 'Língua, Literatura e Cultura Italianas', 'Estudos Judaicos', 'Estudos da Tradução', 'Estudos Linguísticos', 'Estudos Literários e Culturais', 'Estudos da Tradução']}, {'sigla': ('FLO',), 'nome': 'Letras Orientais', 'programas': ['Literatura e Cultura Russa', 'Língua, Literatura e Cultura Japonesa']}, {'sigla': ('FLL',), 'nome': 'Lingüística', 'programas': ['Semiótica e Linguística Geral']}, {'sigla': ('FSL',), 'nome': 'Sociologia', 'programas': ['Sociologia']}, {'sigla': ('FLT',), 'nome': 'Teoria Literária e Literatura Comparada', 'programas': ['Teoria Literária e Literatura Comparada']}, {'sigla': ('FLG',), 'nome': 'Geografia', 'programas': ['Geografia Física', 'Geografia Humana']}]
+                              'FLC', "FLM", "FLO", "FLL", 
+                              "FSL", "FLT", "FLG", ]
+        self.programas = [{
+                                'sigla': ('FLA',),
+                                'nome': 'Antropologia',
+                                'programas': ['Antropologia Social']
+                          },{
+                                'sigla': ('FLP',),
+                                'nome': 'Ciência Política', 
+                                'programas': ['Ciência Política']
+                            },{
+                                'sigla': ('FLH',), 
+                                'nome': 'História', 
+                                'programas': [
+                                                'História Econômica', 
+                                                'História Social',
+                                                'Humanidades, Direitos e Outras Legitimidades'
+                                            ]
+                            },{
+                                'sigla': ('FLF',), 
+                                'nome': 'Filosofia', 
+                                'programas': ['Filosofia']
+                            },{
+                                'sigla': ('FLC',), 
+                                'nome': 'Letras Clássicas e Vernáculas', 
+                                'programas': [
+                                                'Filologia e Língua Portuguesa', 
+                                                'Letras Clássicas', 
+                                                'Literatura Brasileira', 
+                                                'Literatura Portuguesa', 
+                                                'Estudos Comparados de Literaturas de Língua Portuguesa', 
+                                                'Mestrado Profissional em Letras em Rede Nacional'
+                                            ]
+                            },{
+                                'sigla': ('FLM',), 
+                                'nome': 'Letras Modernas', 
+                                'programas': [
+                                                'Língua e Literatura Alemã',   
+                                                'Língua Espanhola e Literaturas Espanhola e Hispano-Americana',
+                                                'Estudos Lingüísticos, Literários e Tradutológicos em Francês', 
+                                                'Estudos Lingüísticos e Literários em Inglês', 
+                                                'Língua, Literatura e Cultura Italianas', 
+                                                'Estudos Judaicos', 
+                                                'Estudos da Tradução', 
+                                                'Estudos Linguísticos', 
+                                                'Estudos Literários e Culturais', 
+                                                'Estudos da Tradução'
+                                            ]
+                            },{
+                                'sigla': ('FLO',), 
+                                'nome': 'Letras Orientais', 
+                                'programas': [
+                                                'Literatura e Cultura Russa', 
+                                                'Língua, Literatura e Cultura Japonesa',
+                                                'Estudos Árabes',
+                                              ]
+                            },{
+                                'sigla': ('FLL',), 
+                                'nome': 'Lingüística', 
+                                'programas': 
+                                            [
+                                                'Semiótica e Linguística Geral'
+                                            ]
+                              },{
+                                'sigla': ('FSL',), 
+                                'nome': 'Sociologia', 
+                                'programas': ['Sociologia']
+                              },{
+                                'sigla': ('FLT',), 
+                                'nome': 'Teoria Literária e Literatura Comparada', 
+                                'programas': ['Teoria Literária e Literatura Comparada']
+                              },{
+                                'sigla': ('FLG',), 
+                                'nome': 'Geografia', 
+                                'programas': [
+                                                'Geografia Física', 
+                                                'Geografia Humana'
+                                              ]
+                                }
+                            ]
 
     def test_retorno_vazio(self):
         self.assertEquals(
