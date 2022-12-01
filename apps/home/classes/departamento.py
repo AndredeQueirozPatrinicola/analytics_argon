@@ -328,7 +328,6 @@ class DadosDepartamento():
         return resultado
     
     def grafico_defesas(self, api_defesas):
-        utils = Utils()
         meses = [mes for mes in range(1, 13)]
         dados = {key : value*0 for (key, value) in zip(meses, meses) }
         ano_atual = datetime.now().year - 1
@@ -379,6 +378,7 @@ class DadosDepartamento():
                 )
 
         resultado = {
+            'titulo' : f'Defesas realizadas no ano de {datetime.now().year-1}',
             'headers' : ['Titulo', 'Nome', 'Nivel', 'Programa', 'Data'],
             'tabela' : resultado
         }
@@ -418,5 +418,3 @@ class DadosDepartamento():
         }
 
         return resultado
-            
-
