@@ -27,109 +27,109 @@
 
 var Layout = (function() {
 
-    function pinSidenav() {
-        $('.sidenav-toggler').addClass('active');
-        $('.sidenav-toggler').data('action', 'sidenav-unpin');
-        $('body').removeClass('g-sidenav-hidden').addClass('g-sidenav-show g-sidenav-pinned');
-        $('body').append('<div class="backdrop d-xl-none" data-action="sidenav-unpin" data-target='+$('#sidenav-main').data('target')+' />');
+    // function pinSidenav() {
+    //     $('.sidenav-toggler').addClass('active');
+    //     $('.sidenav-toggler').data('action', 'sidenav-unpin');
+    //     $('body').removeClass('g-sidenav-hidden').addClass('g-sidenav-show g-sidenav-pinned');
+    //     $('body').append('<div class="backdrop d-xl-none" data-action="sidenav-unpin" data-target='+$('#sidenav-main').data('target')+' />');
 
-        // Store the sidenav state in a cookie session
-        Cookies.set('sidenav-state', 'pinned');
-    }
+    //     // Store the sidenav state in a cookie session
+    //     Cookies.set('sidenav-state', 'pinned');
+    // }
 
-    function unpinSidenav() {
-        $('.sidenav-toggler').removeClass('active');
-        $('.sidenav-toggler').data('action', 'sidenav-pin');
-        $('body').removeClass('g-sidenav-pinned').addClass('g-sidenav-hidden');
-        $('body').find('.backdrop').remove();
+    // function unpinSidenav() {
+    //     $('.sidenav-toggler').removeClass('active');
+    //     $('.sidenav-toggler').data('action', 'sidenav-pin');
+    //     $('body').removeClass('g-sidenav-pinned').addClass('g-sidenav-hidden');
+    //     $('body').find('.backdrop').remove();
 
-        // Store the sidenav state in a cookie session
-        Cookies.set('sidenav-state', 'unpinned');
-    }
+    //     // Store the sidenav state in a cookie session
+    //     Cookies.set('sidenav-state', 'unpinned');
+    // }
 
-    // Set sidenav state from cookie
+    // // Set sidenav state from cookie
 
-    var $sidenavState = Cookies.get('sidenav-state') ? Cookies.get('sidenav-state') : 'pinned';
+    // var $sidenavState = Cookies.get('sidenav-state') ? Cookies.get('sidenav-state') : 'pinned';
 
-    if($(window).width() > 1200) {
-        if($sidenavState == 'pinned') {
-            pinSidenav()
-        }
+    // if($(window).width() > 1200) {
+    //     if($sidenavState == 'pinned') {
+    //         pinSidenav()
+    //     }
 
-        if(Cookies.get('sidenav-state') == 'unpinned') {
-            unpinSidenav()
-        }
+    //     if(Cookies.get('sidenav-state') == 'unpinned') {
+    //         unpinSidenav()
+    //     }
 
-        $(window).resize(function() {
-            if( $('body').hasClass('g-sidenav-show') && !$('body').hasClass('g-sidenav-pinned')) {
-                $('body').removeClass('g-sidenav-show').addClass('g-sidenav-hidden');
-            }
-        })
-    }
+    //     $(window).resize(function() {
+    //         if( $('body').hasClass('g-sidenav-show') && !$('body').hasClass('g-sidenav-pinned')) {
+    //             $('body').removeClass('g-sidenav-show').addClass('g-sidenav-hidden');
+    //         }
+    //     })
+    // }
 
-    if($(window).width() < 1200){
-      $('body').removeClass('g-sidenav-hide').addClass('g-sidenav-hidden');
-      $('body').removeClass('g-sidenav-show');
-      $(window).resize(function() {
-          if( $('body').hasClass('g-sidenav-show') && !$('body').hasClass('g-sidenav-pinned')) {
-              $('body').removeClass('g-sidenav-show').addClass('g-sidenav-hidden');
-          }
-      })
-    }
-
-
-
-    $("body").on("click", "[data-action]", function(e) {
-
-        e.preventDefault();
-
-        var $this = $(this);
-        var action = $this.data('action');
-        var target = $this.data('target');
+    // if($(window).width() < 1200){
+    //   $('body').removeClass('g-sidenav-hide').addClass('g-sidenav-hidden');
+    //   $('body').removeClass('g-sidenav-show');
+    //   $(window).resize(function() {
+    //       if( $('body').hasClass('g-sidenav-show') && !$('body').hasClass('g-sidenav-pinned')) {
+    //           $('body').removeClass('g-sidenav-show').addClass('g-sidenav-hidden');
+    //       }
+    //   })
+    // }
 
 
-        // Manage actions
 
-        switch (action) {
-            case 'sidenav-pin':
-                pinSidenav();
-            break;
+    // $("body").on("click", "[data-action]", function(e) {
 
-            case 'sidenav-unpin':
-                unpinSidenav();
-            break;
+    //     e.preventDefault();
 
-            case 'search-show':
-                target = $this.data('target');
-                $('body').removeClass('g-navbar-search-show').addClass('g-navbar-search-showing');
+    //     var $this = $(this);
+    //     var action = $this.data('action');
+    //     var target = $this.data('target');
 
-                setTimeout(function() {
-                    $('body').removeClass('g-navbar-search-showing').addClass('g-navbar-search-show');
-                }, 150);
 
-                setTimeout(function() {
-                    $('body').addClass('g-navbar-search-shown');
-                }, 300)
-            break;
+    //     // Manage actions
 
-            case 'search-close':
-                target = $this.data('target');
-                $('body').removeClass('g-navbar-search-shown');
+    //     switch (action) {
+    //         case 'sidenav-pin':
+    //             pinSidenav();
+    //         break;
 
-                setTimeout(function() {
-                    $('body').removeClass('g-navbar-search-show').addClass('g-navbar-search-hiding');
-                }, 150);
+    //         case 'sidenav-unpin':
+    //             unpinSidenav();
+    //         break;
 
-                setTimeout(function() {
-                    $('body').removeClass('g-navbar-search-hiding').addClass('g-navbar-search-hidden');
-                }, 300);
+    //         case 'search-show':
+    //             target = $this.data('target');
+    //             $('body').removeClass('g-navbar-search-show').addClass('g-navbar-search-showing');
 
-                setTimeout(function() {
-                    $('body').removeClass('g-navbar-search-hidden');
-                }, 500);
-            break;
-        }
-    })
+    //             setTimeout(function() {
+    //                 $('body').removeClass('g-navbar-search-showing').addClass('g-navbar-search-show');
+    //             }, 150);
+
+    //             setTimeout(function() {
+    //                 $('body').addClass('g-navbar-search-shown');
+    //             }, 300)
+    //         break;
+
+    //         case 'search-close':
+    //             target = $this.data('target');
+    //             $('body').removeClass('g-navbar-search-shown');
+
+    //             setTimeout(function() {
+    //                 $('body').removeClass('g-navbar-search-show').addClass('g-navbar-search-hiding');
+    //             }, 150);
+
+    //             setTimeout(function() {
+    //                 $('body').removeClass('g-navbar-search-hiding').addClass('g-navbar-search-hidden');
+    //             }, 300);
+
+    //             setTimeout(function() {
+    //                 $('body').removeClass('g-navbar-search-hidden');
+    //             }, 500);
+    //         break;
+    //     }
+    // })
 
 
     // Add sidenav modifier classes on mouse events

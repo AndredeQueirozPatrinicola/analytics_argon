@@ -92,3 +92,18 @@ class UtilsCodigoEstado(TestCase):
             self.utils_teste.pega_codigo_estado({}), ERRO)
         self.assertEquals(
             self.utils_teste.pega_codigo_estado("FLA", "FLG"), ERRO)
+
+class UtilsVerificaJson(TestCase):
+
+    def setUp(self):
+        self.utils_teste = Utils()
+
+    def test_padrao_false(self):
+        self.assertEquals(Utils.verifica_json_vazio(), False)
+        self.assertEquals(Utils.verifica_json_vazio(1234213), False)
+        self.assertEquals(Utils.verifica_json_vazio([12,32,432]), False)
+    
+    def test_padrao_true(self):
+        self.assertEquals(Utils.verifica_json_vazio([]), True)
+        self.assertEquals(Utils.verifica_json_vazio({}), True)
+        self.assertEquals(Utils.verifica_json_vazio([{}]), True)

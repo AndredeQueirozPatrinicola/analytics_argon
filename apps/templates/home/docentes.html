@@ -22,16 +22,13 @@
 
     {% include "includes/graficos/grafico_historico.html" %}
 
-    {% if tabela_pu != None %}
-    {% include "includes/tabelas/tabela_publicacoes.html" %}
+    {% if tabela_publicacoes != None %}
+      {% include "includes/tabelas/tabela_publicacoes.html" %}
     {% endif %}
 
-    {% for a in api %} 
-      {{ a.api_docente }}
-    {% endfor %}
 
   </div>
-  {% if tabela != None %}
+
   <div class="row">
 
     {% include "includes/tabelas/tabela_orientandos.html" %}
@@ -39,8 +36,6 @@
     {% include "includes/graficos/grafico_pizza_orientandos.html" %}
 
   </div>
-  {% endif %}
-  
 
 
   {% include "includes/footer.html" %}

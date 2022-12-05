@@ -8,21 +8,16 @@ from django.views.static import serve
 from apps.home import views
 
 urlpatterns = [
-
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 
     # The home page
-    path('', views.index, name='home'),
+    path('', views.IndexView.as_view(), name='home'),
 
-    path('sobre-nos', views.sobre_nos, name='sobre nos'),
+    path('sobre-nos', views.SobrenosView.as_view(), name='sobre-nos'),
 
-    path('departamentos', views.departamentos, name='departamentos'),
+    path('departamentos', views.DepartamentosView.as_view(), name='departamentos'),
 
-    path('departamentos/<str:sigla>', views.departamento, name='docentes'),
+    path('departamentos/<str:sigla>', views.DepartamentoView.as_view(), name='docentes'),
 
-    path('<str:sigla>/docente/<str:parametro>', views.docente, name='docente'),
-
-    # # Matches any html file
-    # re_path(r'^.*\.*', views.pages, name='pages'),
-
+    path('<str:sigla>/docente/<str:numero_lattes>', views.DocenteView.as_view(), name='docente'),
 ]

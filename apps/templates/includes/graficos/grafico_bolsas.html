@@ -4,9 +4,9 @@
         <!-- Chart -->
         <div class="chart tab-content chart-grafico-docente">
           <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
-            <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ titulo_bolsas }}</h5>
+            <h5 class="h3 text-white mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_bolsas.titulo }}</h5>
             {% autoescape off %}
-              {{ grafico_bolsas }}
+              {{ grafico_bolsas.grafico }}
             {% endautoescape %}
           </div>
         </div>

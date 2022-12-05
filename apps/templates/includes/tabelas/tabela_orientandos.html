@@ -1,9 +1,9 @@
+{% if tabela_orientandos %}
 <div class="col-xl-8">
-    <div class="card">
+  <div class="card">
       <div class="card-header border-0">
         <div class="row align-items-center">
-        {% for i in tabela_header %}
-          <p class='titulo-tabela'>{{ i.titulo }}</p>
+          <p class='titulo-tabela'>{{ tabela_orientandos.tabela_infos.title }}</p>
         </div>
       </div>
       <div class="table-responsive">
@@ -11,16 +11,15 @@
         <table class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr>
-              <th scope="col">{{ i.nome }}</th>
-              <th scope="col">{{ i.nivel }}</th>
-              <th scope="col">{{ i.programa }}</th>
-            {% endfor %}
+              <th scope="col">{{ tabela_orientandos.tabela_infos.nome }}</th>
+              <th scope="col">{{ tabela_orientandos.tabela_infos.nivel }}</th>
+              <th scope="col">{{ tabela_orientandos.tabela_infos.programa }}</th>
             </tr>
           </thead>
           <tbody>
-                {% for tabela in tabela %}
+                {% for tables in tabela_orientandos.tabela_conteudo %}
                 <tr>
-                  {% for item in tabela %}
+                  {% for item in tables %}
                   <td>
                     {{ item }}
                   </td>
@@ -30,5 +29,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
+   </div>
+</div>
+{% endif %}

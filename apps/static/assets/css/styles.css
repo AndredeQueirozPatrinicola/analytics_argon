@@ -373,9 +373,15 @@
     margin-top: 23px;
     margin-left: 15px;
     background-color: #fff;
-    border-radius: 10px;
-    min-width: 520px;
+    border-radius: 10px; 
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+    height: 480px;
+  }
+
+  .linha-tabela-mapa{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .header-table-estados{
