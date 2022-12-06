@@ -75,6 +75,21 @@ class Utils:
                 8155, 8157, 8159, 
             ]
 
+        self.meses = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
+        ]
+
     def pega_programas_departamento(self, *departamento):
         try:
             if len(departamento) > 1:
