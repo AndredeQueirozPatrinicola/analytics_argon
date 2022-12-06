@@ -11,7 +11,7 @@
             
             <tr>
               {% for item in tabela_defesas.headers %}
-              <th scope="col">{{ item }}</th>
+                <th scope="col">{{ item }}</th>
               {% endfor %}
             </tr>
             
@@ -21,7 +21,19 @@
                 <tr>
                   {% for item in tabela %}
                   <td style="white-space: normal;">
-                    {{ item }}
+                    {% if item == tabela|first %}
+                      {% if tabela.2 == 'ME' %}
+                        <a href="{{ tabela_defesas.link_mestrado|add:item }}" target="_blank">
+                          {{ item }}
+                        </a>
+                      {% else %}
+                        <a href="{{ tabela_defesas.link_doutorado|add:item }}" target="_blank">
+                          {{ item }}
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      {{ item }}
+                    {% endif %}
                   </td>
                   {% endfor %}
                 </tr>

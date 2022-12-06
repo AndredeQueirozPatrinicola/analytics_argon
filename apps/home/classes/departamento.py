@@ -380,7 +380,9 @@ class DadosDepartamento():
         resultado = {
             'titulo' : f'Defesas realizadas no ano de {datetime.now().year-1}',
             'headers' : ['Titulo', 'Nome', 'Nivel', 'Programa', 'Data'],
-            'tabela' : resultado
+            'tabela' : resultado,
+            'link_mestrado' : 'https://www.teses.usp.br/index.php?option=com_jumi&fileid=11&Itemid=76&lang=pt-br&filtro=',
+            'link_doutorado' : 'https://www.teses.usp.br/index.php?option=com_jumi&fileid=12&Itemid=77&lang=pt-br&filtro='
         }
 
         return resultado
