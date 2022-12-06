@@ -349,7 +349,7 @@ class DadosDepartamento():
             }, margin=dict(l=0, r=30, t=20, b=50), font_color="black", showlegend=False, linecolor='#e0dfda', gridcolor='#e0dfda')
 
         resultado = {
-            'titulo' : f'Defesas realizadas no ano de {ano_atual}',
+            'titulo' : f'Número de defesas por mês em {ano_atual}',
             'grafico' : grafico,
         }
 
