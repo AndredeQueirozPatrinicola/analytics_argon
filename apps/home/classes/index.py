@@ -1,13 +1,13 @@
-import plotly.graph_objects as go
 from plotly.offline import plot
-import requests
 import plotly.express as px
 import pandas as pd
 import os
-from time import sleep
+import locale
 
 from apps.home.utils import Utils
 from apps.home.models import Mapa
+
+from django.utils.formats import localize
 
 class Index:
 
@@ -54,6 +54,7 @@ class Index:
         pd.options.mode.chained_assignment = None
 
         try:
+            locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
             estados = Utils()
             estados = estados.pega_codigo_estado()
             state_geo = self.__mapa_quantidade_alunos_estado_base[0].get('base_de_dados')
@@ -64,16 +65,14 @@ class Index:
             state_data['UFs'] = [i for i in state_data.index]
             state_data.index = [i for i in range(0,len(state_data.index))]
             quantidade_alunos_sp = state_data['Alunos'][25]
-            state_data['Alunos'][25] = 0
             state_data.to_csv('apps/static/assets/csv/data.csv')
             state_data = pd.read_csv('apps/static/assets/csv/data.csv')
 
             if os.path.exists('apps/static/assets/csv/data.csv'):
                 os.remove('apps/static/assets/csv/data.csv')
-
-            numero = quantidade_alunos_sp[0] + quantidade_alunos_sp[1]
-            quantidade_alunos_sp = numero + "." + quantidade_alunos_sp[-3] + quantidade_alunos_sp[-2] + quantidade_alunos_sp[-1]
-
+            
+            quantidade_alunos_sp = int(quantidade_alunos_sp) / 1000
+            quantidade_alunos_sp = round(quantidade_alunos_sp, 3)
 
             fig = px.choropleth(
                                 state_data, 
@@ -89,6 +88,7 @@ class Index:
                                     'Alunos':'Alunos', 
                                     "Codigos" : "Codigo da UF"
                                     },
+                                range_color=[0, 400]
                                 )
 
             fig.update_geos(fitbounds="geojson", visible=False)
