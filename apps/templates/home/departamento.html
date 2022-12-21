@@ -34,15 +34,15 @@
 
   <div class="row">
 
-    {% include 'includes/graficos/grafico_defesas.html' %}
+    {% include 'includes/tabelas/tabela_defesas.html' %}
+
+    {% include 'includes/graficos/grafico_defesa_mestrado_doutorado.html' %}
 
   </div>
 
   <div class="row">
 
-    {% include 'includes/tabelas/tabela_defesas.html' %}
-
-    {% include 'includes/graficos/grafico_defesa_mestrado_doutorado.html' %}
+    {% include 'includes/graficos/grafico_defesas.html' %}
 
   </div>
 
@@ -100,7 +100,7 @@ $(document).ready(function(){
 $('#tabela-defesas').DataTable({responsive: true,
 // "bSort": false,
 "aaSorting": [],
-"pageLength": 6,
+"pageLength": 5,
 "language": {
     "decimal": "",
     "emptyTable": "Sem dados disponíveis",
