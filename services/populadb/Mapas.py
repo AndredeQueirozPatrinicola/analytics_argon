@@ -38,8 +38,8 @@ class ApiMapas:
             else:
                 salva_dados = Mapa(
                                     nome=nome,
-                                    base_de_dados=raw_base_de_dados,
-                                    dados_do_mapa=raw_dados_api
+                                    base_de_dados=base_de_dados,
+                                    dados_do_mapa=dados_api
                                 )
                 salva_dados.save()
         except:
