@@ -44,16 +44,16 @@ class Index:
             raise Exception()
 
     def plota_mapa(self):
-        """
-            Metodo que visita uma base de dados dos estados brasileiros no Github e os 
-            dados dos alunos na api e retorna o mapa plotado junto com o numero de alunos
-            de São Paulo. 
+        # """
+        #     Metodo que visita uma base de dados dos estados brasileiros no Github e os 
+        #     dados dos alunos na api e retorna o mapa plotado junto com o numero de alunos
+        #     de São Paulo. 
 
-            Em caso de erro neste processo, retorna mensagem de erro que será exibida no front.
-        """
-        pd.options.mode.chained_assignment = None
+        #     Em caso de erro neste processo, retorna mensagem de erro que será exibida no front.
+        # """
+            pd.options.mode.chained_assignment = None
 
-        try:
+        # try:
             locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
             estados = Utils()
             estados = estados.pega_codigo_estado()
@@ -92,7 +92,24 @@ class Index:
                                 )
 
             fig.update_geos(fitbounds="geojson", visible=False)
-            fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+            fig.update_layout(
+                                margin={"r":0,"t":0,"l":0,"b":0},
+                                coloraxis_colorbar=dict(
+                                title="Escala",
+                                tickvals=[0, 50, 100, 150, 200, 250, 300, 350, 400],
+                                ticktext=[
+                                    "0", 
+                                    "50",
+                                    "100",
+                                    "150",
+                                    "200",
+                                    "250",
+                                    "300",
+                                    "350",
+                                    ">400"
+
+                                ],
+                            ))
 
             fig = plot(fig, output_type="div", config={
                                                     'displaylogo': False,
@@ -105,8 +122,8 @@ class Index:
                                                         ]})
 
             return fig, quantidade_alunos_sp
-        except:
-            return None
+        # except:
+        #     return None
             
 
     def tabela_alunos_estados(self):
