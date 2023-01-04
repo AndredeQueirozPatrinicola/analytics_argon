@@ -8,9 +8,6 @@ from django.views.static import serve
 from apps.home import views
 
 urlpatterns = [
-    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
-
-    # The home page
     path('', views.IndexView.as_view(), name='home'),
 
     path('sobre-nos', views.SobrenosView.as_view(), name='sobre-nos'),
