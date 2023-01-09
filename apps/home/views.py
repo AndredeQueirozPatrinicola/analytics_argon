@@ -153,10 +153,7 @@ class DepartamentoView(View):
         grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
-        # tabela_defesas = docentes.pega_defesas(queries.get('api_defesas'))
-
         tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
-        grafico_defesas = departamento.grafico_defesas(queries.get('api_defesas'))
         grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
 
         caminho = [
@@ -181,7 +178,6 @@ class DepartamentoView(View):
             # Graficos e tabelas
             'grafico_defesa_mestrado_doutorado' : grafico_defesa_mestrado_doutorado,
             'tabela_defesas' : tabela_defesas,
-            'grafico_defesas' : grafico_defesas,
             'grafico_aposentados_ativos': grafico_pizza_aposentados_ativos,
             'grafico_tipo_vinculo': grafico_pizza_tipo_vinculo,
             'grafico_prod_docentes': grafico_prod_docentes,

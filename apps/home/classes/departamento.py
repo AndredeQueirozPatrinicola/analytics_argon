@@ -218,7 +218,7 @@ class DadosDepartamento():
         ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
             linecolor='white', gridcolor='#4d4b46')
 
-        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]} - {anos[-1]})"
+        titulo = f"Relação entre IC's e Pesquisas de pós-doutorado com e sem bolsa - ({anos[0]} - {anos[-1]})"
 
         resultado = {
             'titulo' : titulo,
@@ -326,39 +326,7 @@ class DadosDepartamento():
         }
 
         return resultado
-    
-    def grafico_defesas(self, api_defesas):
-        meses_int = [mes for mes in range(1, 13)]
-        meses = Utils().meses
-        dados = {key : value*0 for (key, value) in zip(meses_int, meses_int) }
-        ano_atual = datetime.now().year - 1
-
-        for defesa in api_defesas:
-            
-            data = defesa.get('data')
-            verifica_mes = int(data.split('/')[1])
-            dados[verifica_mes] = dados.get(verifica_mes) + 1
-
-        
-        df = pd.DataFrame(dados, index = [0])
-        df = df.transpose()
-        df = df.rename(columns = {0:'Numero defesas'})
-        df['Meses'] = meses
-
-        grafico = Grafico()
-        grafico = grafico.grafico_linhas(df=df, x="Meses", y='Numero defesas', height=450, tickmode='linear',labels={
-                'index': 'Mês',
-            }, margin=dict(l=0, r=30, t=20, b=50), font_color="black", showlegend=False, linecolor='#e0dfda', gridcolor='#e0dfda')
-
-        resultado = {
-            'titulo' : f'Número de defesas por mês em {ano_atual}',
-            'grafico' : grafico,
-        }
-
-        return resultado
-        
-
-    
+       
     def pega_tabela_defesas(self, api_defesas):
         utils = Utils()          
 
@@ -380,7 +348,7 @@ class DadosDepartamento():
                 )
 
         resultado = {
-            'titulo' : f'Defesas realizadas no ano de {datetime.now().year-1}',
+            'titulo' : f'Defesas pós-graduação realizadas no ano de {datetime.now().year-1}',
             'headers' : ['Titulo', 'Nome', 'Nivel', 'Programa', 'Data'],
             'tabela' : resultado,
             'link_mestrado' : 'https://www.teses.usp.br/index.php?option=com_jumi&fileid=11&Itemid=76&lang=pt-br&filtro=',
