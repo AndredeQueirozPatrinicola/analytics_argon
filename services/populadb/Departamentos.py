@@ -58,14 +58,15 @@ class ApiDepartamento:
             'ano_fim': datetime.now().year - 1,
             'serie_historica_tipo': 'departamento'
         }
-        raw_pesquisa_parametros = requests.get(url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
-        dados_pesquisa_parametros = raw_pesquisa_parametros.json()
-        
-        for i in dados_pesquisa_parametros:
-            if i == departamentos_siglas.get(self.sigla) or i == 'Linguística':
-                lista_pesquisa_por_ano = [dados_pesquisa_parametros.get(i)]
+        dados_pesquisa_parametros = requests.get(url=f'https://dados.fflch.usp.br/api/pesquisa', params=parametros)
+        dados_pesquisa_parametros = dados_pesquisa_parametros.json()
 
-        return lista_pesquisa_por_ano
+        resultado = dados_pesquisa_parametros.get(departamentos_siglas.get(self.sigla))
+
+        if not resultado:
+            resultado = dados_pesquisa_parametros.get('Linguística')
+        
+        return resultado
 
     def pega_api_defesas(self):
         utils = Utils()
@@ -134,7 +135,6 @@ class ApiDepartamento:
         departamento = Departamento.objects.filter(sigla=self.sigla)
 
         if departamento.exists():
-
             departamento.update(
                 api_docentes=api_docentes,
                 api_programas=api_programas, 
@@ -144,9 +144,7 @@ class ApiDepartamento:
                 api_programas_docente=api_programas_docentes, 
                 api_programas_docente_limpo=api_programas_docentes_limpo, 
             )
-
             print("Dados atualizados com sucesso")
-
         else:
             departamento = Departamento(
                 api_docentes=api_docentes,
@@ -157,7 +155,5 @@ class ApiDepartamento:
                 api_programas_docente=api_programas_docentes, 
                 api_programas_docente_limpo=api_programas_docentes_limpo, 
             )
-
             print("Departamento salvo com sucesso")
-
             departamento.save()
