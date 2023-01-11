@@ -189,7 +189,7 @@ class DadosDepartamento():
         anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
 
-        df = pd.DataFrame(dados[0])
+        df = pd.DataFrame(dados)
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
         df = df.rename(columns={
