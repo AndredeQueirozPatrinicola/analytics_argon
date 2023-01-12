@@ -115,17 +115,11 @@ class UtilsPegaProgramasDepartamentoTestCase(TestCase):
             x += 1
 
     def test_erros(self):
-        ERRO = 'Houve um erro para encontrar os dados do departamento'
-        self.assertEquals(self.utils_teste.pega_programas_departamento(
-            [i for i in range(100)]), ERRO)
-        self.assertEquals(self.utils_teste.pega_programas_departamento(
-            "ysaguysdagdygsuydgsdgausd"), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_programas_departamento(12312312321), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_programas_departamento({}), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_programas_departamento("FLA", "FLG"), ERRO)
+        self.assertRaises(Exception ,self.utils_teste.pega_programas_departamento, [i for i in range(100)])
+        self.assertRaises(Exception ,self.utils_teste.pega_programas_departamento, "ysaguysdagdygsuydgsdgausd")
+        self.assertRaises(Exception ,self.utils_teste.pega_programas_departamento, 12312312321)
+        self.assertRaises(Exception ,self.utils_teste.pega_programas_departamento, {})
+        self.assertRaises(Exception ,self.utils_teste.pega_programas_departamento, ("FLA", "FLG"))
 
 
 class UtilsPegaDepartamentoPrograma(TestCase):
@@ -170,15 +164,38 @@ class UtilsCodigoEstado(TestCase):
             x += 1
 
     def test_erro(self):
-        ERRO = []
-        self.assertEquals(self.utils_teste.pega_codigo_estado(
-            [i for i in range(100)]), ERRO)
-        self.assertEquals(self.utils_teste.pega_codigo_estado(
-            "ysaguysdagdygsuydgsdgausd"), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_codigo_estado(12312312321), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_codigo_estado({}), ERRO)
-        self.assertEquals(
-            self.utils_teste.pega_codigo_estado("FLA", "FLG"), ERRO)
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, [i for i in range(100)], msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, "ysaguysdagdygsuydgsdgausd", msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, 12312312321, msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, {}, msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, "FLA", "FLG", msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, "", msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, 0, msg="Não foi possivel determinar o estado")
+        self.assertRaises(Exception, self.utils_teste.pega_codigo_estado, "12", msg="Não foi possivel determinar o estado")
 
+class SiglasDepartamentoTestCase(TestCase):
+
+    def setUp(self) -> None:
+        self.utils = Utils()
+        self.siglas = ['FLA','FLP','FLF','FLH','FLC','FLM','FLO','FLL','FSL','FLT','FLG']
+        self.departamentos = [
+                                'Antropologia','Ciência Política','Filosofia','História',
+                                "Letras Clássicas e Vernáculas","Letras Modernas",'Letras Orientais',
+                                'Lingüística', 'Sociologia', "Teoria Literária e Literatura Comparada" ,
+                                'Geografia' ,
+                             ]
+
+    def test_equals(self):
+        x = 0
+        for nome in self.departamentos:
+            self.assertEquals(self.utils.pega_sigla_por_nome_departamento(nome), self.siglas[x]) 
+            x += 1
+
+    def test_errors(self):
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, "", msg="Não foi possível localizar o departamento")
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, "Linguistica", msg="Não foi possível localizar o departamento") # Sem trema "Ü"
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, "GEOGRAFIA", msg="Não foi possível localizar o departamento")
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, 21312312, msg="Não foi possível localizar o departamento")
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, [231,321], msg="Não foi possível localizar o departamento")
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, {}, msg="Não foi possível localizar o departamento")
+        self.assertRaises(Exception, self.utils.pega_sigla_por_nome_departamento, "FLH", msg="Não foi possível localizar o departamento")

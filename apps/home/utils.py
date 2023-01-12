@@ -61,6 +61,20 @@ class Utils:
                 'FLT': "Teoria Literária e Literatura Comparada",
                 'FLG': 'Geografia'
             }
+
+        self.siglas_dptos = {
+                'Antropologia' : 'FLA',
+                'Ciência Política' : 'FLP',
+                'Filosofia' : 'FLF',
+                'História' : 'FLH',
+                "Letras Clássicas e Vernáculas" : 'FLC',
+                "Letras Modernas" : 'FLM',
+                'Letras Orientais' : 'FLO',
+                'Lingüística' : 'FLL',
+                'Sociologia' : 'FSL',
+                "Teoria Literária e Literatura Comparada" : 'FLT',
+                 'Geografia' :'FLG'
+            }
             
         self.codigos = [
                 8131, 8132, 8133, 
@@ -116,7 +130,7 @@ class Utils:
 
             return resultado
         except:
-            return 'Houve um erro para encontrar os dados do departamento'
+            raise Exception()
 
     def pega_departamento_programa(self, *programa):
 
@@ -148,42 +162,44 @@ class Utils:
             return self.dptos_siglas
 
     def pega_codigo_estado(self, *estado):
+        try:
+            estados = {
+                'AC': 12,
+                'AL': 27,
+                'AM': 13,
+                'AP': 16,
+                'BA': 29,
+                'CE': 23,
+                'DF': 53,
+                'ES': 32,
+                'GO': 52,
+                'MA': 21,
+                'MG': 31,
+                'MT': 51,
+                'MS': 50,
+                'PA': 15,
+                'PB': 25,
+                'PE': 26,
+                'PI': 22,
+                'PR': 41,
+                'RJ': 33,
+                'RN': 24,
+                'RO': 11,
+                'RR': 14,
+                'RS': 43,
+                'SC': 42,
+                'SE': 28,
+                'SP': 35,
+                'TO': 17,
+            }
 
-        estados = {
-            'AC': 12,
-            'AL': 27,
-            'AM': 13,
-            'AP': 16,
-            'BA': 29,
-            'CE': 23,
-            'DF': 53,
-            'ES': 32,
-            'GO': 52,
-            'MA': 21,
-            'MG': 31,
-            'MT': 51,
-            'MS': 50,
-            'PA': 15,
-            'PB': 25,
-            'PE': 26,
-            'PI': 22,
-            'PR': 41,
-            'RJ': 33,
-            'RN': 24,
-            'RO': 11,
-            'RR': 14,
-            'RS': 43,
-            'SC': 42,
-            'SE': 28,
-            'SP': 35,
-            'TO': 17,
-        }
+            if not estado:
+                return estados
 
-        if not estado:
-            return estados
-
-        elif estado:
-            return [estados.get(i) for i in estados if i in estado]
+            elif estado:
+                return [estados.get(i) for i in estados if i in estado]
+        except:
+            raise Exception("Não foi possivel determinar o estado")
 
 
     def siglas_departamentos(self, siglas_departamentos):
@@ -196,3 +212,12 @@ class Utils:
         else:
             raise Exception(
                 "A função só aceita os parametros 'siglas' e 'departamentos'.")
+
+    def pega_sigla_por_nome_departamento(self, departamento):
+        try:
+            return self.siglas_dptos.get(f'{departamento}')
+        except:
+            raise Exception(
+                "Não foi possível localizar o departamento"
+            )
+            

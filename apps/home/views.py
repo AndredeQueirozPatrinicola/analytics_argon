@@ -199,52 +199,60 @@ class DepartamentoView(View):
 class DepartamentosView(View):
 
     def queries(self):
-        numero_docentes = Docente.objects.count()
-        api_docentes = Docente.objects.values('api_docentes')
+        querie_departamentos = Departamento.objects.all().values('api_pesquisa_parametros', 'api_programas_docente_limpo')
+        querie_docentes = Docente.objects.all().values('api_docentes')
+
+        queries = {
+            'querie_departamentos' : querie_departamentos,
+            'querie_docentes' : querie_docentes
+        }
+
+        return queries
+        
 
     def get(self, request):
-        departamentos = Departamentos()
-        try:
-            tabela_todos_docentes = departamentos.tabela_todos_docentes()
-            grafico_relacao_cursos = departamentos.plota_relacao_cursos()
-            grafico_bolsas = departamentos.grafico_bolsa_sem()
-            tabela_bolsas = departamentos.tabela_bolsas()
-            grafico_producao_total_departamento = departamentos.prod_total_departamentos()
-            grafico_historico_prod = departamentos.prod_historica_total()
-            numero_docentes = departamentos.pega_numero_docentes()
-            programas_departamento = departamentos.pega_programas()
+        queries = self.queries()
+        querie_departamentos = queries.get('querie_departamentos')
+        querie_docente = queries.get('querie_docentes')
+        departamentos = Departamentos(querie_departamentos, querie_docente)
 
-            caminho = [
-                {
-                    'text': 'Departamentos',
-                }
-            ]
+        tabela_todos_docentes = departamentos.tabela_todos_docentes()
+        grafico_relacao_cursos = departamentos.plota_relacao_cursos()
+        grafico_bolsas = departamentos.grafico_bolsa_sem()
+        tabela_bolsas = departamentos.tabela_bolsas()
+        grafico_producao_total_departamento = departamentos.prod_total_departamentos()
+        grafico_historico_prod = departamentos.prod_historica_total()
+        numero_docentes = departamentos.pega_numero_docentes()
+        programas_departamento = departamentos.pega_programas()
 
-            context = {
-                'regulador': 'regulador',
-                'caminho': caminho,
-
-                'df_docentes': tabela_todos_docentes.get('df'),
-                'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
-
-                'grafico_relacao_cursos':  grafico_relacao_cursos,
-                'grafico_bolsas': grafico_bolsas,
-                'tabela_bolsas': tabela_bolsas,
-                'grafico_prod_docentes': grafico_producao_total_departamento,
-                'grafico_historico_prod': grafico_historico_prod,
-
-                'numero_docentes': numero_docentes,
-
-                'informacoes_card': programas_departamento.get('programas'),
-                'dropdown_label':  programas_departamento.get('label'),
-                'card_2_titulo': 'Programas da Faculdade'
+        caminho = [
+            {
+                'text': 'Departamentos',
             }
+        ]
 
-            return render(request, 'home/departamentos.html', context)
-        except:
-            context = {}
-            html_template = loader.get_template('home/page-500.html')
-            return HttpResponse(html_template.render(context, request))
+        context = {
+            'regulador': 'regulador',
+            'caminho': caminho,
+
+            'df_docentes': tabela_todos_docentes.get('df'),
+            'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
+
+            'grafico_relacao_cursos':  grafico_relacao_cursos,
+            'grafico_bolsas': grafico_bolsas,
+            'tabela_bolsas': tabela_bolsas,
+            'grafico_prod_docentes': grafico_producao_total_departamento,
+            'grafico_historico_prod': grafico_historico_prod,
+
+            'numero_docentes': numero_docentes,
+
+            'informacoes_card': programas_departamento.get('programas'),
+            'dropdown_label':  programas_departamento.get('label'),
+            'card_2_titulo': 'Programas da Faculdade'
+        }
+
+        return render(request, 'home/departamentos.html', context)
+
 
 class SobrenosView(View):
 
