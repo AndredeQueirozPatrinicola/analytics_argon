@@ -11,27 +11,58 @@ from apps.home.utils import Utils
 class Departamentos():
 
     def __init__(self, api_departamentos, api_docentes):
-        self.api_departamentos = api_departamentos
-        self.api_docentes = api_docentes
+        self._api_departamentos = api_departamentos
+        self._api_docentes = api_docentes
 
     @cached_property
-    def pega_api_docentes(self):
-        dados = self.api_docentes
+    def pega_api(self):
+        dados = self._api_departamentos
+
+        api_pesquisa_prametros = []
+        api_programas_docente_limpo = []
+        api_programas_docente = []
+
+        for dado in dados:
+            api_pesquisa_prametros.append(dado.get('api_pesquisa_parametros'))
+            api_programas_docente_limpo.append(dado.get('api_programas_docente_limpo'))
+            api_programas_docente.append(dado.get('api_programas_docente'))
+
+        resultado = {
+            'api_pesquisa_prametros'      : api_pesquisa_prametros,
+            'api_programas_docente_limpo' : api_programas_docente_limpo,
+            'api_programas_docente'       : api_programas_docente
+        }
+
+        return resultado
+
+    @cached_property
+    def api_docentes(self):
+        dados = self._api_docentes
         return [dado.get('api_docentes') for dado in dados]
 
     @cached_property
-    def pega_api_pesquisa_parametros(self):
-        dados = self.api_departamentos
-        return [dado.get('api_pesquisa_parametros') for dado in dados]
+    def api_pesquisa_parametros(self):
+        dados = self.pega_api
+        return dados.get('api_pesquisa_prametros')
 
     @cached_property
-    def pega_api_programas_docente_limpo(self):
-        dados = self.api_departamentos
-        return [dado.get('api_programas_docente_limpo') for dado in dados]
+    def api_programas_docente_limpo(self):
+        dados = self.pega_api
+        return dados.get('api_programas_docente_limpo')
+
+    @cached_property
+    def api_programas_docente(self):
+        dados = self.pega_api
+        return dados.get('api_programas_docente')
+
+    @cached_property
+    def pega_anos_analisados(self):
+        return [str(i) for i in range((datetime.now().year - 6), datetime.now().year)]
 
     def pega_numero_docentes(self):
+        
         resultado = Docente.objects.count()
-        dados = self.pega_api_docentes
+        dados = self.api_docentes
 
         ativos = 0
         aposentados = 0
@@ -58,7 +89,9 @@ class Departamentos():
 
         return resultado
 
-    def trata_dados_ic(self, dados, anos):
+    def trata_dados_ic(self, dados):
+        
+        anos = self.pega_anos_analisados
         resultado = {}
         for ano in anos:
             for dado in dados:
@@ -86,16 +119,18 @@ class Departamentos():
         return resultado
 
     def tabela_todos_docentes(self):
+        
         utils = Utils()
-        dados = self.pega_api_docentes
-
+        dados = self.api_docentes
+        
         df = pd.DataFrame(dados)
         df = df.drop(columns=['codset'])
-
+        
         siglas_departamento = []
         for setor in df['nomset']:
+            
             siglas_departamento.append(utils.pega_sigla_por_nome_departamento(setor))
-
+        
         df['sigset'] = siglas_departamento
 
         titulo = 'Todos os docentes da faculdade'
@@ -108,7 +143,8 @@ class Departamentos():
         return resultado
 
     def plota_relacao_cursos(self):
-        dados = self.pega_api_docentes
+        
+        dados = self.api_docentes
 
         df = pd.DataFrame(dados)
         valores_cursos = df['nomset'].value_counts().to_list()
@@ -123,7 +159,6 @@ class Departamentos():
         titulo = 'Percentual de professores por departamento'
 
         grafico = Grafico()
-
         grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=0), x=0.6, y=-0.5, color=df2.index, height=700,
                                         color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
 
@@ -135,10 +170,11 @@ class Departamentos():
         return resultado
 
     def grafico_bolsa_sem(self):
-        dados = self.pega_api_pesquisa_parametros
-        anos = [str(i) for i in range((datetime.now().year - 6), datetime.now().year)]
+        
+        dados = self.api_pesquisa_parametros
+        anos = self.pega_anos_analisados
 
-        resultado = self.trata_dados_ic(dados, anos)
+        resultado = self.trata_dados_ic(dados)
             
         df = pd.DataFrame(resultado)
         df = df.transpose()
@@ -173,9 +209,10 @@ class Departamentos():
         return resultado
 
     def tabela_bolsas(self):
-        dados = self.pega_api_pesquisa_parametros
-        anos = [str(i) for i in range((datetime.now().year - 6), datetime.now().year)]
-        resultado = self.trata_dados_ic(dados, anos)
+        
+        dados = self.api_pesquisa_parametros
+        anos = self.pega_anos_analisados
+        resultado = self.trata_dados_ic(dados)
         rows = ["IC's com bolsa", "IC's sem bolsa", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"] 
 
         df = pd.DataFrame(resultado)
@@ -203,32 +240,21 @@ class Departamentos():
         return resultado
 
     def prod_total_departamentos(self):
-        dados = Departamento.objects.values('api_programas_docente_limpo')
+        
+        dados = self.api_programas_docente_limpo
 
-        x = 0
-        resultado_livros = []
-        resultado_artigos = []
-        resultado_capitulos = []
-        while x < len(dados):
+        for departamento in dados:
+            for docente in departamento:
+                if departamento == dados[0]:
+                    total_livros = int(docente.get('total_livros'))
+                    total_artigos = int(docente.get('total_artigos'))
+                    total_capitulos = int(docente.get('total_capitulos'))
+                else:
+                    total_livros += int(docente.get('total_livros')) 
+                    total_artigos += int(docente.get('total_artigos'))
+                    total_capitulos += int(docente.get('total_capitulos'))
 
-            for i in range(len(dados[x].get('api_programas_docente_limpo'))):
-
-                resultado_livros.append(dados[x].get(
-                    'api_programas_docente_limpo')[i].get('total_livros'))
-                resultado_artigos.append(dados[x].get('api_programas_docente_limpo')[
-                                         i].get('total_artigos'))
-                resultado_capitulos.append(dados[x].get('api_programas_docente_limpo')[
-                                           i].get('total_capitulos'))
-
-            x += 1
-
-        resultado_livros = [int(i) for i in resultado_livros]
-        resultado_artigos = [int(i) for i in resultado_artigos]
-        resultado_capitulos = [int(i) for i in resultado_capitulos]
-
-        resultado = [sum(resultado_livros), sum(
-            resultado_artigos), sum(resultado_capitulos)]
-
+        resultado = [total_livros, total_artigos, total_capitulos]
         fig = Grafico()
         fig = fig.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=resultado, color=['Livros', 'Artigos', 'Capitulos'],
                                  color_discrete_sequence=[
@@ -253,14 +279,13 @@ class Departamentos():
         return resultado
 
     def prod_historica_total(self):
-
+        
         def soma_lista(a: int, b: int):
             return int(a) + int(b)
 
         dados = Departamento.objects.values_list('api_programas_docente')
 
-        anos = [str(i)
-                for i in range(datetime.now().year - 6, datetime.now().year)]
+        anos = self.pega_anos_analisados
 
         tipos = ['total_livros', 'total_artigos', 'total_capitulos']
 

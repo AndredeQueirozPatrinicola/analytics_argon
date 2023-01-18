@@ -199,8 +199,8 @@ class DepartamentoView(View):
 class DepartamentosView(View):
 
     def queries(self):
-        querie_departamentos = Departamento.objects.all().values('api_pesquisa_parametros', 'api_programas_docente_limpo')
-        querie_docentes = Docente.objects.all().values('api_docentes')
+        querie_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+        querie_docentes = Docente.objects.values('api_docentes')
 
         queries = {
             'querie_departamentos' : querie_departamentos,
@@ -216,14 +216,14 @@ class DepartamentosView(View):
         querie_docente = queries.get('querie_docentes')
         departamentos = Departamentos(querie_departamentos, querie_docente)
 
+        numero_docentes = departamentos.pega_numero_docentes()
         tabela_todos_docentes = departamentos.tabela_todos_docentes()
         grafico_relacao_cursos = departamentos.plota_relacao_cursos()
         grafico_bolsas = departamentos.grafico_bolsa_sem()
         tabela_bolsas = departamentos.tabela_bolsas()
         grafico_producao_total_departamento = departamentos.prod_total_departamentos()
-        grafico_historico_prod = departamentos.prod_historica_total()
-        numero_docentes = departamentos.pega_numero_docentes()
         programas_departamento = departamentos.pega_programas()
+        grafico_historico_prod = departamentos.prod_historica_total()
 
         caminho = [
             {
