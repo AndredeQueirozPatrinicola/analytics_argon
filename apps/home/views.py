@@ -213,7 +213,6 @@ class DepartamentosView(View):
         
 
     def get(self, request):
-        start = time.perf_counter()
         queries = self.queries()
         querie_departamentos = queries.get('querie_departamentos')
         querie_docente = queries.get('querie_docentes')
@@ -253,8 +252,6 @@ class DepartamentosView(View):
             'dropdown_label':  programas_departamento.get('label'),
             'card_2_titulo': 'Programas da Faculdade'
         }
-        end = time.perf_counter() 
-        print(end - start)
         return render(request, 'home/departamentos.html', context)
 
 
