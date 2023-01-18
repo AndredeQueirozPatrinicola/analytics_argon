@@ -28,7 +28,7 @@ class IndexView(View):
             quantidade_alunos_sp = None
 
         menu_nav_table, titulo_menu = index.tabela_sobrenos()
-        tabela_alunos_estados = index.tabela_alunos_estados()
+        tabela_mapa = index.tabela_alunos_estados()
 
         context = {
             'segment': 'index',
@@ -39,7 +39,7 @@ class IndexView(View):
 
             'globo': globo,
             'quantidade_alunos_sp' : quantidade_alunos_sp,
-            'tabela_alunos_estados' : tabela_alunos_estados,
+            'tabela_mapa' : tabela_mapa,
         }
 
         html_template = loader.get_template('home/index.html')
@@ -253,8 +253,8 @@ class DepartamentosView(View):
             'dropdown_label':  programas_departamento.get('label'),
             'card_2_titulo': 'Programas da Faculdade'
         }
-        end = time.perf_counter() - start
-        print(end)
+        end = time.perf_counter() 
+        print(end - start)
         return render(request, 'home/departamentos.html', context)
 
 

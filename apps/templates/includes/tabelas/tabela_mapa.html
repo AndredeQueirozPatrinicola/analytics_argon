@@ -1,0 +1,33 @@
+<div class="col-xl-4 mt-4">
+  <div class="card">
+    <div class="card-header border-0">
+      <div class="row align-items-center">
+        <p class='titulo-tabela titulo-tabela-defesas'>Alunos contabilizados por estado</p>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-items-center table-flush">
+        <thead class="thead-light">
+          
+          <tr>
+            {% for item in tabela_mapa.headers %}
+            <th scope="col">{{ item }}</th>
+            {% endfor %}
+          </tr>
+          
+        </thead>
+        <tbody>
+              {% for tabela in tabela_mapa.tabelas %}
+              <tr>
+                {% for item in tabela %}
+                <td>
+                  {{ item }}
+                </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
