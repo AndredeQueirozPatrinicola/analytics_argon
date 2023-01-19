@@ -41,7 +41,7 @@ class Index:
             except:
                 dados_alunos['RR'] = 0
             dados_alunos = dados_alunos.transpose()
-            dados_alunos = dados_alunos.rename(columns={0:"Alunos"}, index={"":"N/I"})
+            dados_alunos = dados_alunos.rename(columns={0:"Alunos"}, index={"":"Não Informado"})
             dados_alunos = dados_alunos.sort_index(ascending=True)
 
             return dados_alunos
@@ -49,13 +49,13 @@ class Index:
             raise Exception()
 
     def plota_mapa(self):
-        # """
-        #     Metodo que visita uma base de dados dos estados brasileiros no Github e os 
-        #     dados dos alunos na api e retorna o mapa plotado junto com o numero de alunos
-        #     de São Paulo. 
+        """
+            Metodo que visita uma base de dados dos estados brasileiros no Github e os 
+            dados dos alunos na api e retorna o mapa plotado junto com o numero de alunos
+            de São Paulo. 
 
-        #     Em caso de erro neste processo, retorna mensagem de erro que será exibida no front.
-        # """
+            Em caso de erro neste processo, retorna mensagem de erro que será exibida no front.
+        """
         pd.options.mode.chained_assignment = None
 
         try:
@@ -99,7 +99,7 @@ class Index:
                                 range_color=[0, 400]
                                 )
 
-            fig.update_geos(fitbounds="geojson", visible=True)
+            fig.update_geos(fitbounds="geojson", visible=False)
             fig.update_layout(
                                 margin={"r":0,"t":0,"l":0,"b":0},
                                 coloraxis_colorbar=dict(
