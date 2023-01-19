@@ -140,7 +140,7 @@ class DadosDepartamento():
                         'color' : 'Legenda'
                      })
 
-        titulo = 'Produção total do departamento registrada no Lattes'
+        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no Lattes'
 
         resultado = {
             'titulo' : titulo,
