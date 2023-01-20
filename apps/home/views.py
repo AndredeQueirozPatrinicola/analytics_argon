@@ -30,6 +30,7 @@ class IndexView(View):
         menu_nav_table, titulo_menu = index.tabela_sobrenos()
         tabela_mapa = index.tabela_alunos_estados()
 
+
         context = {
             'segment': 'index',
             'landingpage': 'landingpage',
@@ -62,11 +63,21 @@ class DocenteView(View):
             api_docente = docente.pega_api_docente()
             api_docentes = docente.pega_api_docentes()
 
-        return api_docente, api_programas, api_docentes
+        queries = {
+            'api_docente' : api_docente,
+            'api_programas' : api_programas,
+            'api_docentes' : api_docentes
+        }
+
+        return queries
 
     def get(self, request, sigla, numero_lattes):
         docente = DadosDocente(numero_lattes, sigla)
-        api_docente, api_programas, api_docentes = self.queries(numero_lattes)
+        queries = self.queries(numero_lattes)
+
+        api_docente = queries.get('api_docente')
+        api_programas = queries.get('api_programas')  
+        api_docentes = queries.get('api_docentes')
 
         informacoes_docente = docente.pega_informacoes_basicas(api_programas, api_docentes)
         tabela_orientandos = docente.tabela_orientandos(api_docente)
@@ -78,7 +89,7 @@ class DocenteView(View):
         caminho = docente.pega_caminho(api_programas, api_docentes)
         linhas_pesquisa = docente.linhas_de_pesquisa(api_docente)
         tipo_vinculo_situacao = docente.pega_vinculo_situacao(api_docentes)
-
+        
         """
             Dados dos cards que ficam no header da pagina.
             O header é o mesmo para todas as paginas, por isso a necessidade

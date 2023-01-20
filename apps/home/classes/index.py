@@ -143,7 +143,7 @@ class Index:
             tabela = []
             x = 0
             while x < len(siglas)/2:
-                tabela.append([siglas[x], quantidade[x], siglas[x+13], quantidade[x+13]])
+                tabela.append([siglas[x], quantidade[x], siglas[x+14], quantidade[x+14]])
                 x+=1
 
             return {
