@@ -405,6 +405,11 @@
     margin-left: 0;
   }
 
+  .center-child-element{
+    display: flex;
+    justify-content: center;
+  }
+
   @media only screen and (max-width: 1706px) {
     .regula-altura{
       height: 120px;
