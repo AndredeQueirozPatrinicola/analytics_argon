@@ -4,7 +4,6 @@ from datetime import datetime
 
 from django.db import connections
 
-
 from apps.home.classes.graficos import Grafico
 from apps.home.utils import Utils
 
@@ -60,7 +59,6 @@ class Graduacao:
 
         df = self.cursor.fetchall()
         df = pd.DataFrame(df)
-        print(df.transpose())
 
         grafico = Grafico()
         grafico = grafico.grafico_barras(df=df, x=0, y=2, height=478, barmode='group', 
