@@ -72,8 +72,16 @@ DATABASES = {
         'NAME': config('DBNAME'),
         'USER': config('DBUSER'),
         'PASSWORD': config('DBPASSWORD'),
-        'HOST': config('DBHOST'),   # Or an IP Address that your DB is hosted on
+        'HOST': config('DBHOST'),   
         'PORT': config('DBPORT'),
+    },
+    'etl': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': config('ETL_DBNAME'),
+        'USER': config('ETL_DBUSER'),
+        'PASSWORD': config('ETL_DBPASSWORD'),
+        'HOST': config('ETL_DBHOST'),   
+        'PORT': config('ETL_DBPORT'),
     }
 }
 
