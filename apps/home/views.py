@@ -1,10 +1,7 @@
-from django import template
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.views import View
 from django.template import loader
-from django.urls import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import  render
 
 from services.populadb.Docentes import ApiDocente
 
@@ -14,8 +11,11 @@ from .classes.docente import DadosDocente
 from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 from .classes.index import Index
+from .classes.graduacao import Graduacao
 
-import time
+import pandas as pd
+import datetime
+
 
 class IndexView(View):
 
@@ -285,3 +285,22 @@ class SobrenosView(View):
             'menu_table' : menu_nav_table
         }
         return render(request, 'home/sobre-nos.html', context)
+
+
+class GraduacaoViews(View):
+    
+    def get(self, request):
+        graduacao = Graduacao()
+        grafico_diversidade = graduacao.grafico_diversidade()
+        numero_alunos = graduacao.pega_numero_alunos_ativos()
+        caminho = graduacao.pega_caminho()
+        context = {
+            'numero_alunos' : numero_alunos,
+            'grafico_diversidade' : grafico_diversidade,
+            'caminho' : caminho
+        }
+
+        return render(request, 'home/graduacao.html', context)
+
+
+

@@ -24,10 +24,14 @@ def config(request):
 
 
     return {'menu':[{
-                'text' : 'Departamentos',
-                'url' : '/departamentos/',
-                'submenu' : menu_departamentos
-            }],
+                    'text' : 'Departamentos',
+                    'url' : '/departamentos/',
+                    'submenu' : menu_departamentos
+                   },
+                   {
+                    'text' : 'Graduação',
+                    'url' : '/graduacao/',
+                   }],
             'logo' : 'brand/logo.png',
             'icon' : 'icons/fflch_simbolo.jpg',
             'name_app' : 'FFLCH | Analytics',
