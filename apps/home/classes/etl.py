@@ -8,7 +8,7 @@ class Etl:
         self.cursor = connections['etl'].cursor()
         self.anos = [i for i in range(int(datetime.now().year) - 6, int(datetime.now().year) + 1)]
 
-    def pega_dados_por_ano(self, coluna):
+    def pega_dados_por_ano(self, coluna, order_by=False):
         select = f"SELECT ag.{coluna}"
         query = f"""
                     FROM graduacoes g
@@ -20,6 +20,12 @@ class Etl:
             somas.append(f", SUM(CASE WHEN ({ano} >= YEAR(dataInicioVinculo)) AND ({ano} <= YEAR(dataFimVinculo) OR dataFimVinculo IS NULL) THEN 1 END) AS '{ano}'")
 
         somas = "".join(somas)
+
+        if order_by:
+            query = query + f"""
+                            ORDER BY {order_by}
+                            """
+
         query = f"""
                     { select }
                     { somas  }

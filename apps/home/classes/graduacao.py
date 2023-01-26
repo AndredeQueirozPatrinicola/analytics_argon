@@ -43,7 +43,7 @@ class Graduacao:
         data = f"{dia}/{mes}/{ano}"
 
         etl = Etl()
-        dados = etl.pega_dados_por_ano("raca")
+        dados = etl.pega_dados_por_ano("raca", 'raca')
         df = pd.DataFrame(dados)
 
         df = df.rename(columns={
