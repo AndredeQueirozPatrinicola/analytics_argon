@@ -291,12 +291,11 @@ class GraduacaoViews(View):
     
     def get(self, request):
         graduacao = Graduacao()
-        grafico_diversidade = graduacao.grafico_diversidade()
         numero_alunos = graduacao.pega_numero_alunos_ativos()
         caminho = graduacao.pega_caminho()
+        graduacao.pega_dados_raca()
         context = {
             'numero_alunos' : numero_alunos,
-            'grafico_diversidade' : grafico_diversidade,
             'caminho' : caminho
         }
 

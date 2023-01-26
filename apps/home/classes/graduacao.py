@@ -6,6 +6,7 @@ from django.db import connections
 
 from apps.home.classes.graficos import Grafico
 from apps.home.utils import Utils
+from .etl import Etl
 
 
 class Graduacao:
@@ -35,54 +36,37 @@ class Graduacao:
         }
         return resultado
 
-    def grafico_diversidade(self):
+    def pega_dados_raca(self):
         dia = datetime.now().day
         mes = datetime.now().month
         ano = datetime.now().year
-
         data = f"{dia}/{mes}/{ano}"
 
-        self.cursor.execute(f"""
-                            SELECT 
-                                ag.raca,
-                                ag.sexo,
-                                COUNT(*)
-                            FROM alunos_graduacao ag 
-                            JOIN graduacoes g 
-                                ON ag.numeroUSP = g.numeroUSP 
-                            WHERE g.situacao = 'Ativo'
-                            GROUP BY 
-                                ag.raca, ag.sexo 
-                            ORDER BY 
-                                COUNT(*) DESC  ;
-                            """)
+        etl = Etl()
+        dados = etl.pega_dados_por_ano("raca")
+        df = pd.DataFrame(dados)
 
-        df = self.cursor.fetchall()
-        df = pd.DataFrame(df)
+        df = df.rename(columns={
+                                    1:etl.anos[0], 
+                                    2:etl.anos[1],
+                                    3:etl.anos[2], 
+                                    4:etl.anos[3], 
+                                    5:etl.anos[4],
+                                    6:etl.anos[5],
+                                    7:etl.anos[6]
+                                })
 
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=0, y=2, height=478, barmode='group', 
-                                            color_discrete_sequence=["#053787","#9facc2"]
-                                            , labels={
-                                                'x' : '',
-                                                'variable' : 'Legenda',
-                                                'value' : 'Valor'
-                                            },
-                                            margin=dict(
-                                                l=0, r=30, t=20, b=50), font_color="black", legend=dict(
-                                                yanchor="top",
-                                                y=0.99,
-                                                xanchor="right",
-                                                x=0.99
-                                            ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-                                            linecolor='#e0dfda', gridcolor='#e0dfda')
+        resultado = []
+        for ano in range(1, 8):
+            ano_nome = str(ano + 2016)
+            ano_dados = {}
+            for row in df.itertuples(index=False):
+                ano_dados[row[0]] = row[ano]
+            resultado.append({'ano': ano_nome, 'dados': ano_dados})
 
-        titulo = f"Diversidade de sexo e raça dos alunos de graduação com vínculo ativo({data})."
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico 
-        }
+        print(resultado)
 
         return resultado
+
+
 

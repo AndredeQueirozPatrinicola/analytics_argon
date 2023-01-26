@@ -1,10 +1,8 @@
-from rest_framework import serializers
-
 from apps.home.models import Docente
 
-class GraficoSerializer(serializers.Serializer):
-    array_x = serializers.ListField(child=serializers.IntegerField())
-    array_y = serializers.ListField(child=serializers.IntegerField())
-    titulo = serializers.CharField()
+from rest_framework import serializers
 
-    
+class GraficoRacaAnoSerializer(serializers.Serializer):
+    ano = serializers.CharField()
+    dados = serializers.DictField()
+

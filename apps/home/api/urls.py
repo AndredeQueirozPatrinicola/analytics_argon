@@ -1,17 +1,14 @@
-from email.mime import base
-from django.urls import path, re_path, include
-from django.conf.urls import url 
-from django.conf import settings
+from django.urls import path, include
 from apps.home import views
 
 from rest_framework import routers
 
-from .views import hello_world
+from .views import GraduacaoAPIView
 
 router = routers.DefaultRouter()
 
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('teste', hello_world)
+    path('graduacao', GraduacaoAPIView.as_view(), name='graduacao')
 ]

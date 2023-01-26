@@ -1,13 +1,11 @@
 from django.http import JsonResponse
 from rest_framework import views, viewsets
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer 
 
-from .serializers import GraficoSerializer
+from apps.home.classes.graduacao import Graduacao
 
-from apps.home.classes.departamentos import Departamentos
-from apps.home.models import Docente
+from .serializers import GraficoRacaAnoSerializer
 
 class Grafico():
 
@@ -18,11 +16,12 @@ class Grafico():
 
 
 
-@api_view(['GET', 'POST'])
-def hello_world(request):
-    grafico = Grafico([23,32,12,4], [2,32,12,3], 'titulo')
-    serializer = GraficoSerializer(grafico)
+class GraduacaoAPIView(views.APIView):
 
-    if request.method == 'GET':
+    def get(self, request):
+        graduacao = Graduacao()
+        dados = graduacao.pega_dados_raca()
+        serializer = GraficoRacaAnoSerializer(dados, many=True)
         return Response(serializer.data)
+
 
