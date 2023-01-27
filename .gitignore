@@ -17,6 +17,7 @@ venv
 
 # javascript
 package-lock.json
+node_modules/
 
 staticfiles/*
 !staticfiles/.gitkeep 
@@ -159,3 +160,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
