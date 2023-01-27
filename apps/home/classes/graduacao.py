@@ -37,15 +37,9 @@ class Graduacao:
         return resultado
 
     def pega_dados_raca(self):
-        dia = datetime.now().day
-        mes = datetime.now().month
-        ano = datetime.now().year
-        data = f"{dia}/{mes}/{ano}"
-
         etl = Etl()
-        dados = etl.pega_dados_por_ano("raca", 'raca')
+        dados = etl.pega_dados_por_ano("raca", order_by='raca')
         df = pd.DataFrame(dados)
-
         df = df.rename(columns={
                                     1:etl.anos[0], 
                                     2:etl.anos[1],
@@ -55,7 +49,6 @@ class Graduacao:
                                     6:etl.anos[5],
                                     7:etl.anos[6]
                                 })
-
         resultado = []
         for ano in range(1, 8):
             ano_nome = str(ano + 2016)
@@ -63,9 +56,6 @@ class Graduacao:
             for row in df.itertuples(index=False):
                 ano_dados[row[0]] = row[ano]
             resultado.append({'ano': ano_nome, 'dados': ano_dados})
-
-        print(resultado)
-
         return resultado
 
 
