@@ -70,20 +70,20 @@ class DocenteViewTestCase(ViewsTestCase):
             raise Exception("Não retornou HTML")
 
 
-# class DocenteViewAposentadoTestCase(DocenteViewTestCase):
+class DocenteViewAposentadoTestCase(DocenteViewTestCase):
     
-#     def setUp(self) -> None:
-#         super().setUp()
-#         self.numero_lattes = '6454039195387336'
-#         self.departamento = 'FLH'
-#         self.url = f'/{self.departamento}/docente/{self.numero_lattes}'
-#         self.API = Docentes.ApiDocente(self.numero_lattes)
-#         self.docente = models.Docente.objects.create(
-#             docente_id=self.url,
-#             api_docente=self.API.pega_api_docente(),
-#             api_programas=self.API.pega_api_programas(),
-#             api_docentes=self.API.pega_api_docentes()
-#         )
+    def setUp(self) -> None:
+        super().setUp()
+        self.numero_lattes = '6454039195387336'
+        self.departamento = 'FLH'
+        self.url = f'/{self.departamento}/docente/{self.numero_lattes}'
+        self.API = Docentes.ApiDocente(self.numero_lattes)
+        self.docente = models.Docente.objects.create(
+            docente_id=self.url,
+            api_docente=self.API.pega_api_docente(),
+            api_programas=self.API.pega_api_programas(),
+            api_docentes=self.API.pega_api_docentes()
+        )
         
 
             
