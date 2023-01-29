@@ -303,3 +303,6 @@ class GraduacaoViews(View):
 
 
 
+def testes(request):
+    return render(request, 'home/testes.html')
+

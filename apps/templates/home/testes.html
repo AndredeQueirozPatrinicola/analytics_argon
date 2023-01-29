@@ -1,19 +1,74 @@
-{% extends 'layouts/base-fullscreen.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block title %} Register {% endblock title %}
+      <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-argon">
+  
+    <title>
+        {{ name_app }}
+    </title>
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+    <!-- Favicon - loaded as static -->
+    <link rel="icon" href="/static/assets/img/{{ icon }}" type="image/png">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    
+    <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <!-- Page plugins -->
+    <!-- Argon CSS -->
+    <!-- <link rel="stylesheet" href="/static/assets/css/argon.css" type="text/css"> -->
+    <!-- Specific CSS goes HERE -->
+    <link rel="stylesheet" href="/static/assets/css/styles2.css" type="text/css">
+    <!-- Jquery DataTables -->
+    <link rel="stylesheet" href="/static/assets/css/datatables.min.css">
+</head>
+<body>
+    <section class="main-section">
+        <!-- # Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a class="sidebar-logo-link" href="/">
+                    <img class='sidebar-logo' src="/static/assets/img/{{ logo }}">
+                </a>
+            </div>
+            <div class="sidebar-body">
+                <div class="sidebar-menu">
+                    <ul class="sidebar-menu-items">
+                        {% for item in menu %}
+                        <li class="sidebar-menu-item">
+                            {{ item.text }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-{% block content %}
+                <hr class="sidebar-line">
 
-<h1>Teste</h1>
+                <div>
 
-{{ teste }}
+                </div>
 
+            </div>
+        </div>
+        <!-- # Main content -->
+        <div class="main-content">
+            <div class="navbar">
+                <div class="navbar-searchbar">
+                    <span>Search Bar</span>
+                </div>
+                <div class="navbar-login">
+                    <span>Icone entrar</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-
-{% endblock content %}
-
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+    <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+    <script src="/static/assets/js/scripts.js"></script>
+</body>
+</html>
