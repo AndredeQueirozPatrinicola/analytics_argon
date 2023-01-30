@@ -13,6 +13,7 @@ class Graduacao:
 
     def __init__(self) -> None:
         self.cursor = connections['etl'].cursor()
+        self.etl = Etl()
 
     def pega_caminho(self):
         return [
@@ -37,17 +38,16 @@ class Graduacao:
         return resultado
 
     def pega_dados_raca(self):
-        etl = Etl()
-        dados = etl.pega_dados_por_ano("raca", order_by='raca')
+        dados = self.etl.pega_dados_por_ano("raca", order_by='raca')
         df = pd.DataFrame(dados)
         df = df.rename(columns={
-                                    1:etl.anos[0], 
-                                    2:etl.anos[1],
-                                    3:etl.anos[2], 
-                                    4:etl.anos[3], 
-                                    5:etl.anos[4],
-                                    6:etl.anos[5],
-                                    7:etl.anos[6]
+                                    1:self.etl.anos[0], 
+                                    2:self.etl.anos[1],
+                                    3:self.etl.anos[2], 
+                                    4:self.etl.anos[3], 
+                                    5:self.etl.anos[4],
+                                    6:self.etl.anos[5],
+                                    7:self.etl.anos[6]
                                 })
         resultado = []
         for ano in range(1, 8):
@@ -57,6 +57,33 @@ class Graduacao:
                 ano_dados[row[0]] = row[ano]
             resultado.append({'ano': ano_nome, 'dados': ano_dados})
         return resultado
+
+    def trata_dados_raca_api(self, type, labels, colors):
+        api = self.pega_dados_raca()
+
+        datasets = []
+        for i in range(len(labels)):
+            data = []
+            for j in range(len(api)):
+                label = labels[i]
+                data.append(api[j]["dados"][label])
+            datasets.append(
+                {
+                    "label": labels[i],
+                    "data": data,
+                    "backgroundColor": colors[i],
+                    "borderWidth": 1,
+                }
+            )
+        result = {
+            'type' : type,
+            'data' : {
+                'labels' : self.etl.anos,
+                'datasets' : datasets
+            },
+            'responsive' : True,
+        }
+        return result
 
 
 

@@ -10,5 +10,5 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('graduacao', GraduacaoAPIView.as_view(), name='graduacao')
+    path('graduacao/', GraduacaoAPIView.as_view(), name='graduacao'),
 ]
