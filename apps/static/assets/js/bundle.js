@@ -16,7 +16,37 @@
   \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js/auto */ \"./node_modules/chart.js/auto/auto.js\");\n\n\nasync function pegaApi(apiNome = \"\"){\n    try {\n        const apiResponse = await fetch(\"http://127.0.0.1:8000/api/graduacao\");\n        const api = await apiResponse.json();\n        return api;\n    } catch (error) {\n        console.error(`Error getting API ${apiNome}: ${error}`);\n        return error;\n    }\n}\n\nasync function dataSetsApi(){\n    const api = await pegaApi()\n    const labels = ['Amarela', 'Branca', 'Indígena', 'Não informada', 'Parda']\n    const colors = ['#052e70', '#1a448a', '#425e8f', '#7585a1', '#91a8cf']\n\n    let datasets = []\n    for(let i=0;i < labels.length; i++){\n        let data = []\n        for(let j = 0; j < api.length; j++){\n            let label = labels[i]\n            data.push(api[j].dados[label])\n        }\n        datasets.push(\n            {\n                label : labels[i],\n                data : data,\n                backgroundColor: colors[i],\n                borderWidth: 1\n            }\n        )\n    }    \n    return datasets\n}\n\nasync function plotaGrafico(){\n    const labels = [\"2017\", \"2018\", \"2019\",\"2020\",\"2021\",\"2022\", \"2023\"];\n    const datasets = await dataSetsApi()\n    const data = {\n      labels: labels,\n      datasets: datasets\n    };\n    const config = {\n        type: 'bar',\n        data: data,\n        plugins: {\n            title: {\n              display: true,\n              text: 'Chart.js Bar Chart - Stacked'\n            },\n          },\n          responsive: true,\n          scales: {\n            x: {\n              stacked: true,\n            },\n            y: {\n              stacked: true\n            }\n        }\n    };\n    const grafico = document.getElementById('teste')\n    return new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.Chart(grafico, config)\n}\n\n\nplotaGrafico()\n\n//# sourceURL=webpack://analytics/./frontend/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src_graficos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/graficos */ \"./frontend/src/graficos.js\");\n\n\nasync function coordenaGraficos(){\n    const graficos = Array.from(document.getElementsByTagName('canvas'))\n    graficos.forEach(tag => {\n        ;(0,_src_graficos__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(tag)\n    });\n}\n\ncoordenaGraficos()\n\n//# sourceURL=webpack://analytics/./frontend/index.js?");
+
+/***/ }),
+
+/***/ "./frontend/src/api.js":
+/*!*****************************!*\
+  !*** ./frontend/src/api.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _host__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./host */ \"./frontend/src/host.js\");\n\n\nasync function pegaApi(apiNome = \"\"){\n    try {\n        const apiUrl = await (0,_host__WEBPACK_IMPORTED_MODULE_0__[\"default\"])()\n        const apiResponse = await fetch(apiUrl);\n        const api = await apiResponse.json();\n        return api;\n    } catch (error) {\n        console.error(`Error getting API ${apiNome}: ${error}`);\n        return error;\n    }\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (pegaApi);\n\n//# sourceURL=webpack://analytics/./frontend/src/api.js?");
+
+/***/ }),
+
+/***/ "./frontend/src/graficos.js":
+/*!**********************************!*\
+  !*** ./frontend/src/graficos.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js/auto */ \"./node_modules/chart.js/auto/auto.js\");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api */ \"./frontend/src/api.js\");\n\n\n\nasync function plotaGrafico(element){\n  console.log('ola')\n  const grafico = await (0,_api__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n  console.log('fim')\n  return new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.Chart(element, grafico)\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (plotaGrafico);\n\n//# sourceURL=webpack://analytics/./frontend/src/graficos.js?");
+
+/***/ }),
+
+/***/ "./frontend/src/host.js":
+/*!******************************!*\
+  !*** ./frontend/src/host.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nasync function getHostApi(){\n    const pathName = window.location.pathname\n    const apiUrl = `/api${pathName}`\n    return apiUrl\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getHostApi);\n\n//# sourceURL=webpack://analytics/./frontend/src/host.js?");
 
 /***/ }),
 
