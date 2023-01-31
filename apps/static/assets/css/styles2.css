@@ -1,4 +1,5 @@
 * {
+    padding: 0;
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,6 +9,10 @@ html, body, .side-bar, .main-section, .main-content{
     height: 100%;
 }
 
+ul, ol, li, input, hr{
+    all:unset
+}
+
 .main-section{
     display: flex;
 }
@@ -15,17 +20,20 @@ html, body, .side-bar, .main-section, .main-content{
 .main-content{
     display: flex;
     width: 100%;    
-    margin-left: 16rem;
+    margin-left: 15.65rem;
     flex-direction: column;
 }
+
+
+/* Sidebar */
 
 .sidebar{
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 15.5rem;
-    max-width: 15.5rem;
-    min-width: 15.5rem;
+    width: 15.65rem;
+    max-width: 15.65rem;
+    min-width: 15.65rem;
     position: fixed;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
 }
@@ -77,6 +85,7 @@ html, body, .side-bar, .main-section, .main-content{
     margin-top: 0.5rem;
     border-radius: 5px;
     font-size: 14px;
+    color: #696969;
 }
 
 .sidebar-line{
@@ -87,3 +96,112 @@ html, body, .side-bar, .main-section, .main-content{
     width: 80%;
     margin: 1rem 0 1rem 0;
 }
+
+
+/* NavBar */
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5rem;
+    min-height: 5rem;
+    max-height: 5rem;
+    background-color: #052e70;
+    border-color: #0f3676;
+}
+
+.navbar-login{
+    margin-right: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-icon{
+    border: 1px solid #e6eaf1;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    background-color: #e6eaf1;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #052e70;
+}
+
+.navbar-username{
+    margin-right: 15px;
+    color: #d2d8e1;
+}
+
+/* Search-bar */
+
+.searchbar-div{
+    display: flex;
+    margin-left: 2rem;
+    background-color: #e6eaf1;
+    padding: 0.65rem;
+    border-radius: 5rem;
+    width: 18rem;
+}
+
+.is-toggled{
+    width: 18rem;
+}
+
+.search-icon-div{
+    margin-left: 0.4rem;
+}
+
+.search-icon{
+    color: #696969;
+    font-size: 0.875rem;
+}
+
+.search-input{
+    background-color: #e6eaf1;
+    margin-left: 0.75rem;
+    font-size: 13px;
+    border-style: none;
+}
+
+.search-input:focus{
+    border-style: none;
+    background-color: #e6eaf1;
+}
+
+/* Header */
+
+.header{
+    height: 257px;
+    min-height: 257px;
+    background-color: #052e70;
+    display: flex;
+    border-top: 1px solid #ffffff14;
+}
+
+
+/* DashBoard */
+
+.main-dashboard{
+    height: 100%;
+    width: 100%;
+    margin-top: -4.5rem;
+}
+
+.dashboard-row{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card-dash{
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-left: 30px;
+    width: 30%;
+    height: 30%;
+}
+
