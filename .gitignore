@@ -16,7 +16,7 @@ venv
 .DS_Store
 
 # javascript
-package-lock.json
+
 node_modules/
 
 staticfiles/*
