@@ -293,7 +293,6 @@ class GraduacaoViews(View):
         graduacao = Graduacao()
         numero_alunos = graduacao.pega_numero_alunos_ativos()
         caminho = graduacao.pega_caminho()
-        graduacao.pega_dados_raca()
         context = {
             'numero_alunos' : numero_alunos,
             'caminho' : caminho
@@ -304,5 +303,21 @@ class GraduacaoViews(View):
 
 
 def testes(request):
-    return render(request, 'home/testes.html')
+    caminho = [
+        {
+            'text' : 'História',
+            'url' : '#', 
+        },
+        {
+            'text': 'Ana Paula Torres Megiani',
+            'url' : '#'
+        }
+    ]
+
+    context = {
+        'caminho' : caminho
+    }
+
+
+    return render(request, 'home/testes.html', context)
 

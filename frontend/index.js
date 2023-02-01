@@ -1,4 +1,5 @@
 import plotaGrafico from './src/graficos';
+import animaSearchBar from './src/searchbar';
 
 async function coordenaGraficos(){
     const graficos = Array.from(document.getElementsByTagName('canvas'))
@@ -7,4 +8,6 @@ async function coordenaGraficos(){
     });
 }
 
+
 coordenaGraficos()
+animaSearchBar()
