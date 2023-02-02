@@ -59,6 +59,20 @@
                         </div>
                     </form>
                 </div>
+                <div class="navbar-menu dropdown">
+                    <span class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Menu
+                    </span>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for item in menu %}
+                        <li>
+                            <a class="dropdown-item" href="{{ item.url }}">
+                                {{ item.text }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <div class="navbar-login">
                     {% if user.is_authenticated %}
                     <span class="navbar-username">{{ user.first_name }}</span>
@@ -93,17 +107,21 @@
                     </div>
                 </div>
                 <div class="card-header-container">
-                    <div class="card-header">
-                            
+                    <div class="card-header-block">
+                        <div class="card-header">
+                                
+                        </div>
+                        <div class="card-header">
+                                
+                        </div>
                     </div>
-                    <div class="card-header">
-                            
-                    </div>
-                    <div class="card-header">
-                            
-                    </div>
-                    <div class="card-header">
-                            
+                    <div class="card-header-block">
+                        <div class="card-header">
+                                
+                        </div>
+                        <div class="card-header">
+                                
+                        </div>
                     </div>
                 </div>
             </div>

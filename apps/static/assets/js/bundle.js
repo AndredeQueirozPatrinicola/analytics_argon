@@ -16,7 +16,7 @@
   \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src_graficos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/graficos */ \"./frontend/src/graficos.js\");\n/* harmony import */ var _src_searchbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/searchbar */ \"./frontend/src/searchbar.js\");\n\n\n\nasync function coordenaGraficos(){\n    const graficos = Array.from(document.getElementsByTagName('canvas'))\n    graficos.forEach(tag => {\n        ;(0,_src_graficos__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(tag)\n    });\n}\n\n\ncoordenaGraficos()\n;(0,_src_searchbar__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n\n//# sourceURL=webpack://analytics/./frontend/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src_graficos__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/graficos */ \"./frontend/src/graficos.js\");\n/* harmony import */ var _src_searchbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/searchbar */ \"./frontend/src/searchbar.js\");\n\n\n\n\n\nasync function main(){\n    (0,_src_graficos__WEBPACK_IMPORTED_MODULE_0__[\"default\"])()\n    ;(0,_src_searchbar__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n}\n\n\nmain()\n\n//# sourceURL=webpack://analytics/./frontend/index.js?");
 
 /***/ }),
 
@@ -36,7 +36,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js/auto */ \"./node_modules/chart.js/auto/auto.js\");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api */ \"./frontend/src/api.js\");\n\n\n\nasync function plotaGrafico(element){\n  const grafico = await (0,_api__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n  return new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.Chart(element, grafico)\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (plotaGrafico);\n\n//# sourceURL=webpack://analytics/./frontend/src/graficos.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js/auto */ \"./node_modules/chart.js/auto/auto.js\");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api */ \"./frontend/src/api.js\");\n\n\n\nasync function plotaGrafico(element){\n  const grafico = await (0,_api__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n  return new chart_js_auto__WEBPACK_IMPORTED_MODULE_0__.Chart(element, grafico)\n}\n\nasync function coordenaGraficos(){\n  const graficos = Array.from(document.getElementsByTagName('canvas'))\n  graficos.forEach(tag => {\n      plotaGrafico(tag)\n  });\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (coordenaGraficos);\n\n\n\n//# sourceURL=webpack://analytics/./frontend/src/graficos.js?");
 
 /***/ }),
 

@@ -6,4 +6,12 @@ async function plotaGrafico(element){
   return new Chart(element, grafico)
 }
 
-export default plotaGrafico
+async function coordenaGraficos(){
+  const graficos = Array.from(document.getElementsByTagName('canvas'))
+  graficos.forEach(tag => {
+      plotaGrafico(tag)
+  });
+}
+
+export default coordenaGraficos
+
