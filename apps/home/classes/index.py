@@ -1,13 +1,13 @@
-import plotly.graph_objects as go
 from plotly.offline import plot
-import requests
 import plotly.express as px
 import pandas as pd
 import os
-from time import sleep
+import locale
+from functools import cached_property
 
 from apps.home.utils import Utils
 from apps.home.models import Mapa
+
 
 class Index:
 
@@ -31,15 +31,20 @@ class Index:
         ]
         return menu_nav_table, titulo
 
-    def _trata_dados_api(self):
+    @cached_property
+    def dados_mapa(self):
         try:
-            dados_api = self.__mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
-            dados_api = pd.DataFrame(dados_api, index=[0])
-            dados_api = dados_api.drop('', axis=1)
-            dados_api = dados_api.transpose()
-            dados_api = dados_api.rename(columns={0:"Alunos"})
+            dados_alunos = self.__mapa_quantidade_alunos_estado_dados[0].get('dados_do_mapa')
+            dados_alunos = pd.DataFrame([dados_alunos])
+            try:
+                dados_alunos.loc[0, 'RR']
+            except:
+                dados_alunos['RR'] = 0
+            dados_alunos = dados_alunos.transpose()
+            dados_alunos = dados_alunos.rename(columns={0:"Alunos"}, index={"":"Não Informado"})
+            dados_alunos = dados_alunos.sort_index(ascending=True)
 
-            return dados_api
+            return dados_alunos
         except:
             raise Exception()
 
@@ -54,29 +59,31 @@ class Index:
         pd.options.mode.chained_assignment = None
 
         try:
-            estados = Utils()
-            estados = estados.pega_codigo_estado()
+            locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
             state_geo = self.__mapa_quantidade_alunos_estado_base[0].get('base_de_dados')
 
-            state_data = self._trata_dados_api()
-            state_data = state_data.sort_index(ascending=True)
-            state_data['Codigos'] = [estados.get(i) for i in estados]
-            state_data['UFs'] = [i for i in state_data.index]
-            state_data.index = [i for i in range(0,len(state_data.index))]
-            quantidade_alunos_sp = state_data['Alunos'][25]
-            state_data['Alunos'][25] = 0
-            state_data.to_csv('apps/static/assets/csv/data.csv')
-            state_data = pd.read_csv('apps/static/assets/csv/data.csv')
+            estados = Utils().pega_codigo_estado()
+            df_estados = pd.DataFrame([estados])
+            df_estados = df_estados.transpose()
+            df_estados = df_estados.rename(columns={0:"Codigos"})
+
+            dados_alunos = self.dados_mapa
+
+            df_merged = dados_alunos.join(df_estados)
+            df_merged['Codigos'] = df_merged['Codigos'].fillna(0)
+            df_merged['Codigos'] = df_merged['Codigos'].apply(int)
+            quantidade_alunos_sp = df_merged['Alunos'][26]
+            df_merged.to_csv('apps/static/assets/csv/data.csv')
+            df_merged = pd.read_csv('apps/static/assets/csv/data.csv')
 
             if os.path.exists('apps/static/assets/csv/data.csv'):
                 os.remove('apps/static/assets/csv/data.csv')
-
-            numero = quantidade_alunos_sp[0] + quantidade_alunos_sp[1]
-            quantidade_alunos_sp = numero + "." + quantidade_alunos_sp[-3] + quantidade_alunos_sp[-2] + quantidade_alunos_sp[-1]
-
+            
+            quantidade_alunos_sp = int(quantidade_alunos_sp) / 1000
+            quantidade_alunos_sp = round(quantidade_alunos_sp, 3)
 
             fig = px.choropleth(
-                                state_data, 
+                                df_merged, 
                                 geojson=state_geo, 
                                 color="Alunos",
                                 locations="Codigos", 
@@ -89,10 +96,28 @@ class Index:
                                     'Alunos':'Alunos', 
                                     "Codigos" : "Codigo da UF"
                                     },
+                                range_color=[0, 400]
                                 )
 
             fig.update_geos(fitbounds="geojson", visible=False)
-            fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+            fig.update_layout(
+                                margin={"r":0,"t":0,"l":0,"b":0},
+                                coloraxis_colorbar=dict(
+                                title="Escala",
+                                tickvals=[0, 50, 100, 150, 200, 250, 300, 350, 400],
+                                ticktext=[
+                                    "0", 
+                                    "50",
+                                    "100",
+                                    "150",
+                                    "200",
+                                    "250",
+                                    "300",
+                                    "350",
+                                    ">400"
+
+                                ],
+                            ))
 
             fig = plot(fig, output_type="div", config={
                                                     'displaylogo': False,
@@ -111,20 +136,20 @@ class Index:
 
     def tabela_alunos_estados(self):
         try:
-            data = self._trata_dados_api()
-            estados = data.index.to_list()
-            alunos = data["Alunos"].to_list()
+            data = self.dados_mapa
+            siglas = data.index.to_list()
+            quantidade = data['Alunos'].to_list()
 
+            tabela = []
             x = 0
-            resultado = [] 
-            while x < len(estados)/2 + 0.5:
-                try:
-                    resultado.append([estados[x], alunos[x], estados[x + 14], alunos[x + 14]])
-                except:
-                    resultado.append([estados[x], alunos[x], '    -   ', '      -   '])
-                x += 1
+            while x < len(siglas)/2:
+                tabela.append([siglas[x], quantidade[x], siglas[x+14], quantidade[x+14]])
+                x+=1
 
-            return resultado
+            return {
+                'headers': ["Siglas", "Valores", "Siglas", "Valores"],
+                'tabelas' : tabela
+            }
         except:
             erro = [["Houve um problema para fornecer a tabela"]]
             return erro

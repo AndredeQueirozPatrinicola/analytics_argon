@@ -2,8 +2,8 @@
     <div class="card bg-default prod-hist h-100" style="margin-left:-13px; width: 102.5%;">
       {% if globo != None %}
       <div class="card-body card-body-grafico-docente">
-        <h4 class="titulo-mapa-index text-center">Quantidade de Alunos de Gradução, Pós Graduação, Pós Doutorado e de Cultura e Extensão da FFLCH por estado(exceto São Paulo*).
-          Sigla do estado onde foi expedido o documento de identificação.</h4>
+        <h4 class="titulo-mapa-index text-center">Quantidade de Alunos de Gradução, Pós Graduação, Pós Doutorado e de Cultura e Extensão da FFLCH por estado*.
+          <br>Sigla do estado onde foi expedido o documento de identificação.</h4>
         <!-- Chart -->
         <div class="chart tab-content chart-grafico-docente">
           <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
@@ -14,8 +14,7 @@
           </div>
         </div>
         <p class="legenda-mapa-index regula-margem-mapa">
-            *A quantidade de alunos em SP é: {{ quantidade_alunos_sp }}<br>
-             Os alunos de SP foram retirados do mapa para preservar a escala de cores nos demais estados.
+            *A quantidade de alunos em SP é: {{ quantidade_alunos_sp }}
         </p>
       </div>
       {% else %}

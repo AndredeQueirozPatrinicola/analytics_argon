@@ -15,6 +15,8 @@ from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 from .classes.index import Index
 
+import time
+
 class IndexView(View):
 
     def get(self, request):
@@ -26,7 +28,8 @@ class IndexView(View):
             quantidade_alunos_sp = None
 
         menu_nav_table, titulo_menu = index.tabela_sobrenos()
-        tabela_alunos_estados = index.tabela_alunos_estados()
+        tabela_mapa = index.tabela_alunos_estados()
+
 
         context = {
             'segment': 'index',
@@ -37,7 +40,7 @@ class IndexView(View):
 
             'globo': globo,
             'quantidade_alunos_sp' : quantidade_alunos_sp,
-            'tabela_alunos_estados' : tabela_alunos_estados,
+            'tabela_mapa' : tabela_mapa,
         }
 
         html_template = loader.get_template('home/index.html')
@@ -60,11 +63,21 @@ class DocenteView(View):
             api_docente = docente.pega_api_docente()
             api_docentes = docente.pega_api_docentes()
 
-        return api_docente, api_programas, api_docentes
+        queries = {
+            'api_docente' : api_docente,
+            'api_programas' : api_programas,
+            'api_docentes' : api_docentes
+        }
+
+        return queries
 
     def get(self, request, sigla, numero_lattes):
         docente = DadosDocente(numero_lattes, sigla)
-        api_docente, api_programas, api_docentes = self.queries(numero_lattes)
+        queries = self.queries(numero_lattes)
+
+        api_docente = queries.get('api_docente')
+        api_programas = queries.get('api_programas')  
+        api_docentes = queries.get('api_docentes')
 
         informacoes_docente = docente.pega_informacoes_basicas(api_programas, api_docentes)
         tabela_orientandos = docente.tabela_orientandos(api_docente)
@@ -76,7 +89,7 @@ class DocenteView(View):
         caminho = docente.pega_caminho(api_programas, api_docentes)
         linhas_pesquisa = docente.linhas_de_pesquisa(api_docente)
         tipo_vinculo_situacao = docente.pega_vinculo_situacao(api_docentes)
-
+        
         """
             Dados dos cards que ficam no header da pagina.
             O header é o mesmo para todas as paginas, por isso a necessidade
@@ -140,19 +153,21 @@ class DepartamentoView(View):
     
     def get(self, request, sigla):
 
-        docentes = DadosDepartamento(sigla)
+        departamento = DadosDepartamento(sigla)
 
         queries = self.queries(sigla)
 
-        tabela_docentes = docentes.tabela_docentes(queries.get('api_programas'), queries.get('api_docentes'))
-        numero_docentes = docentes.pega_numero_docentes(queries.get('api_programas'), queries.get('api_docentes'))
-        grafico_pizza_aposentados_ativos = docentes.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
-        grafico_pizza_tipo_vinculo = docentes.plota_tipo_vinculo_docente(queries.get('api_docentes'))
-        grafico_prod_docentes = docentes.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
-        grafico_historico_prod = docentes.plota_prod_serie_historica(queries.get('api_programas_docente'))
-        grafico_bolsas = docentes.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
-        tabela_bolsas = docentes.tabela_trabalhos(queries.get('api_pesquisa'))
-        programas_dpto = docentes.pega_programa_departamento()
+        tabela_docentes = departamento.tabela_docentes(queries.get('api_programas'), queries.get('api_docentes'))
+        numero_docentes = departamento.pega_numero_docentes(queries.get('api_programas'), queries.get('api_docentes'))
+        grafico_pizza_aposentados_ativos = departamento.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
+        grafico_pizza_tipo_vinculo = departamento.plota_tipo_vinculo_docente(queries.get('api_docentes'))
+        grafico_prod_docentes = departamento.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
+        grafico_historico_prod = departamento.plota_prod_serie_historica(queries.get('api_programas_docente'))
+        grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
+        tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
+        programas_dpto = departamento.pega_programa_departamento()
+        tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
+        grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
 
         caminho = [
             {
@@ -167,13 +182,15 @@ class DepartamentoView(View):
             'caminho': caminho,
             'nome': tabela_docentes.get('nome'),
             'id_lattes': id,
-            'docentes': docentes,
+            'docentes': departamento,
             'df': tabela_docentes.get('df'),
             'lattes_id': tabela_docentes.get('id_lattes'),
             'tabela': 'docentes',
             'sigla_departamento': sigla,
             'numero_docentes': numero_docentes,
             # Graficos e tabelas
+            'grafico_defesa_mestrado_doutorado' : grafico_defesa_mestrado_doutorado,
+            'tabela_defesas' : tabela_defesas,
             'grafico_aposentados_ativos': grafico_pizza_aposentados_ativos,
             'grafico_tipo_vinculo': grafico_pizza_tipo_vinculo,
             'grafico_prod_docentes': grafico_prod_docentes,
@@ -195,52 +212,59 @@ class DepartamentoView(View):
 class DepartamentosView(View):
 
     def queries(self):
-        numero_docentes = Docente.objects.count()
-        api_docentes = Docente.objects.values('api_docentes')
+        querie_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+        querie_docentes = Docente.objects.values('api_docentes')
+
+        queries = {
+            'querie_departamentos' : querie_departamentos,
+            'querie_docentes' : querie_docentes
+        }
+
+        return queries
+        
 
     def get(self, request):
-        departamentos = Departamentos()
-        try:
-            tabela_todos_docentes = departamentos.tabela_todos_docentes()
-            grafico_relacao_cursos = departamentos.plota_relacao_cursos()
-            grafico_bolsas = departamentos.grafico_bolsa_sem()
-            tabela_bolsas = departamentos.tabela_bolsas()
-            grafico_producao_total_departamento = departamentos.prod_total_departamentos()
-            grafico_historico_prod = departamentos.prod_historica_total()
-            numero_docentes = departamentos.pega_numero_docentes()
-            programas_departamento = departamentos.pega_programas()
+        queries = self.queries()
+        querie_departamentos = queries.get('querie_departamentos')
+        querie_docente = queries.get('querie_docentes')
+        departamentos = Departamentos(querie_departamentos, querie_docente)
 
-            caminho = [
-                {
-                    'text': 'Departamentos',
-                }
-            ]
+        numero_docentes = departamentos.pega_numero_docentes()
+        tabela_todos_docentes = departamentos.tabela_todos_docentes()
+        grafico_relacao_cursos = departamentos.plota_relacao_cursos()
+        grafico_bolsas = departamentos.grafico_bolsa_sem()
+        tabela_bolsas = departamentos.tabela_bolsas()
+        grafico_producao_total_departamento = departamentos.prod_total_departamentos()
+        programas_departamento = departamentos.pega_programas()
+        grafico_historico_prod = departamentos.prod_historica_total()
 
-            context = {
-                'regulador': 'regulador',
-                'caminho': caminho,
-
-                'df_docentes': tabela_todos_docentes.get('df'),
-                'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
-
-                'grafico_relacao_cursos':  grafico_relacao_cursos,
-                'grafico_bolsas': grafico_bolsas,
-                'tabela_bolsas': tabela_bolsas,
-                'grafico_prod_docentes': grafico_producao_total_departamento,
-                'grafico_historico_prod': grafico_historico_prod,
-
-                'numero_docentes': numero_docentes,
-
-                'informacoes_card': programas_departamento.get('programas'),
-                'dropdown_label':  programas_departamento.get('label'),
-                'card_2_titulo': 'Programas da Faculdade'
+        caminho = [
+            {
+                'text': 'Departamentos',
             }
+        ]
 
-            return render(request, 'home/departamentos.html', context)
-        except:
-            context = {}
-            html_template = loader.get_template('home/page-500.html')
-            return HttpResponse(html_template.render(context, request))
+        context = {
+            'regulador': 'regulador',
+            'caminho': caminho,
+
+            'df_docentes': tabela_todos_docentes.get('df'),
+            'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
+
+            'grafico_relacao_cursos':  grafico_relacao_cursos,
+            'grafico_bolsas': grafico_bolsas,
+            'tabela_bolsas': tabela_bolsas,
+            'grafico_prod_docentes': grafico_producao_total_departamento,
+            'grafico_historico_prod': grafico_historico_prod,
+
+            'numero_docentes': numero_docentes,
+
+            'informacoes_card': programas_departamento.get('programas'),
+            'dropdown_label':  programas_departamento.get('label'),
+            'card_2_titulo': 'Programas da Faculdade'
+        }
+        return render(request, 'home/departamentos.html', context)
+
 
 class SobrenosView(View):
 

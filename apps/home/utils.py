@@ -8,12 +8,12 @@ class Utils:
             'FLF': [8133],
             'FLA': [8134],
             'FLG': [8135, 8136],
-            'FLH': [8137, 8138],
+            'FLH': [8137, 8138, 8161],
             'FLL': [8139],
             'FLC': [8142, 8143, 8149, 8150, 8156, 8162],
             'FLM': [8144, 8145, 8146, 8147, 8148, 8158, 8160, 8163, 8164, 8165],
             'FLT': [8151],
-            'FLO': [8155, 8157],
+            'FLO': [8155, 8157, 8159],
         }
         self.codigo_programas = {
                 8131: 'Ciência Política',
@@ -43,8 +43,9 @@ class Utils:
                 8165: 'Estudos da Tradução',
                 8151: 'Teoria Literária e Literatura Comparada',
                 8155: 'Literatura e Cultura Russa',
-                8157: 'Língua, Literatura e Cultura Japonesa'
-
+                8157: 'Língua, Literatura e Cultura Japonesa',
+                8159: 'Estudos Árabes',
+                8161: 'Humanidades, Direitos e Outras Legitimidades'
             }
 
         self.dptos_siglas = {
@@ -60,16 +61,48 @@ class Utils:
                 'FLT': "Teoria Literária e Literatura Comparada",
                 'FLG': 'Geografia'
             }
+
+        self.siglas_dptos = {
+                'Antropologia' : 'FLA',
+                'Ciência Política' : 'FLP',
+                'Filosofia' : 'FLF',
+                'História' : 'FLH',
+                "Letras Clássicas e Vernáculas" : 'FLC',
+                "Letras Modernas" : 'FLM',
+                'Letras Orientais' : 'FLO',
+                'Lingüística' : 'FLL',
+                'Sociologia' : 'FSL',
+                "Teoria Literária e Literatura Comparada" : 'FLT',
+                 'Geografia' :'FLG'
+            }
             
         self.codigos = [
-                8131, 8132, 8133, 8134,
-                8135, 8136, 8137, 8138,
-                8139, 8142, 8143, 8149,
-                8150, 8156, 8162, 8144,
-                8145, 8146, 8147, 8148,
-                8158, 8160, 8163, 8164,
-                8165, 8151, 8155, 8157
+                8131, 8132, 8133, 
+                8134, 8135, 8136, 
+                8137, 8138, 8139, 
+                8142, 8143, 8149,
+                8150, 8156, 8162,
+                8144, 8145, 8146, 
+                8147, 8148, 8158,
+                8160, 8161, 8163, 
+                8164, 8165, 8151, 
+                8155, 8157, 8159, 
             ]
+
+        self.meses = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
+        ]
 
     def pega_programas_departamento(self, *departamento):
         try:
@@ -97,7 +130,7 @@ class Utils:
 
             return resultado
         except:
-            return 'Houve um erro para encontrar os dados do departamento'
+            raise Exception()
 
     def pega_departamento_programa(self, *programa):
 
@@ -105,8 +138,7 @@ class Utils:
             if len(programa) == 1:
 
                 if type(programa[0]) == int:
-                    depart = [i for i in self.dptos_programas if programa[0]
-                              in self.dptos_programas.get(i)]
+                    depart = [i for i in self.dptos_programas if programa[0] in self.dptos_programas.get(i)]
                     depart_nome = self.dptos_siglas.get(depart[0])
 
                 if type(programa[0]) == str:
@@ -130,51 +162,45 @@ class Utils:
             return self.dptos_siglas
 
     def pega_codigo_estado(self, *estado):
+        try:
+            estados = {
+                'AC': 12,
+                'AL': 27,
+                'AM': 13,
+                'AP': 16,
+                'BA': 29,
+                'CE': 23,
+                'DF': 53,
+                'ES': 32,
+                'GO': 52,
+                'MA': 21,
+                'MG': 31,
+                'MT': 51,
+                'MS': 50,
+                'PA': 15,
+                'PB': 25,
+                'PE': 26,
+                'PI': 22,
+                'PR': 41,
+                'RJ': 33,
+                'RN': 24,
+                'RO': 11,
+                'RR': 14,
+                'RS': 43,
+                'SC': 42,
+                'SE': 28,
+                'SP': 35,
+                'TO': 17,
+            }
 
-        estados = {
-            'AC': 12,
-            'AL': 27,
-            'AM': 13,
-            'AP': 16,
-            'BA': 29,
-            'CE': 23,
-            'DF': 53,
-            'ES': 32,
-            'GO': 52,
-            'MA': 21,
-            'MG': 31,
-            'MT': 51,
-            'MS': 50,
-            'PA': 15,
-            'PB': 25,
-            'PE': 26,
-            'PI': 22,
-            'PR': 41,
-            'RJ': 33,
-            'RN': 24,
-            'RO': 11,
-            'RR': 14,
-            'RS': 43,
-            'SC': 42,
-            'SE': 28,
-            'SP': 35,
-            'TO': 17,
-        }
+            if not estado:
+                return estados
 
-        if not estado:
-            return estados
+            elif estado:
+                return [estados.get(i) for i in estados if i in estado]
+        except:
+            raise Exception("Não foi possivel determinar o estado")
 
-        elif estado:
-            return [estados.get(i) for i in estados if i in estado]
-
-    def verifica_json_vazio(json=0):
-
-        vazio = [[], {}, [{}], ]
-
-        if json in vazio:
-            return True
-        else:
-            return False
 
     def siglas_departamentos(self, siglas_departamentos):
 
@@ -186,3 +212,12 @@ class Utils:
         else:
             raise Exception(
                 "A função só aceita os parametros 'siglas' e 'departamentos'.")
+
+    def pega_sigla_por_nome_departamento(self, departamento):
+        try:
+            return self.siglas_dptos.get(f'{departamento}')
+        except:
+            raise Exception(
+                "Não foi possível localizar o departamento"
+            )
+            

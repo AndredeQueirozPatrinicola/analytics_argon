@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+import requests
 
 
 from apps.home.models import Departamento, Docente
@@ -115,8 +116,7 @@ class DadosDepartamento():
     def plota_prod_departamento(self, api_programas_docente_limpo):
         dados = api_programas_docente_limpo
         df = pd.DataFrame(dados)
-        somas = df['total_livros'].to_list(
-        ), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
+        somas = df['total_livros'].to_list(), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
 
         x = 0
         lista_valores = []
@@ -140,7 +140,7 @@ class DadosDepartamento():
                         'color' : 'Legenda'
                      })
 
-        titulo = 'Produção total do departamento registrada no Lattes'
+        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no Lattes'
 
         resultado = {
             'titulo' : titulo,
@@ -189,7 +189,7 @@ class DadosDepartamento():
         anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
 
-        df = pd.DataFrame(dados[0])
+        df = pd.DataFrame(dados)
         df = df.drop(['pesquisadores_colab'])
         df = df.transpose()
         df = df.rename(columns={
@@ -218,7 +218,7 @@ class DadosDepartamento():
         ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
             linecolor='white', gridcolor='#4d4b46')
 
-        titulo = f"Relação entre IC's e Pesquisas de pós com e sem bolsa - ({anos[0]} - {anos[-1]})"
+        titulo = f"Relação entre IC's e Pesquisas de pós-doutorado com e sem bolsa - ({anos[0]} - {anos[-1]})"
 
         resultado = {
             'titulo' : titulo,
@@ -323,6 +323,70 @@ class DadosDepartamento():
         resultado = {
             'label' : label,
             'programas_dpto' : programas_dpto
+        }
+
+        return resultado
+       
+    def pega_tabela_defesas(self, api_defesas):
+        utils = Utils()          
+
+        resultado = []
+        for defesa in api_defesas:
+            
+            codigo_departamento = defesa.get('codare')
+            verifica_departamento = utils.pega_departamento_programa(codigo_departamento)
+
+            if verifica_departamento.get('sigla') == self.sigla:
+                    resultado.append(
+                    [
+                        defesa.get('titulo'),
+                        defesa.get('nome'),
+                        defesa.get('nivel'),
+                        defesa.get('nomare'),
+                        defesa.get('data'),
+                    ]
+                )
+
+        resultado = {
+            'titulo' : f'Defesas pós-graduação realizadas no ano de {datetime.now().year-1}',
+            'headers' : ['Titulo', 'Nome', 'Nivel', 'Programa', 'Data'],
+            'tabela' : resultado,
+            'link_mestrado' : 'https://www.teses.usp.br/index.php?option=com_jumi&fileid=11&Itemid=76&lang=pt-br&filtro=',
+            'link_doutorado' : 'https://www.teses.usp.br/index.php?option=com_jumi&fileid=12&Itemid=77&lang=pt-br&filtro='
+        }
+
+        return resultado
+
+    def defesas_mestrado_doutorado(self, api_defesas):
+        tipos = ['ME', 'DO', 'DD']
+
+        x, y, z = 0, 0, 0
+        nivel = []
+        for defesa in api_defesas:  
+
+            if defesa.get('nivel') == 'ME':
+                x += 1
+            if defesa.get('nivel') == 'DO':
+                y += 1
+            if defesa.get('nivel') == 'DD':
+                z += 1
+
+        nivel.append(x)
+        nivel.append(y)
+        nivel.append(z)
+
+        figura = Grafico()
+        figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
+                    color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
+                    labels={
+                        'values': 'Valor',
+                        'names': 'Tipo',
+                        'color': 'Cor'
+                    }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
+
+        resultado = {
+            'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
+            'grafico' : figura
         }
 
         return resultado
