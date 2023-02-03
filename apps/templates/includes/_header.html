@@ -1,0 +1,37 @@
+<div class="header">
+    <div class="caminho-header">
+        <div class="caminho-box">
+            <a href="/">
+                <i class="fas fa-home header-icone"></i>
+            </a>
+            <span class="caminho-bar">/</span>
+            {% for item in caminho %}
+                {% if item == caminho|last %}
+                <span class="caminho-header-item last-item">{{ item.text }}</span>
+                {% else %}
+                <span class="caminho-header-item">
+                    <a href="{{ item.url }}" class="caminho-header-item">{{ item.text }}</a>
+                </span><span class="caminho-bar">/</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-header-container">
+        <div class="card-header-block">
+            <div class="card-header">
+                    
+            </div>
+            <div class="card-header">
+                    
+            </div>
+        </div>
+        <div class="card-header-block">
+            <div class="card-header">
+                    
+            </div>
+            <div class="card-header">
+                    
+            </div>
+        </div>
+    </div>
+</div>

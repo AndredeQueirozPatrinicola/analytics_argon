@@ -1,34 +1,56 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/_base.html' %}
 
 {% block title %} FFLCH {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
 
+<div class="dashboard-row">
+  <div class="card-dash-6">
+    <div style="margin: 2rem 1rem;">
 
-<!-- Page content -->
-<div class="container-fluid mt--6 position-relative">
+      <canvas id="teste"></canvas>
 
-  <div class="row">
-    <div class="col-xl-8">
-      <div class="card bg-default prod-hist">
-        <div class="card-body card-body-grafico-docente">
-          <!-- Chart -->
-          <div class="chart tab-content chart-grafico-docente">
-            <div class="tab-pane fade show active" id="artigo" role="tabpanel" aria-labelledby="grafico-artigo">
-              <h5 class="h3 mb-0 ml-3 titulo-grafico-docente-tab">{{ grafico_diversidade.titulo }}</h5>
-              <div>
-                <canvas id="teste"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+  <div class="card-dash-3">
+      
+  </div>
+</div>
+<div class="dashboard-row">
+  <div class="card-dash-3">
+      
+  </div>
+  <div class="card-dash-3">
+      
+  </div>
+  <div class="card-dash-3">
+      
+  </div>
+</div>
+<div class="dashboard-row">
+  <div class="card-dash-5">
+      
+  </div>
+  <div class="card-dash-5">
+      
+  </div>
+</div>
+<div class="dashboard-row">
+  <div class="card-dash-10">
+      
+  </div>
+</div>
+<div class="dashboard-row">
+  <div class="card-dash-5">
+      
+  </div>
+  <div class="card-dash-3">
+      
+  </div>
+</div>
 
   {% include "includes/footer.html" %}
 

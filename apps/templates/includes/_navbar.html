@@ -1,0 +1,39 @@
+<div class="navbar">
+    <div class="navbar-searchbar">
+        <form>
+            <div class="searchbar-div" id="search-bar-div">
+                <div class="search-icon-div">
+                    <i class="fas fa-search fa-2xs search-icon"></i>
+                </div>
+                <input placeholder="Search" type="text" class="search-input" id="search-bar-input">
+            </div>
+        </form>
+    </div>
+    <div class="navbar-menu dropdown">
+        <span class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+        </span>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            {% for item in menu %}
+            <li>
+                <a class="dropdown-item" href="{{ item.url }}">
+                    {{ item.text }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="navbar-login">
+        {% if user.is_authenticated %}
+        <span class="navbar-username">{{ user.first_name }}</span>
+        <a href="#" class="navbar-icon">
+            <i class="fas fa-sign-out-alt"></i>
+          </a> 
+        {% else %}
+        <span class="navbar-username">Não autenticado.</span>
+        <a href="#" class="navbar-icon">
+            <i class="fas fa-sign-in-alt"></i>
+          </a> 
+        {% endif %}
+    </div>
+</div>
