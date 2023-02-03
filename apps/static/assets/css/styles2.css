@@ -272,18 +272,42 @@ ul, ol, li, input, hr{
 .dashboard-row{
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 2rem 1.875rem;
 }
 
-.card-dash{
+.dashboard-row:first-child{
+    margin-top: 0;
+}
+
+.card-dash-3, .card-dash-5, .card-dash-6, .card-dash-10{
     border-radius: 5px;
-    margin-left: 30px;
-    width: 64%;
     min-height: 25rem;
     background-color: #fff;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
 }
 
+.card-dash-3{
+    width: 32%;
+    min-width: 32%;
+}
 
+.card-dash-5{
+    width: 49%;
+    min-width: 49%;
+}
+
+.card-dash-6{
+    width: 66%;
+    min-width: 66%;
+}
+
+.card-dash-10{
+    width: 100%;
+    min-width: 100%;
+}
+
+/* Responsividade !! */
 
 @media only screen and (max-width: 1198px){
     /* Basic config */
@@ -336,7 +360,7 @@ ul, ol, li, input, hr{
         width: 34.375rem;
     }
 
-    .card-dash{
+    .card-dash-3, .card-dash-6, .card-dash-9{
         width: 94.5%;
     }
 }
@@ -392,6 +416,4 @@ ul, ol, li, input, hr{
         width: 100%;
         margin: 0 1rem;
     }
-
-
 }
