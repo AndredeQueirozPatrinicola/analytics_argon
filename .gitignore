@@ -17,6 +17,7 @@ venv
 
 # javascript
 
+bundle.js.LICENSE.txt
 node_modules/
 
 staticfiles/*
