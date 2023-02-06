@@ -1,8 +1,12 @@
 import getHostApi from "./host";
 
-async function pegaApi(apiNome = ""){
+async function pegaApi(element, apiNome = ""){
     try {
-        const apiUrl = await getHostApi()
+        let apiUrl = await getHostApi();   
+        apiUrl = apiUrl + element.id  
+        if(apiNome){
+          apiUrl = apiUrl + '/' + apiNome;  
+        }
         const apiResponse = await fetch(apiUrl);
         const api = await apiResponse.json();
         return api;

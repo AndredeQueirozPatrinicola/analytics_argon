@@ -1,15 +1,40 @@
 import { Chart } from "chart.js/auto";
 import pegaApi from './api';
 
-async function plotaGrafico(element){
-  const grafico = await pegaApi()
+async function spinnerController(){
+  
+}
+
+async function plotaGraficoDefault(element){
+  const grafico = await pegaApi(element)
   return new Chart(element, grafico)
+}
+
+async function plotaGrafico(element, option){
+  let chart = Chart.getChart(element.id)
+  if(!chart){
+    new Chart(element, config)
+  }
+  else{
+    chart.destroy()
+    const config = await pegaApi(element, option)
+    new Chart(element, config)
+  }
+}
+
+async function addChartListener(element){
+  const selectElement = document.querySelector(`.${element.id}`);
+  selectElement.addEventListener('change', function() {
+    const selectedValue = selectElement.value;
+    plotaGrafico(element, selectedValue.toLowerCase())    
+  }); 
 }
 
 async function coordenaGraficos(){
   const graficos = Array.from(document.getElementsByTagName('canvas'))
   graficos.forEach(tag => {
-      plotaGrafico(tag)
+      plotaGraficoDefault(tag)
+      addChartListener(tag)
   });
 }
 
