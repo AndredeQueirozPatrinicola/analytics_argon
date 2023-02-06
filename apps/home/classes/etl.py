@@ -34,3 +34,13 @@ class Etl:
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
+    def conta_pessoa_por_categoria(self, tabela, situacao):
+        # try:
+            self.cursor.execute(f"""
+                                    SELECT COUNT(*) 
+                                    FROM {tabela} g 
+                                    WHERE situacao = '{situacao}';
+                                """)
+            return self.cursor.fetchall()
+        # except:
+        #     raise Exception("Não foi possivel realizar a query") 

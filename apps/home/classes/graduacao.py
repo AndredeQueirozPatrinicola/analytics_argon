@@ -24,16 +24,10 @@ class Graduacao:
         ]
 
     def pega_numero_alunos_ativos(self):
-        self.cursor.execute("""
-                                SELECT COUNT(*) 
-                                FROM graduacoes g 
-                                WHERE situacao = 'Ativo';
-                            """)
-
-        valor = self.cursor.fetchall()
+        dados = self.etl.conta_pessoa_por_categoria('graduacoes', 'ativo')
         resultado = {
             'titulo' : 'Numero de Alunos Ativos',
-            'text' : valor[0][0]
+            'text' : dados[0][0]
         }
         return resultado
 
