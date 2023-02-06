@@ -3,12 +3,13 @@ from apps.home import views
 
 from rest_framework import routers
 
-from .views import GraduacaoAPIView
+from .views import GraduacaoRacaAPIView
 
 router = routers.DefaultRouter()
 
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('graduacao/', GraduacaoAPIView.as_view(), name='graduacao'),
+    path('graduacao/raca-por-ano', GraduacaoRacaAPIView.as_view(), name='graduacao'),
+    path('graduacao/raca-por-ano/<str:graduacao>', GraduacaoRacaAPIView.as_view(), name='graduacao'),
 ]

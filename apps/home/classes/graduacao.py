@@ -11,10 +11,11 @@ from .etl import Etl
 
 class Graduacao:
 
-    def __init__(self) -> None:
+    def __init__(self, graduacao=False) -> None:
+        self.graduacao = graduacao
         self.cursor = connections['etl'].cursor()
         self.etl = Etl()
-
+        
     def pega_caminho(self):
         return [
             {
@@ -32,7 +33,11 @@ class Graduacao:
         return resultado
 
     def pega_dados_raca(self):
-        dados = self.etl.pega_dados_por_ano("raca", order_by='raca')
+        if self.graduacao:
+            dados = self.etl.pega_dados_por_ano("raca", order_by='raca', where=self.graduacao)
+        else:
+            dados = self.etl.pega_dados_por_ano("raca", order_by='raca')
+            
         df = pd.DataFrame(dados)
         df = df.rename(columns={
                                     1:self.etl.anos[0], 
