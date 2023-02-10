@@ -4,12 +4,8 @@ import ChartjsPluginStacked100 from "chartjs-plugin-stacked100";
 
 Chart.register(ChartjsPluginStacked100);
 
-async function spinnerController(){
-  
-}
-
 async function plotaGraficoDefault(element){
-  const grafico = await pegaApi(element)
+  const grafico = await pegaApi(element, "todos")
   return new Chart(element, grafico)
 }
 
