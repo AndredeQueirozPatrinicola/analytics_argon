@@ -86,7 +86,10 @@ class Index:
             
             quantidade_alunos_sp = int(quantidade_alunos_sp) / 1000
             quantidade_alunos_sp = round(quantidade_alunos_sp, 3)
-            escala_grafico = self.regula_escala(df_merged['Alunos'].nlargest(2).tolist()[1])
+            escala_numerica_grafico = self.regula_escala(df_merged['Alunos'].nlargest(2).tolist()[1])
+            escala_string_legenda = [str(i) for i in escala_numerica_grafico]
+            escala_string_legenda[-1] = ">" + escala_string_legenda[-1]
+
 
             fig = px.choropleth(
                                 df_merged, 
@@ -102,7 +105,7 @@ class Index:
                                     'Alunos':'Alunos', 
                                     "Codigos" : "Codigo da UF"
                                     },
-                                range_color=[escala_grafico[0], escala_grafico[-1]]
+                                range_color=[escala_numerica_grafico[0], escala_numerica_grafico[-1]]
                                 )
 
             fig.update_geos(fitbounds="geojson", visible=False)
@@ -110,8 +113,8 @@ class Index:
                                 margin={"r":0,"t":0,"l":0,"b":0},
                                 coloraxis_colorbar=dict(
                                 title="Escala",
-                                tickvals=escala_grafico,
-                                ticktext=escala_grafico
+                                tickvals=escala_numerica_grafico,
+                                ticktext=escala_string_legenda
                             ))
 
             fig = plot(fig, output_type="div", config={
