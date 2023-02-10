@@ -307,6 +307,31 @@ ul, ol, li, input, hr{
     min-width: 100%;
 }
 
+
+.select-container{
+    min-height: 3rem;
+    height: 3rem;
+    max-height: 3rem;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.select-grafico{
+    background-color: #fff;
+    border: 1px solid #fff;
+    margin-right: 2rem;
+    height: 2rem;
+    width: 10rem;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
+
+.grafico-container{
+    margin: 0 1rem;
+    min-height: 515px;
+}
+
+
 /* Responsividade !! */
 
 @media only screen and (max-width: 1198px){

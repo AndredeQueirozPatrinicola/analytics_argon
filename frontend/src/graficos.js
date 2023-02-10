@@ -1,5 +1,8 @@
 import { Chart } from "chart.js/auto";
 import pegaApi from './api';
+import ChartjsPluginStacked100 from "chartjs-plugin-stacked100";
+
+Chart.register(ChartjsPluginStacked100);
 
 async function spinnerController(){
   
