@@ -293,8 +293,9 @@ class GraduacaoViews(View):
         graduacao = Graduacao()
         numero_alunos = graduacao.pega_numero_alunos_ativos()
         caminho = graduacao.pega_caminho()
+
         context = {
-            'numero_alunos' : numero_alunos,
+            "card_header_1": numero_alunos,
             'caminho' : caminho
         }
 

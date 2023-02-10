@@ -18,20 +18,56 @@
     </div>
     <div class="card-header-container">
         <div class="card-header-block">
+            {% if card_header_1 %}
             <div class="card-header">
-                    
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_1.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_1.text }}
+                    </p>
+                </div>
             </div>
+            {% endif %}
+            {% if card_header_2 %}
             <div class="card-header">
-                    
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_2.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_2.text }}
+                    </p>
+                </div>
             </div>
+            {% endif %}
         </div>
         <div class="card-header-block">
+            {% if card_header_3 %}
             <div class="card-header">
-                    
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_3.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_3.text }}
+                    </p>
+                </div>
             </div>
+            {% endif %}
+            {% if card_header_4 %}
             <div class="card-header">
-                    
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_4.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_4.text }}
+                    </p>
+                </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
