@@ -48,6 +48,11 @@ class Index:
         except:
             raise Exception()
 
+    def regula_escala(self, valor):
+        valor = valor + 50
+        escala = int(valor/9)
+        return [i for i in range(0,escala*10, escala)]
+
     def plota_mapa(self):
         """
             Metodo que visita uma base de dados dos estados brasileiros no Github e os 
@@ -81,6 +86,7 @@ class Index:
             
             quantidade_alunos_sp = int(quantidade_alunos_sp) / 1000
             quantidade_alunos_sp = round(quantidade_alunos_sp, 3)
+            escala_grafico = self.regula_escala(df_merged['Alunos'].nlargest(2).tolist()[1])
 
             fig = px.choropleth(
                                 df_merged, 
@@ -96,7 +102,7 @@ class Index:
                                     'Alunos':'Alunos', 
                                     "Codigos" : "Codigo da UF"
                                     },
-                                range_color=[0, 400]
+                                range_color=[escala_grafico[0], escala_grafico[-1]]
                                 )
 
             fig.update_geos(fitbounds="geojson", visible=False)
@@ -104,19 +110,8 @@ class Index:
                                 margin={"r":0,"t":0,"l":0,"b":0},
                                 coloraxis_colorbar=dict(
                                 title="Escala",
-                                tickvals=[0, 50, 100, 150, 200, 250, 300, 350, 400],
-                                ticktext=[
-                                    "0", 
-                                    "50",
-                                    "100",
-                                    "150",
-                                    "200",
-                                    "250",
-                                    "300",
-                                    "350",
-                                    ">400"
-
-                                ],
+                                tickvals=escala_grafico,
+                                ticktext=escala_grafico
                             ))
 
             fig = plot(fig, output_type="div", config={
