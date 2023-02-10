@@ -2,6 +2,10 @@ from apps.home.models import Docente
 
 from rest_framework import serializers
 
+
+class OptionsSerializer(serializers.Serializer):
+    plugins = serializers.DictField(child=serializers.DictField())
+
 class GraficoDataSetSerializer(serializers.Serializer):
     label = serializers.CharField()
     backgroundColor = serializers.CharField()
@@ -15,6 +19,7 @@ class GraficoDataSerializer(serializers.Serializer):
 class GraficoSerializer(serializers.Serializer):
     type = serializers.CharField()
     data = GraficoDataSerializer()
+    options = OptionsSerializer()
     responsive = serializers.BooleanField()
 
 class PaginaSerializer(serializers.Serializer):

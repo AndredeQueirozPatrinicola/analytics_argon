@@ -57,8 +57,14 @@ class Graduacao:
             resultado.append({'ano': ano_nome, 'dados': ano_dados})
         return resultado
 
-    def trata_dados_raca_api(self, type, labels, colors):
+    def trata_dados_raca_api(self, tipo, labels, colors, departamento = False):
         api = self.pega_dados_raca()
+
+        if not departamento:
+            titulo = "Distribuição de todos os alunos de graduação por raça(Percentual)."
+        else:
+            titulo = f"DIstribuição dos alunos de {departamento} po raça(Percentual)."
+
 
         datasets = []
         for i in range(len(labels)):
@@ -75,10 +81,25 @@ class Graduacao:
                 }
             )
         result = {
-            'type' : type,
+            'type' : tipo,
             'data' : {
                 'labels' : self.etl.anos,
                 'datasets' : datasets
+            },
+            'options': {
+                'plugins' : {
+                    'stacked100': { 
+                        'enable': True, 
+                        'replaceTooltipLabel': False 
+                    },
+                    'title': {
+                        'display': True,
+                        'text': titulo,
+                        'font': {
+                            'size' : 16
+                        }
+                    }
+                }
             },
             'responsive' : True,
         }

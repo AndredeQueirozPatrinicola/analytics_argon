@@ -11,8 +11,10 @@ class GraduacaoRacaAPIView(views.APIView):
 
     def get(self, *args, **kwargs):
         try:
-            graduacao = Graduacao(self.kwargs['graduacao'])
+            departamento = self.kwargs['graduacao']
+            graduacao = Graduacao(departamento)
         except:
+            departamento = False
             graduacao = Graduacao()
 
         dados = graduacao.trata_dados_raca_api('bar',[
@@ -20,14 +22,16 @@ class GraduacaoRacaAPIView(views.APIView):
                                                         'Branca', 
                                                         'Indígena', 
                                                         'Não informada', 
-                                                        'Parda'
+                                                        'Parda',
+                                                        'Preta'
                                                      ],
                                                      [
                                                         '#052e70',
                                                         '#1a448a', 
                                                         '#425e8f', 
                                                         '#7585a1', 
-                                                        '#91a8cf'
-                                                     ])
+                                                        '#91a8cf',
+                                                        '#cad5e8'
+                                                     ], departamento)
         serializer = GraficoSerializer(dados)
         return Response(serializer.data)
