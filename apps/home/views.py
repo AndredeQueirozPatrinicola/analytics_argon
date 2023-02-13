@@ -303,22 +303,3 @@ class GraduacaoViews(View):
 
 
 
-def testes(request):
-    caminho = [
-        {
-            'text' : 'História',
-            'url' : '#', 
-        },
-        {
-            'text': 'Ana Paula Torres Megiani',
-            'url' : '#'
-        }
-    ]
-
-    context = {
-        'caminho' : caminho
-    }
-
-
-    return render(request, 'home/testes.html', context)
-

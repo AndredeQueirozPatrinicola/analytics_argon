@@ -33,56 +33,6 @@ class Graduacao:
         return resultado
 
 
-    def trata_dados_raca_api(self, tipo, labels, colors, departamento = False):
-        if self.graduacao:
-            dados = self.etl.pega_dados_por_ano("raca", order_by='raca', where=self.graduacao)
-        else:
-            dados = self.etl.pega_dados_por_ano("raca", order_by='raca')
-
-        if not departamento:
-            titulo = "Distribuição de todos os alunos de graduação por raça(Percentual)."
-        else:
-            titulo = f"DIstribuição dos alunos de {departamento.capitalize()} por raça(Percentual)."
-
-        dados = pd.DataFrame(dados)
-        dados = dados.values.tolist()
-
-        datasets = []
-        for dado in dados:
-            label = dado[0]
-            dado.pop(0)
-            data = {
-                "label" : label,
-                "data" : dado,
-                "backgroundColor" : colors[dados.index(dado)],
-                "borderWidth" : 1
-            }
-            datasets.append(data)
-
-        result = {
-            'type' : tipo,
-            'data' : {
-                'labels' : self.etl.anos,
-                'datasets' : datasets
-            },
-            'options': {
-                'plugins' : {
-                    'stacked100': { 
-                        'enable': True, 
-                        'replaceTooltipLabel': False 
-                    },
-                    'title': {
-                        'display': True,
-                        'text': titulo,
-                        'font': {
-                            'size' : 16
-                        }
-                    }
-                }
-            },
-            'responsive' : True,
-        }
-        return result
 
 
 
