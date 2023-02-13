@@ -350,6 +350,9 @@ ul, ol, li, input, hr{
 .grafico-container{
     margin: 0 1rem;
     min-height: 515px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

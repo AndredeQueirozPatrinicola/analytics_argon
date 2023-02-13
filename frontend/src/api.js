@@ -12,7 +12,8 @@ async function pegaApi(element, apiNome = ""){
         return api;
     } catch (error) {
         console.error(`Error getting API ${apiNome}: ${error}`);
-        return error;
+        element.parentElement.innerHTML = "Não foi possivel renderizar o grafico, recarregue a pagina e tente novamente ou contate o administrador";
+        return {}
     }
 }
 
