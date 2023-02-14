@@ -28,7 +28,7 @@ class GraficoAPI(views.APIView):
             datasets.append(data)
         return datasets
 
-    def plota_grafico(self, tipo, labels, colors, departamento = False):
+    def plota_grafico(self, tipo, labels, colors, stacked = False, departamento = False):
         titulo = self.get_titulo(departamento)
         data = self.get_data()
         datasets = self.get_datasets(data, colors)
@@ -40,10 +40,6 @@ class GraficoAPI(views.APIView):
             },
             'options': {
                 'plugins' : {
-                    'stacked100': { 
-                        'enable': True, 
-                        'replaceTooltipLabel': False 
-                    },
                     'title': {
                         'display': True,
                         'text': titulo,
@@ -55,6 +51,13 @@ class GraficoAPI(views.APIView):
             },
             'responsive' : True,
         }
+
+        if stacked:
+            result.get('options')['plugins'] = {'stacked100': { 
+                        'enable': True, 
+                        'replaceTooltipLabel': False 
+                    },}
+        print(result)
         return result
 
 class GraficoRacaAPIView(GraficoAPI):
@@ -82,6 +85,7 @@ class GraficoRacaAPIView(GraficoAPI):
         except:
             departamento = False
         finally:
+            stacked = True
             dados = self.plota_grafico('bar',[
                                                 'Amarela', 
                                                 'Branca', 
@@ -97,7 +101,7 @@ class GraficoRacaAPIView(GraficoAPI):
                                                 '#7585a1', 
                                                 '#91a8cf',
                                                 '#cad5e8'
-                                             ], departamento)
+                                             ], stacked, departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
 
@@ -109,8 +113,10 @@ class GraficoSexoAPIView(GraficoAPI):
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo', where=self.kwargs['graduacao'])
         else:
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo')
+        print(dados)
         dados = pd.DataFrame(dados)
         dados = dados.values.tolist()
+        print(dados)
         return dados
 
     def get_titulo(self, departamento):
@@ -137,3 +143,20 @@ class GraficoSexoAPIView(GraficoAPI):
                                              ], departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
+        
+
+class TesteAPI(GraficoAPI):
+
+    def get_data(self):
+        return [["Teste", 123, 32, 321,56, 34, 123 , 2]]
+    
+    def get_titulo(self, ola):
+        return f"Testeeeeeee"
+
+    def get(self, *args, **kwargs):
+        dados = self.plota_grafico(
+            "bar",
+            ["Teste"],  ['#052e70','#cad5e8'], False)
+
+        serializer = GraficoSerializer(dados)
+        return Response(serializer.data)
