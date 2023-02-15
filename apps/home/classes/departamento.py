@@ -269,49 +269,13 @@ class DadosDepartamento():
             g = f
             f += len(dados[0].get(anos[0]))
 
-        resultado = {}
-        s = 0
-        while s < len(anos_int):
+        result = [
+            ["Livros", *resultado_livros],
+            ["Artigos", *resultado_artigos],
+            ["Capitulos", *resultado_capitulos],
+        ]
 
-            resultado[anos_int[s]] = {
-                'total_livros': resultado_livros[s],
-                'total_artigos': resultado_artigos[s],
-                'total_capitulos': resultado_capitulos[s]
-            }
-
-            s += 1
-
-        df = pd.DataFrame(resultado)
-        df = df.transpose()
-        df = df.rename(columns={'total_livros': 'Livros',
-                       'total_artigos': 'Artigos', 'total_capitulos': 'Capitulos'})
-        
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', color_discrete_map={
-            "Livros": "#053787",
-            "Artigos": "#9facc2",
-            "Capitulos": "#AFAFAF"
-        },
-            labels={
-            'x': '',
-            'variable': 'Legenda',
-        }, margin=dict(
-            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-        linecolor='#e0dfda', gridcolor='#e0dfda')
-        
-        titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico 
-        }
-
-        return resultado
+        return result
 
     def pega_programa_departamento(self):
         programas_dpto = Utils()

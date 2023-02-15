@@ -333,48 +333,12 @@ class Departamentos():
                 soma_lista, dados_terceiro_ano), reduce(soma_lista, dados_quarto_ano), reduce(soma_lista, dados_quinto_ano), reduce(soma_lista, dados_sexto_ano)])
             s += 1
 
-
-        w = 0
-        dado = {}
-        while w < len(anos):
-
-            dado[anos[w]] = {
-                'Livros' : resultado[0][w],
-                'Artigos' : resultado[1][w],
-                'Capitulos' : resultado[2][w]
-            }
-
-            w += 1
-
-        df = pd.DataFrame(dado)
-        df = df.transpose()
-
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', 
-                                        color_discrete_map={
-                                            "Livros": "#053787",
-                                            "Artigos": "#9facc2",
-                                            "Capitulos": "#AFAFAF"
-                                        },
-                                            labels={
-                                            'x': '',
-                                            'variable': 'Legenda',
-                                        }, margin=dict(
-                                            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
-                                            yanchor="top",
-                                            y=0.99,
-                                            xanchor="left",
-                                            x=0.01
-                                        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-                                        linecolor='#e0dfda', gridcolor='#e0dfda')
-                                        
-        titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
-
+        x = 0
+        labels = ["Livros", "Artigos", "Capitulos"]
+        for dado in resultado:
+            dado.insert(0, labels[x])
+            x += 1
+     
         return resultado
 
     def pega_programas(self):

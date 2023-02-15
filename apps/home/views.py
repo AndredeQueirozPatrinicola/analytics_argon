@@ -12,6 +12,7 @@ from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 from .classes.index import Index
 from .classes.graduacao import Graduacao
+from .utils import Utils
 
 import pandas as pd
 import datetime
@@ -236,7 +237,7 @@ class DepartamentosView(View):
         tabela_bolsas = departamentos.tabela_bolsas()
         grafico_producao_total_departamento = departamentos.prod_total_departamentos()
         programas_departamento = departamentos.pega_programas()
-        grafico_historico_prod = departamentos.prod_historica_total()
+        departamentos.prod_historica_total()
 
         caminho = [
             {
@@ -244,25 +245,34 @@ class DepartamentosView(View):
             }
         ]
 
+        # context = {
+        #     'regulador': 'regulador',
+        #     'caminho': caminho,
+
+        #     'df_docentes': tabela_todos_docentes.get('df'),
+        #     'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
+
+        #     'grafico_relacao_cursos':  grafico_relacao_cursos,
+        #     'grafico_bolsas': grafico_bolsas,
+        #     'tabela_bolsas': tabela_bolsas,
+        #     'grafico_prod_docentes': grafico_producao_total_departamento,
+        #     'grafico_historico_prod': grafico_historico_prod,
+
+        #     'numero_docentes': numero_docentes,
+
+        #     'informacoes_card': programas_departamento.get('programas'),
+        #     'dropdown_label':  programas_departamento.get('label'),
+        #     'card_2_titulo': 'Programas da Faculdade'
+        # }
+        
+        utils = Utils()
+        departamentos_ = ["Geral", *list(utils.siglas_dptos.keys())]
         context = {
-            'regulador': 'regulador',
-            'caminho': caminho,
-
-            'df_docentes': tabela_todos_docentes.get('df'),
-            'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
-
-            'grafico_relacao_cursos':  grafico_relacao_cursos,
-            'grafico_bolsas': grafico_bolsas,
-            'tabela_bolsas': tabela_bolsas,
-            'grafico_prod_docentes': grafico_producao_total_departamento,
-            'grafico_historico_prod': grafico_historico_prod,
-
-            'numero_docentes': numero_docentes,
-
-            'informacoes_card': programas_departamento.get('programas'),
-            'dropdown_label':  programas_departamento.get('label'),
-            'card_2_titulo': 'Programas da Faculdade'
+            'departamentos' : departamentos_
         }
+
+
+
         return render(request, 'home/departamentos.html', context)
 
 

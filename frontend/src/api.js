@@ -3,8 +3,7 @@ import getHostApi from "./host";
 async function pegaApi(element, apiNome = ""){
     try {
         let apiUrl = await getHostApi();   
-        apiUrl = apiUrl + element.id  
-        console.log(apiNome)
+        apiUrl = apiUrl + element.id 
         if(apiNome != "geral"){
           apiUrl = apiUrl + '/' + apiNome;  
         }
