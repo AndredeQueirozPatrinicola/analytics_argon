@@ -137,7 +137,7 @@ class GraficoSexoAPIView(GraficoAPI):
             return Response(serializer.data)
         
 
-class GraficoPizzaRaca(GraficoAPI):
+class GraficoPizzaSexo(GraficoAPI):
 
     def get_datasets(self, dados, colors):
         labels = []
@@ -157,9 +157,9 @@ class GraficoPizzaRaca(GraficoAPI):
 
     def get_data(self):
         if self.kwargs.get('graduacao'):
-            dados = self.etl.query_teste(self.kwargs['graduacao'])
+            dados = self.etl.query_teste('sexo', self.kwargs['graduacao'])
         else:
-            dados = self.etl.query_teste()
+            dados = self.etl.query_teste('sexo')
 
         dados = pd.DataFrame(dados)
         dados = dados.values.tolist()
@@ -184,6 +184,42 @@ class GraficoPizzaRaca(GraficoAPI):
                                                                 '#052e70', 
                                                                 '#91a8cf', 
                                                              ], 
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)
+        
+class GraficoPizzaRaca(GraficoPizzaSexo):
+
+    def get_data(self):
+        if self.kwargs.get('graduacao'):
+            dados = self.etl.query_teste('raca', self.kwargs['graduacao'])
+        else:
+            dados = self.etl.query_teste('raca')
+
+        dados = pd.DataFrame(dados)
+        dados = dados.values.tolist()
+        return dados
+
+    def get_titulo(self, departamento):
+        if not departamento:
+            return "Distribuição de todos os alunos de graduação por raca(Percentual)."
+        else:
+            return f"Distribuição dos alunos de {departamento.capitalize()} por sexo(Percentual)."
+
+    def get_labels(self):
+        return ["Amarela", "Branca", "Indígena", "Não informada", "Parda", "Preta"]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['graduacao']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                        '#052e70', '#1a448a', 
+                                                        '#425e8f', '#7585a1', 
+                                                        '#91a8cf', '#cad5e8'
+                                                      ],  
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)

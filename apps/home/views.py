@@ -291,12 +291,14 @@ class GraduacaoViews(View):
     
     def get(self, request):
         graduacao = Graduacao()
+        departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
         numero_alunos = graduacao.pega_numero_alunos_ativos()
         caminho = graduacao.pega_caminho()
 
         context = {
             "card_header_1": numero_alunos,
-            'caminho' : caminho
+            'caminho' : caminho,
+            "departamentos" : departamentos
         }
 
         return render(request, 'home/graduacao.html', context)

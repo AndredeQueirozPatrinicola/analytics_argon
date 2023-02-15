@@ -4,7 +4,8 @@ async function pegaApi(element, apiNome = ""){
     try {
         let apiUrl = await getHostApi();   
         apiUrl = apiUrl + element.id  
-        if(apiNome != "todos"){
+        console.log(apiNome)
+        if(apiNome != "geral"){
           apiUrl = apiUrl + '/' + apiNome;  
         }
         const apiResponse = await fetch(apiUrl);

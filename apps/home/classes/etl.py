@@ -49,19 +49,20 @@ class Etl:
         except:
             raise Exception("Não foi possivel realizar a query") 
         
-    def query_teste(self, departamento = False):
+    def query_teste(self, coluna, departamento = False):
         if departamento:
             where = f"WHERE g.nomeCurso = '{departamento}' AND g.situacao = 'ativo'"
         else:
             where = f"WHERE g.situacao = 'ativo'"
         self.cursor.execute(f"""
                                 SELECT
-                                    ag.sexo,  
+                                    ag.{coluna},  
                                     COUNT(*)	
                                 FROM alunos_graduacao ag 
                                 LEFT JOIN graduacoes g 
                                     ON ag.numeroUSP = g.numeroUSP  
                                 {where}
-                                GROUP BY ag.sexo ;
+                                GROUP BY ag.{coluna}
+                                ORDER BY ag.{coluna} ;
                              """)
         return self.cursor.fetchall()

@@ -5,7 +5,7 @@ import ChartjsPluginStacked100 from "chartjs-plugin-stacked100";
 Chart.register(ChartjsPluginStacked100);
 
 async function plotaGraficoDefault(element){
-  const grafico = await pegaApi(element, "todos")
+  const grafico = await pegaApi(element, "geral")
   return new Chart(element, grafico)
 }
 

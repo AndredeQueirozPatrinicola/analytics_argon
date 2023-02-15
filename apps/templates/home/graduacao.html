@@ -11,12 +11,9 @@
   <div class="card-dash-6">
     <div class="select-container">
       <select class="select-grafico raca-por-ano">
-        <option value="Todos">Geral</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Historia">Historia</option>
-        <option value="Letras">Letras</option>
-        <option value="Ciências Sociais">Ciências Sociais</option>
-        <option value="Filosofia">Filosofia</option>
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="grafico-container">
@@ -26,19 +23,27 @@
     </div>
   </div>
   <div class="card-dash-3">
-    
+    <div class="select-container">
+      <select class="select-grafico raca-atual">
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grafico-container">
+
+      <canvas id="raca-atual"></canvas>
+
+    </div>
   </div>
 </div>
 <div class="dashboard-row">
   <div class="card-dash-3">
     <div class="select-container">
       <select class="select-grafico sexo-atual">
-        <option value="Todos">Geral</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Historia">Historia</option>
-        <option value="Letras">Letras</option>
-        <option value="Ciências Sociais">Ciências Sociais</option>
-        <option value="Filosofia">Filosofia</option>
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="grafico-container">
@@ -50,12 +55,9 @@
   <div class="card-dash-6">
     <div class="select-container">
       <select class="select-grafico sexo-por-ano">
-        <option value="Todos">Geral</option>
-        <option value="Geografia">Geografia</option>
-        <option value="Historia">Historia</option>
-        <option value="Letras">Letras</option>
-        <option value="Ciências Sociais">Ciências Sociais</option>
-        <option value="Filosofia">Filosofia</option>
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="grafico-container">
