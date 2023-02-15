@@ -8,7 +8,7 @@ class OptionsSerializer(serializers.Serializer):
 
 class GraficoDataSetSerializer(serializers.Serializer):
     label = serializers.CharField()
-    backgroundColor = serializers.CharField()
+    backgroundColor = serializers.ListField(child=serializers.CharField())
     borderWidth = serializers.IntegerField()
     data = serializers.ListField(child=serializers.IntegerField())
 
