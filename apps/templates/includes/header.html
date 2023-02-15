@@ -1,3 +1,4 @@
+{% load static %}
 <div class="header bg-primary pb-6">
   <div class="container-fluid">
     {% if landingpage %}
@@ -11,7 +12,7 @@
             <!-- Celulas -->
 
               <a class="d-flex div-img-land" href="/">
-                <img src="/static/assets/img/brand/fundoazul.png" class="img-land">
+                <img src="{% static 'assets/img/brand/fundoazul.png' %}" class="img-land">
 
                 <div class="d-flex flex-column div-text-land">
                   <p class="p-text-logo">
@@ -27,7 +28,7 @@
         </div>
         <div>
           <a href="https://www5.usp.br/" target="_blank">
-            <img src="/static/assets/img/brand/usplogo.png" class="img-logo-usp">
+            <img src="{% static 'assets/img/brand/usplogo.png' %}" class="img-logo-usp">
           </a>
         </div>
       </div>
