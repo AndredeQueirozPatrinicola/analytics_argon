@@ -8,6 +8,8 @@ from .serializers import GraficoSerializer
 
 import pandas as pd
 
+from datetime import datetime
+
 class GraficoAPI(views.APIView):
 
     def __init__(self, **kwargs) -> None:
@@ -28,14 +30,16 @@ class GraficoAPI(views.APIView):
             datasets.append(data)
         return datasets
 
-    def plota_grafico(self, tipo, labels, colors, stacked = False, departamento = False):
-        titulo = self.get_titulo(departamento)
+    def plota_grafico(self, *args, **kwargs):
+        titulo = self.get_titulo(kwargs.get('departamento'))
         data = self.get_data()
-        datasets = self.get_datasets(data, colors)
+        labels = self.get_labels()
+        datasets = self.get_datasets(data, kwargs['colors'])
+
         result = {
-            'type' : tipo,
+            'type' : kwargs['tipo'],
             'data' : {
-                'labels' : self.etl.anos,
+                'labels' : labels,
                 'datasets' : datasets
             },
             'options': {
@@ -51,13 +55,12 @@ class GraficoAPI(views.APIView):
             },
             'responsive' : True,
         }
-
-        if stacked:
+        if kwargs.get('stacked'):
             result.get('options')['plugins'] = {'stacked100': { 
                         'enable': True, 
                         'replaceTooltipLabel': False 
                     },}
-        print(result)
+
         return result
 
 class GraficoRacaAPIView(GraficoAPI):
@@ -75,9 +78,10 @@ class GraficoRacaAPIView(GraficoAPI):
         if not departamento:
             titulo = "Distribuição de todos os alunos de graduação por raça(Percentual)."
         else:
-            titulo = f"DIstribuição dos alunos de {departamento.capitalize()} por raça(Percentual)."
-
-        return titulo
+            return f"DIstribuição dos alunos de {departamento.capitalize()} por raça(Percentual)."
+        
+    def get_labels(self):
+        return [int(ano) for ano in range(datetime.now()- 6, datetime.now() + 1)]
 
     def get(self, *args, **kwargs):
         try:
@@ -85,23 +89,13 @@ class GraficoRacaAPIView(GraficoAPI):
         except:
             departamento = False
         finally:
-            stacked = True
-            dados = self.plota_grafico('bar',[
-                                                'Amarela', 
-                                                'Branca', 
-                                                'Indígena', 
-                                                'Não informada', 
-                                                'Parda',
-                                                'Preta'
-                                             ],
-                                             [
-                                                '#052e70',
-                                                '#1a448a', 
-                                                '#425e8f', 
-                                                '#7585a1', 
-                                                '#91a8cf',
-                                                '#cad5e8'
-                                             ], stacked, departamento)
+            dados = self.plota_grafico('bar',colors = [
+                                                        '#052e70', '#1a448a', 
+                                                        '#425e8f', '#7585a1', 
+                                                        '#91a8cf', '#cad5e8'
+                                                      ], 
+                                            stacked = True, departamento = departamento)
+            
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
 
@@ -113,19 +107,18 @@ class GraficoSexoAPIView(GraficoAPI):
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo', where=self.kwargs['graduacao'])
         else:
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo')
-        print(dados)
         dados = pd.DataFrame(dados)
         dados = dados.values.tolist()
-        print(dados)
         return dados
 
     def get_titulo(self, departamento):
         if not departamento:
-            titulo = "Distribuição de todos os alunos de graduação por sexo(Percentual)."
+            return "Distribuição de todos os alunos de graduação por sexo(Percentual)."
         else:
-            titulo = f"DIstribuição dos alunos de {departamento.capitalize()} por sexo(Percentual)."
+            return f"Distribuição dos alunos de {departamento.capitalize()} por sexo(Percentual)."
 
-        return titulo
+    def get_labels(self):
+        return [int(ano) for ano in range(datetime.now()- 6, datetime.now() + 1)]
 
     def get(self, *args, **kwargs):
         try:
@@ -133,30 +126,13 @@ class GraficoSexoAPIView(GraficoAPI):
         except:
             departamento = False
         finally:
-            dados = self.plota_grafico('bar',[
-                                               "Mulher",
-                                               "Masculino"
-                                             ],
-                                             [
-                                                '#052e70',
-                                                '#cad5e8'
-                                             ], departamento)
+            dados = self.plota_grafico('bar',colors = [
+                                                        '#052e70', '#1a448a', 
+                                                        '#425e8f', '#7585a1', 
+                                                        '#91a8cf', '#cad5e8'
+                                                      ], 
+                                            stacked = True, departamento = departamento)
+            
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         
-
-class TesteAPI(GraficoAPI):
-
-    def get_data(self):
-        return [["Teste", 123, 32, 321,56, 34, 123 , 2]]
-    
-    def get_titulo(self, ola):
-        return f"Testeeeeeee"
-
-    def get(self, *args, **kwargs):
-        dados = self.plota_grafico(
-            "bar",
-            ["Teste"],  ['#052e70','#cad5e8'], False)
-
-        serializer = GraficoSerializer(dados)
-        return Response(serializer.data)

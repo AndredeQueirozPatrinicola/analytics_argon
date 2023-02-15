@@ -9,7 +9,7 @@ class Etl:
         self.anos = [i for i in range(int(datetime.now().year) - 6, int(datetime.now().year) + 1)]
 
     def pega_dados_por_ano(self, coluna, order_by='', where=''):
-        # try:
+        try:
             select = f"SELECT ag.{coluna}"
             _from = f'FROM graduacoes g'
             join = f'JOIN alunos_graduacao ag ON g.numeroUSP = ag.numeroUSP'
@@ -35,8 +35,8 @@ class Etl:
                     """
             self.cursor.execute(query)
             return self.cursor.fetchall()
-        # except:
-        #     raise Exception("Não foi possivel realizar a query") 
+        except:
+            raise Exception("Não foi possivel realizar a query") 
         
     def conta_pessoa_por_categoria(self, tabela, situacao):
         try:

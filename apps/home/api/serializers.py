@@ -21,7 +21,3 @@ class GraficoSerializer(serializers.Serializer):
     data = GraficoDataSerializer()
     options = OptionsSerializer()
     responsive = serializers.BooleanField()
-
-class PaginaSerializer(serializers.Serializer):
-    titulo = serializers.CharField()
-    grafico = GraficoSerializer()
