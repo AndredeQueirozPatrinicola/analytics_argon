@@ -163,7 +163,7 @@ class DepartamentoView(View):
         grafico_pizza_aposentados_ativos = departamento.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
         grafico_pizza_tipo_vinculo = departamento.plota_tipo_vinculo_docente(queries.get('api_docentes'))
         grafico_prod_docentes = departamento.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
-        grafico_historico_prod = departamento.plota_prod_serie_historica(queries.get('api_programas_docente'))
+        # grafico_historico_prod = departamento.plota_prod_serie_historica(queries.get('api_programas_docente'))
         grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
@@ -197,7 +197,7 @@ class DepartamentoView(View):
             'grafico_prod_docentes': grafico_prod_docentes,
             'tabela_bolsas': tabela_bolsas,
             'grafico_bolsas': grafico_bolsas,
-            'grafico_historico_prod': grafico_historico_prod,
+            # 'grafico_historico_prod': grafico_historico_prod,
             # Card 2 -> Programas
             'informacoes_card': programas_dpto.get('programas_dpto'),
             'dropdown_label': programas_dpto.get('label'),

@@ -3,7 +3,7 @@ from apps.home import views
 
 from rest_framework import routers
 
-from .views import GraficoRacaAPIView, GraficoSexoAPIView, GraficoPizzaSexo, GraficoPizzaRaca, GraficoProducaoHistoricaDepartamentos
+from .views import GraficoRacaAPIView, GraficoSexoAPIView, GraficoPizzaSexo, GraficoPizzaRaca, GraficoProducaoHistoricaDepartamentos, GraficoProducaoDepartamentos
 
 router = routers.DefaultRouter()
 
@@ -23,5 +23,8 @@ urlpatterns = [
     path('graduacao/raca-atual/<str:graduacao>', GraficoPizzaRaca.as_view(), name='raca-atual'),
 
     path('departamentos/prod-por-ano', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
-    path('departamentos/prod-por-ano/<str:departamento>', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano')
-]
+    path('departamentos/prod-por-ano/<str:departamento>', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
+
+    path('departamentos/prod-total', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
+    path('departamentos/prod-total/<str:departamento>', GraficoProducaoDepartamentos.as_view(), name='prod-total')
+    ]

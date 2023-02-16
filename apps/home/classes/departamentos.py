@@ -254,13 +254,13 @@ class Departamentos():
                     total_artigos += int(docente.get('total_artigos'))
                     total_capitulos += int(docente.get('total_capitulos'))
 
-        # resultado = [
-        #                 ["Livros", *total_livros], 
-        #                 ["Artigos", *total_artigos], 
-        #                 ["Capitulos", *total_capitulos]
-        #             ]
+        resultado = [
+                        ["Livros", total_livros], 
+                        ["Artigos", total_artigos], 
+                        ["Capitulos", total_capitulos]
+                    ]
         
-        # return resultado
+        return resultado
 
     def prod_historica_total(self):
         
@@ -322,7 +322,7 @@ class Departamentos():
         for dado in resultado:
             dado.insert(0, labels[x])
             x += 1
-     
+
         return resultado
 
     def pega_programas(self):

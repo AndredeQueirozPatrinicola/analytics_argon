@@ -301,3 +301,40 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
+        
+class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        if self.kwargs.get('departamento'):
+            query = self.queries(departamento = ['api_programas_docente_limpo'])
+            departamento = DadosDepartamento(self.get_sigla())
+            dados = departamento.plota_prod_departamento(query)
+        else:
+            query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+            query_docentes = Docente.objects.values('api_docentes')
+            departamentos = Departamentos(query_departamentos, query_docentes)
+            dados = departamentos.prod_total_departamentos()
+        return dados
+
+    def get_titulo(self, departamento):
+        if not departamento:
+            return "Produção de Livros, Artigos e Capitulos em todos os departamentos."
+        else:
+            return f"Produção de Livros, Artigos e Capitulos no departamento de {departamento.title()}."
+
+    def get_labels(self):
+        return ["Livros", "Artigos", "Capitulos"]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['departamento']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                        '#052e70', '#7585a1', 
+                                                        '#91a8cf',
+                                                      ],  
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)

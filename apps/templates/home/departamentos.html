@@ -22,6 +22,20 @@
 
     </div>
   </div>
+  <div class="card-dash-3">
+    <div class="select-container">
+      <select class="select-grafico prod-total">
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grafico-container">
+
+      <canvas id="prod-total"></canvas>
+
+    </div>
+  </div>
 
 </div>
 

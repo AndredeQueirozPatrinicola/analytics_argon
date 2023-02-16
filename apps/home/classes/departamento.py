@@ -114,7 +114,7 @@ class DadosDepartamento():
         return resultado
 
     def plota_prod_departamento(self, api_programas_docente_limpo):
-        dados = api_programas_docente_limpo
+        dados = api_programas_docente_limpo.get('api_programas_docente_limpo')
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
 
@@ -125,27 +125,11 @@ class DadosDepartamento():
             lista_valores.append(sum(lista_valores_individuais))
             x += 1
 
-
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=lista_valores, color=['Livros', 'Artigos', 'Capitulos'],
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
-                     linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-                     l=15, r=15, t=15, b=0), legend=dict(
-                        yanchor="top",
-                        y=0.99,
-                        xanchor="left",
-                        x=0.01),
-                     labels={
-                        'x': '',
-                        'color' : 'Legenda'
-                     })
-
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no Lattes'
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        resultado = [
+            ["Livros", lista_valores[0]],
+            ["Artigos", lista_valores[1]],
+            ["Capitulos", lista_valores[2]]
+        ]
 
         return resultado
 
