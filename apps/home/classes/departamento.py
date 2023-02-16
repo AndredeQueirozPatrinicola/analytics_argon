@@ -228,7 +228,7 @@ class DadosDepartamento():
         return resultado
 
     def plota_prod_serie_historica(self, api_programas_docente):
-        dados = api_programas_docente
+        dados = api_programas_docente.get('api_programas_docente')
 
         anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos = [str(i) for i in anos_int]

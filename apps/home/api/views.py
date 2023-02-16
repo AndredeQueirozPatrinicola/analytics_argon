@@ -70,6 +70,57 @@ class GraficoAPI(views.APIView):
         }
         return result
 
+class GraficoPizzaAPIView(GraficoAPI):
+
+    def get_datasets(self, dados, colors):
+        labels = []
+        data = []
+        for dado in dados:
+            dado.pop(0)
+            data.append(*dado)
+        datasets = [
+                        {
+                            "label" : "Relação MxF",
+                            "data" : data,
+                            "backgroundColor" : colors,
+                            "borderWidth" : 1
+                        }
+                    ]
+        return datasets
+
+class GraficoDepartamentosDocentesAPIView(GraficoAPI):
+
+    def get_sigla(self):
+        sigla = self.utils.siglas_dptos
+        if "e" in self.kwargs.get('departamento').split():
+            departamento = self.kwargs.get('departamento').split()
+            departamento_formatado = []
+            for palavra in departamento:
+                if palavra != "e":
+                    palavra = palavra.capitalize()
+                departamento_formatado.append(palavra)
+            departamento_formatado = " ".join(departamento_formatado)
+            sigla = sigla.get(departamento_formatado)
+        else:
+            sigla = sigla.get(self.kwargs.get('departamento').title())
+        return sigla
+
+    def queries(self, **kwargs):
+        sigla = self.get_sigla()
+
+        if kwargs.get('departamento'):
+            query = Departamento.objects.filter(sigla=sigla).values()
+            query = query[0]
+
+            resultado_departamentos = {}
+            for coluna in kwargs.get('departamento'):
+                resultado_departamentos[coluna] = query.get(str(coluna))
+
+        return resultado_departamentos
+
+#########################################
+               # Filhos #
+#########################################
 
 class GraficoRacaAPIView(GraficoAPI):
 
@@ -142,23 +193,7 @@ class GraficoSexoAPIView(GraficoAPI):
             return Response(serializer.data)
         
 
-class GraficoPizzaSexo(GraficoAPI):
-
-    def get_datasets(self, dados, colors):
-        labels = []
-        data = []
-        for dado in dados:
-            dado.pop(0)
-            data.append(*dado)
-        datasets = [
-                        {
-                            "label" : "Relação MxF",
-                            "data" : data,
-                            "backgroundColor" : colors,
-                            "borderWidth" : 1
-                        }
-                    ]
-        return datasets
+class GraficoPizzaSexo(GraficoPizzaAPIView):
 
     def get_data(self):
         if self.kwargs.get('graduacao'):
@@ -193,7 +228,7 @@ class GraficoPizzaSexo(GraficoAPI):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         
-class GraficoPizzaRaca(GraficoPizzaSexo):
+class GraficoPizzaRaca(GraficoPizzaAPIView):
 
     def get_data(self):
         if self.kwargs.get('graduacao'):
@@ -230,46 +265,19 @@ class GraficoPizzaRaca(GraficoPizzaSexo):
             return Response(serializer.data)
         
 
-class GraficoProducaoDocentes(GraficoAPI):
-
-    def queries(self):
-        querie_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
-        querie_docentes = Docente.objects.values('api_docentes')
-
-        queries = {
-            'query_departamentos' : querie_departamentos,
-            'query_docentes' : querie_docentes
-        }
-
-        return queries
+class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
 
     def get_data(self):
         if self.kwargs.get('departamento'):
-            sigla = self.utils.siglas_dptos
-            if "e" in self.kwargs.get('departamento').split():
-                departamento = self.kwargs.get('departamento').split()
-                departamento_formatado = []
-                for palavra in departamento:
-                    if palavra != "e":
-                        palavra = palavra.capitalize()
-                    departamento_formatado.append(palavra)
-                departamento_formatado = " ".join(departamento_formatado)
-                sigla = sigla.get(departamento_formatado)
-            else:
-                sigla = sigla.get(self.kwargs.get('departamento').title())
-            query = Departamento.objects.filter(sigla=sigla).values()
-            query = query[0]
-            api_programas_docente = query.get('api_programas_docente')
-            departamentos = DadosDepartamento(self.kwargs.get(sigla))
-            dados = departamentos.plota_prod_serie_historica(api_programas_docente)
-            return dados
+            query = self.queries(departamento = ['api_programas_docente'])
+            departamento = DadosDepartamento(self.get_sigla())
+            dados = departamento.plota_prod_serie_historica(query)
         else:
-            queries = self.queries()
-            queries_departamentos = queries.get('query_departamentos')
-            queries_docentes = queries.get('query_docentes')
-            departamentos = Departamentos(queries_departamentos, queries_docentes)
+            query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+            query_docentes = Docente.objects.values('api_docentes')
+            departamentos = Departamentos(query_departamentos, query_docentes)
             dados = departamentos.prod_historica_total()
-            return dados
+        return dados
 
     def get_titulo(self, departamento):
         if not departamento:
@@ -282,7 +290,7 @@ class GraficoProducaoDocentes(GraficoAPI):
 
     def get(self, *args, **kwargs):
         try:
-            departamento = self.kwargs['graduacao']
+            departamento = self.kwargs['departamento']
         except:
             departamento = False
         finally:

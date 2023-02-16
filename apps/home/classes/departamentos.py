@@ -254,29 +254,13 @@ class Departamentos():
                     total_artigos += int(docente.get('total_artigos'))
                     total_capitulos += int(docente.get('total_capitulos'))
 
-        resultado = [total_livros, total_artigos, total_capitulos]
-        fig = Grafico()
-        fig = fig.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=resultado, color=['Livros', 'Artigos', 'Capitulos'],
-                                 color_discrete_sequence=[
-                                     "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
-                                 linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-            l=15, r=15, t=15, b=0), legend=dict(
-                        yanchor="top",
-                        y=0.99,
-                        xanchor="left",
-                        x=0.01), labels={
-                                    'x': '',
-                                    'color': 'Legenda'
-                                    })
-
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no lattes'
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : fig
-        }
-
-        return resultado
+        # resultado = [
+        #                 ["Livros", *total_livros], 
+        #                 ["Artigos", *total_artigos], 
+        #                 ["Capitulos", *total_capitulos]
+        #             ]
+        
+        # return resultado
 
     def prod_historica_total(self):
         
