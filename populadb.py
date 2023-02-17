@@ -60,6 +60,7 @@ class PopulaDB():
             api_programas_docentes_limpo = departamento.pega_api_programas_docentes_limpo()
 
             departamento.atualiza_ou_cria_departamento(
+                                                    sigla,
                                                     api_docentes,
                                                     api_programas, 
                                                     api_pesquisa_vazio, 
