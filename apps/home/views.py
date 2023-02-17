@@ -165,7 +165,7 @@ class DepartamentoView(View):
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
         tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
-        grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
+        # grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
 
         
 
@@ -189,7 +189,7 @@ class DepartamentoView(View):
             'sigla_departamento': sigla,
             'numero_docentes': numero_docentes,
             # Graficos e tabelas
-            'grafico_defesa_mestrado_doutorado' : grafico_defesa_mestrado_doutorado,
+            # 'grafico_defesa_mestrado_doutorado' : grafico_defesa_mestrado_doutorado,
             'tabela_defesas' : tabela_defesas,
             'grafico_aposentados_ativos': grafico_pizza_aposentados_ativos,
             'grafico_tipo_vinculo': grafico_pizza_tipo_vinculo,
@@ -212,7 +212,7 @@ class DepartamentoView(View):
 class DepartamentosView(View):
 
     def queries(self):
-        querie_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+        querie_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente', 'api_defesas')
         querie_docentes = Docente.objects.values('api_docentes')
 
         queries = {

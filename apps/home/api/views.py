@@ -375,3 +375,40 @@ class GraficoBolsaSemICePosDoc(GraficoDepartamentosDocentesAPIView):
                                         departamento = departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
+        
+class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        if self.kwargs.get('departamento'):
+            query = self.queries(departamento = ['api_defesas'])
+            departamento = DadosDepartamento(self.get_sigla())
+            dados = departamento.defesas_mestrado_doutorado(query)
+        else:
+            query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente', 'api_defesas')
+            query_docentes = Docente.objects.values('api_docentes')
+            departamentos = Departamentos(query_departamentos, query_docentes)
+            dados = departamentos.grafico_defesas()
+        return dados
+
+    def get_titulo(self, departamento):
+        if not departamento:
+            return "Proporção entre alunos de Mestrado, Doutorado e Doutorado Direto de toda a faculdade."
+        else:
+            return f"Proporção entre alunos de Mestrado, Doutorado e Doutorado Direto no departamento de {departamento.title()}."
+
+    def get_labels(self):
+        return ["Mestrado", "Doutorado", "Doutorado Direto"]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['departamento']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                        '#052e70', '#7585a1', 
+                                                        '#91a8cf',
+                                                      ],  
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)

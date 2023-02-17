@@ -283,7 +283,7 @@ class DadosDepartamento():
 
         x, y, z = 0, 0, 0
         nivel = []
-        for defesa in api_defesas:  
+        for defesa in api_defesas.get('api_defesas'):  
 
             if defesa.get('nivel') == 'ME':
                 x += 1
@@ -292,22 +292,10 @@ class DadosDepartamento():
             if defesa.get('nivel') == 'DD':
                 z += 1
 
-        nivel.append(x)
-        nivel.append(y)
-        nivel.append(z)
-
-        figura = Grafico()
-        figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
-                    color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
-                    labels={
-                        'values': 'Valor',
-                        'names': 'Tipo',
-                        'color': 'Cor'
-                    }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
-
-        resultado = {
-            'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
-            'grafico' : figura
-        }
+        resultado = [
+            ["Mestrado", x],
+            ["Doutorado", y],
+            ["Doutorado Direto", z]
+        ]
 
         return resultado

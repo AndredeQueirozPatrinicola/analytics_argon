@@ -21,16 +21,19 @@ class Departamentos():
         api_pesquisa_prametros = []
         api_programas_docente_limpo = []
         api_programas_docente = []
+        api_defesas = []
 
         for dado in dados:
             api_pesquisa_prametros.append(dado.get('api_pesquisa_parametros'))
             api_programas_docente_limpo.append(dado.get('api_programas_docente_limpo'))
             api_programas_docente.append(dado.get('api_programas_docente'))
+            api_defesas.append(dado.get('api_defesas'))
 
         resultado = {
             'api_pesquisa_prametros'      : api_pesquisa_prametros,
             'api_programas_docente_limpo' : api_programas_docente_limpo,
-            'api_programas_docente'       : api_programas_docente
+            'api_programas_docente'       : api_programas_docente,
+            'api_defesas' : api_defesas
         }
 
         return resultado
@@ -39,6 +42,11 @@ class Departamentos():
     def api_docentes(self):
         dados = self._api_docentes
         return [dado.get('api_docentes') for dado in dados]
+
+    @cached_property
+    def api_defesas(self):
+        dados = self.pega_api
+        return dados.get('api_defesas')
 
     @cached_property
     def api_pesquisa_parametros(self):
@@ -310,4 +318,25 @@ class Departamentos():
             'programas' : utils.pega_programas_departamento().get('programas'),
             'label' : 'Programas'
         }
+        return resultado
+    
+    def grafico_defesas(self):
+        dados = self.api_defesas
+
+        x, y, z = 0, 0, 0     
+        for dado in dados:
+            for defesa in dado:
+                if defesa.get('nivel') == 'ME':
+                    x += 1
+                if defesa.get('nivel') == 'DO':
+                    y += 1
+                if defesa.get('nivel') == 'DD':
+                    z += 1
+
+        resultado = [
+            ["Mestrado", x],
+            ["Doutorado", y],
+            ["Doutorado Direto", z]
+        ]
+
         return resultado

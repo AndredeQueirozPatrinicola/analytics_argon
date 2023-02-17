@@ -30,4 +30,7 @@ urlpatterns = [
 
     path('departamentos/ic-bolsa-sem', GraficoBolsaSemICePosDoc.as_view(), name='ic-bolsa-sem'),
     path('departamentos/ic-bolsa-sem/<str:departamento>', GraficoBolsaSemICePosDoc.as_view(), name='ic-bolsa-sem'),
+
+    path('departamentos/defesas', GraficoDefesasDepartamentos.as_view(), name='defesas'),
+    path('departamentos/defesas/<str:departamento>', GraficoDefesasDepartamentos.as_view(), name='defesas'),
     ]
