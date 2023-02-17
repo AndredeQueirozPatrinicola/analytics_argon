@@ -87,6 +87,8 @@ class DadosDepartamento():
     def plota_tipo_vinculo_docente(self, api_docentes):
         dados = api_docentes
 
+        print(dados)
+
         x = 0
         nomefnc = []
         while x < len(dados):
@@ -100,17 +102,12 @@ class DadosDepartamento():
         nomes = [i[0] for i in lista_nomes]
         lista_valores = df.value_counts().to_list()
 
-        titulo = 'Percentual entre tipos de vínculo de docente'
-        grafico = Grafico()
-        grafico = grafico.grafico_pizza(values=lista_valores, names=nomes, color=nomes, legend_orientation='h',
-                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"], x=1, y=1.02,
-                                        margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
-
+        x = 0
+        resultado = []
+        for nome in nomes:
+            resultado.append([nome, lista_valores[x]])
+            x += 1
+        print(nomes)
         return resultado
 
     def plota_prod_departamento(self, api_programas_docente_limpo):

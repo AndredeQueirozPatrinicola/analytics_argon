@@ -151,9 +151,7 @@ class Departamentos():
         return resultado
 
     def plota_relacao_cursos(self):
-        
         dados = self.api_docentes
-
         df = pd.DataFrame(dados)
         valores_cursos = df['nomset'].value_counts().to_list()
         df2 = pd.DataFrame(df['nomset'].value_counts())
@@ -163,17 +161,31 @@ class Departamentos():
         while x < len(df2):
             nomes_cursos.append(df2.index[x])
             x += 1
+        
+        resultado = []
+        x = 0
+        for nome in nomes_cursos:
+            resultado.append([nome, valores_cursos[x]])
+            x += 1
 
-        titulo = 'Percentual de professores por departamento'
+        return resultado
 
-        grafico = Grafico()
-        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=0), x=0.6, y=-0.5, color=df2.index, height=700,
-                                        color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
+    def plota_tipo_vinculo_docente(self):
+        docentes = Docente.objects.values('api_docentes')
 
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        funcoes = []
+        for docente in docentes:
+            funcoes.append(docente.get('api_docentes').get("nomefnc"))
+
+        df = pd.DataFrame(funcoes)
+        lista_nomes = df.value_counts().index.to_list()
+        nomes = [i[0] for i in lista_nomes]
+        lista_valores = df.value_counts().to_list()
+        print(nomes)
+        resultado = []
+        x = 0
+        for nome in nomes:
+            resultado.append([nome, lista_valores[x]])
 
         return resultado
 

@@ -82,5 +82,35 @@
 
 </div>
 
+<div class="dashboard-row">
+  
+  <div class="card-dash-6">
+
+  </div>
+
+  <div class="card-dash-3">
+    <div>
+      <div class="grafico-container">
+  
+        <canvas id="professores"></canvas>
+  
+      </div>
+      <div class="select-container">
+        <select class="select-grafico tipo-vinculo">
+          {% for departamento in departamentos %}
+            <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="grafico-container">
+        
+        <canvas id="tipo-vinculo"></canvas>
+  
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
 {% endblock content %}

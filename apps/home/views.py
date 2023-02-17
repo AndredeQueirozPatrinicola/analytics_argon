@@ -157,15 +157,9 @@ class DepartamentoView(View):
 
         tabela_docentes = departamento.tabela_docentes(queries.get('api_programas'), queries.get('api_docentes'))
         numero_docentes = departamento.pega_numero_docentes(queries.get('api_programas'), queries.get('api_docentes'))
-        grafico_pizza_aposentados_ativos = departamento.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
-        grafico_pizza_tipo_vinculo = departamento.plota_tipo_vinculo_docente(queries.get('api_docentes'))
-        # grafico_prod_docentes = departamento.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
-        # grafico_historico_prod = departamento.plota_prod_serie_historica(queries.get('api_programas_docente'))
-        # grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
         tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
-        # grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
 
         
 
@@ -189,14 +183,8 @@ class DepartamentoView(View):
             'sigla_departamento': sigla,
             'numero_docentes': numero_docentes,
             # Graficos e tabelas
-            # 'grafico_defesa_mestrado_doutorado' : grafico_defesa_mestrado_doutorado,
             'tabela_defesas' : tabela_defesas,
-            'grafico_aposentados_ativos': grafico_pizza_aposentados_ativos,
-            'grafico_tipo_vinculo': grafico_pizza_tipo_vinculo,
-            # 'grafico_prod_docentes': grafico_prod_docentes,
             'tabela_bolsas': tabela_bolsas,
-            # 'grafico_bolsas': grafico_bolsas,
-            # 'grafico_historico_prod': grafico_historico_prod,
             # Card 2 -> Programas
             'informacoes_card': programas_dpto.get('programas_dpto'),
             'dropdown_label': programas_dpto.get('label'),
@@ -231,12 +219,9 @@ class DepartamentosView(View):
 
         numero_docentes = departamentos.pega_numero_docentes()
         tabela_todos_docentes = departamentos.tabela_todos_docentes()
-        grafico_relacao_cursos = departamentos.plota_relacao_cursos()
-        grafico_bolsas = departamentos.grafico_bolsa_sem()
         tabela_bolsas = departamentos.tabela_bolsas()
-        grafico_producao_total_departamento = departamentos.prod_total_departamentos()
         programas_departamento = departamentos.pega_programas()
-        departamentos.prod_historica_total()
+
 
         caminho = [
             {

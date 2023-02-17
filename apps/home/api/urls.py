@@ -33,4 +33,9 @@ urlpatterns = [
 
     path('departamentos/defesas', GraficoDefesasDepartamentos.as_view(), name='defesas'),
     path('departamentos/defesas/<str:departamento>', GraficoDefesasDepartamentos.as_view(), name='defesas'),
+
+    path('departamentos/professores', GraficoDocentesNosDepartamentos.as_view(), name='professores-proporcoes'),
+
+    path('departamentos/tipo-vinculo', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
+    path('departamentos/tipo-vinculo/<str:departamento>', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
     ]

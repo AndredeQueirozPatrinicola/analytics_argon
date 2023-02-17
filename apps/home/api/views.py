@@ -1,5 +1,4 @@
-from django.http import JsonResponse
-from rest_framework import views, viewsets
+from rest_framework import views
 from rest_framework.response import Response
 
 from apps.home.classes.etl import Etl
@@ -115,7 +114,18 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
             for coluna in kwargs.get('departamento'):
                 resultado_departamentos[coluna] = query.get(str(coluna))
 
-        return resultado_departamentos
+            return resultado_departamentos
+        
+        if kwargs.get('docente'):
+            print(kwargs.get('docente'))
+            query = Docente.objects.values(*kwargs.get('docente'))
+
+            resultado_docentes = {}
+            for coluna in kwargs.get('docente'):
+                resultado_docentes[coluna] = query.get(str(coluna))
+
+            return resultado_docentes
+
 
 #########################################
                # Filhos #
@@ -409,6 +419,82 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
                                                         '#052e70', '#7585a1', 
                                                         '#91a8cf',
                                                       ],  
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)
+        
+class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente', 'api_defesas')
+        query_docentes = Docente.objects.values('api_docentes')
+        departamentos = Departamentos(query_departamentos, query_docentes)
+        departamentos.plota_tipo_vinculo_docente()
+        dados = departamentos.plota_relacao_cursos()
+        return dados
+
+    def get_titulo(self, departamento):
+        return "Distribuição dos docentes pelos departamentos da faculdade."
+
+    def get_labels(self):
+        return ['Letras Clássicas e Vernáculas', 'Letras Modernas', 'História', 'Geografia', 'Filosofia', 'Letras Orientais', 'Sociologia', 'Lingüística', 'Antropologia', 'Ciência Política', 'Teoria Literária e Literatura Comparada']
+
+    def get(self, *args, **kwargs):
+        dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                    '#052e70',
+                                                    '#133f85',
+                                                    '#2d528d',
+                                                    '#486492',
+                                                    '#6980a7',
+                                                    '#8291ac',
+                                                    '#9faec9',
+                                                    '#969ca8',
+                                                    '#c5cad3',
+                                                    '#d6dae0',
+                                                    '#f5f6f8',
+                                                    ],  
+                                    departamento = False)
+        serializer = GraficoSerializer(dados)
+        return Response(serializer.data)
+    
+class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        if self.kwargs.get('departamento'):
+            query = self.queries(docente = ['api_docentes'])
+            departamento = DadosDepartamento(self.get_sigla())
+            dados = departamento.plota_tipo_vinculo_docente(query)
+        else:
+            query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente', 'api_defesas')
+            query_docentes = Docente.objects.values('api_docentes')
+            departamentos = Departamentos(query_departamentos, query_docentes)
+            dados = departamentos.plota_tipo_vinculo_docente()
+        return dados
+
+    def get_titulo(self, departamento):
+        if not departamento:
+            return "Proporção entre tipos de vínculo dos docentes de toda a universidade"
+        else:
+            return f"Proporção entre tipos de vínculo dos docentes do departamento de {departamento.title()}."
+
+    def get_labels(self):
+        return ['Prof Doutor', 'Prof Associado', 'Prof Titular', 'Prof Contratado III', 'Assistente', 'Prof Colab Ms-6', 'Prof Contratado II']
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['departamento']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                    '#2d528d',
+                                                    '#486492',
+                                                    '#6980a7',
+                                                    '#8291ac',
+                                                    '#9faec9',
+                                                    '#969ca8',
+                                                    '#c5cad3',
+                                                    ],
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
