@@ -3,7 +3,7 @@ from apps.home import views
 
 from rest_framework import routers
 
-from .views import GraficoRacaAPIView, GraficoSexoAPIView, GraficoPizzaSexo, GraficoPizzaRaca, GraficoProducaoHistoricaDepartamentos, GraficoProducaoDepartamentos
+from .views import *
 
 router = routers.DefaultRouter()
 
@@ -26,5 +26,8 @@ urlpatterns = [
     path('departamentos/prod-por-ano/<str:departamento>', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
 
     path('departamentos/prod-total', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
-    path('departamentos/prod-total/<str:departamento>', GraficoProducaoDepartamentos.as_view(), name='prod-total')
+    path('departamentos/prod-total/<str:departamento>', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
+
+    path('departamentos/ic-bolsa-sem', GraficoBolsaSemICePosDoc.as_view(), name='ic-bolsa-sem'),
+    path('departamentos/ic-bolsa-sem/<str:departamento>', GraficoBolsaSemICePosDoc.as_view(), name='ic-bolsa-sem'),
     ]

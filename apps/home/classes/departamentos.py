@@ -177,36 +177,15 @@ class Departamentos():
         resultado = self.trata_dados_ic(dados)
             
         df = pd.DataFrame(resultado)
-        df = df.transpose()
-        df = df.rename(columns={'ic_com_bolsa': "IC's com bolsa", 'ic_sem_bolsa': "IC's sem bolsa",
-                       'pesquisa_pos_doutorado': "Pos Doutorado com bolsa",'pesquisa_pos_doutorado_sem_bolsa': "Pos Doutorado sem bolsa"})
+        labels = ["IC com bolsa", "IC sem bolsa", 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa']
 
-        fig = Grafico()
-        fig = fig.grafico_barras(df=df, x=anos, y=["IC's com bolsa", "IC's sem bolsa", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"], barmode='group', height=400, color_discrete_map={
-                                    "IC's com bolsa": "#053787",
-                                    "IC's sem bolsa": "#264a87",
-                                    "Pos Doutorado com bolsa": "#9facc2",
-                                    "Pos Doutorado sem bolsa": "#AFAFAF"},
-                                    labels={
-                                        'x': '',
-                                        'variable': 'Legenda',
-                                }, margin=dict(
-                                    l=0, r=30, t=20, b=50), font_color="white", legend=dict(
-                                    yanchor="top",
-                                    y=0.99,
-                                    xanchor="left",
-                                    x=0.01
-                                ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-                                    linecolor='white', gridcolor='#4d4b46')
+        df = df.values.tolist()
+        x = 0
+        for element in df:
+            element.insert(0, labels[x])
+            x += 1
 
-        titulo = "Relação entre IC's e Pós Doutorado com e sem bolsas"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : fig
-        }
-
-        return resultado
+        return df
 
     def tabela_bolsas(self):
         

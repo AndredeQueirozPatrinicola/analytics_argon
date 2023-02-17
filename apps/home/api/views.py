@@ -73,14 +73,13 @@ class GraficoAPI(views.APIView):
 class GraficoPizzaAPIView(GraficoAPI):
 
     def get_datasets(self, dados, colors):
-        labels = []
         data = []
         for dado in dados:
             dado.pop(0)
             data.append(*dado)
         datasets = [
                         {
-                            "label" : "Relação MxF",
+                            "label" : "Total",
                             "data" : data,
                             "backgroundColor" : colors,
                             "borderWidth" : 1
@@ -336,5 +335,43 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
                                                         '#91a8cf',
                                                       ],  
                                        departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)
+        
+class GraficoBolsaSemICePosDoc(GraficoDepartamentosDocentesAPIView):
+
+    def get_data(self):
+        if self.kwargs.get('departamento'):
+            query = self.queries(departamento = ['api_pesquisa_parametros'])
+            departamento = DadosDepartamento(self.get_sigla())
+            dados = departamento.plota_grafico_bolsa_sem(query)
+        else:
+            query_departamentos = Departamento.objects.values('api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
+            query_docentes = Docente.objects.values('api_docentes')
+            departamentos = Departamentos(query_departamentos, query_docentes)
+            dados = departamentos.grafico_bolsa_sem()
+        return dados
+
+    def get_titulo(self, departamento):
+        if not departamento:
+            return "Projetos de Iniciação Ciêntifica e pós-doutorado com e sem bolsa de todos os departamentos"
+        else:
+            return f"Projetos de Iniciação Ciêntifica e pós-doutorado com e sem bolsa de {departamento.title()}"
+    
+    def get_labels(self):
+        return [int(ano) for ano in range(int(datetime.now().year)- 6, int(datetime.now().year))]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['departamento']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico( tipo = 'bar',colors = [
+                                                        '#052e70', '#1a448a', 
+                                                        '#425e8f', '#7585a1', 
+                                                        '#91a8cf', '#cad5e8'
+                                                      ], 
+                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)

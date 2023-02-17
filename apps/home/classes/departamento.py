@@ -168,48 +168,21 @@ class DadosDepartamento():
         return resultado
 
     def plota_grafico_bolsa_sem(self, api_pesquisa_parametros):
-        dados = api_pesquisa_parametros
+        dados = api_pesquisa_parametros.get('api_pesquisa_parametros')
 
         anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
 
         df = pd.DataFrame(dados)
-        df = df.drop(['pesquisadores_colab'])
-        df = df.transpose()
-        df = df.rename(columns={
-            "ic_com_bolsa": "IC com bolsa",
-            "ic_sem_bolsa": "IC sem bolsa",
-            'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa',
-            'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
-        })
+        df = df.drop(['pesquisadores_colab', 'projetos_pesquisa'])
+        labels = ["IC com bolsa", "IC sem bolsa", 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa']
+        df = df.values.tolist()
+        x = 0
+        for element in df:
+            element.insert(0, labels[x])
+            x += 1
 
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa', 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'],
-                           barmode='group', height=400, color_discrete_map={
-            "IC com bolsa": "#053787",
-            "IC sem bolsa": "#264a87",
-            "Pesquisas pós doutorado com bolsa": "#9facc2",
-            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"},
-            labels={
-                'x': '',
-                'variable': 'Legenda',
-        }, margin=dict(
-            l=0, r=30, t=20, b=50), font_color="white", legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
-            linecolor='white', gridcolor='#4d4b46')
-
-        titulo = f"Relação entre IC's e Pesquisas de pós-doutorado com e sem bolsa - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
-
-        return resultado
+        return df
 
     def plota_prod_serie_historica(self, api_programas_docente):
         dados = api_programas_docente.get('api_programas_docente')

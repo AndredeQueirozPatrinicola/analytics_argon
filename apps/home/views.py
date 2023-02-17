@@ -14,9 +14,6 @@ from .classes.index import Index
 from .classes.graduacao import Graduacao
 from .utils import Utils
 
-import pandas as pd
-import datetime
-
 
 class IndexView(View):
 
@@ -162,13 +159,15 @@ class DepartamentoView(View):
         numero_docentes = departamento.pega_numero_docentes(queries.get('api_programas'), queries.get('api_docentes'))
         grafico_pizza_aposentados_ativos = departamento.plota_aposentados_ativos(queries.get('api_programas'), queries.get('api_docentes'))
         grafico_pizza_tipo_vinculo = departamento.plota_tipo_vinculo_docente(queries.get('api_docentes'))
-        grafico_prod_docentes = departamento.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
+        # grafico_prod_docentes = departamento.plota_prod_departamento(queries.get('api_programas_docente_limpo'))
         # grafico_historico_prod = departamento.plota_prod_serie_historica(queries.get('api_programas_docente'))
-        grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
+        # grafico_bolsas = departamento.plota_grafico_bolsa_sem(queries.get('api_pesquisa_parametros'))
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
         tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
         grafico_defesa_mestrado_doutorado = departamento.defesas_mestrado_doutorado(queries.get('api_defesas'))
+
+        
 
         caminho = [
             {
@@ -194,9 +193,9 @@ class DepartamentoView(View):
             'tabela_defesas' : tabela_defesas,
             'grafico_aposentados_ativos': grafico_pizza_aposentados_ativos,
             'grafico_tipo_vinculo': grafico_pizza_tipo_vinculo,
-            'grafico_prod_docentes': grafico_prod_docentes,
+            # 'grafico_prod_docentes': grafico_prod_docentes,
             'tabela_bolsas': tabela_bolsas,
-            'grafico_bolsas': grafico_bolsas,
+            # 'grafico_bolsas': grafico_bolsas,
             # 'grafico_historico_prod': grafico_historico_prod,
             # Card 2 -> Programas
             'informacoes_card': programas_dpto.get('programas_dpto'),
@@ -245,33 +244,19 @@ class DepartamentosView(View):
             }
         ]
 
-        # context = {
-        #     'regulador': 'regulador',
-        #     'caminho': caminho,
-
-        #     'df_docentes': tabela_todos_docentes.get('df'),
-        #     'titulo_tabela_todos_docentes': tabela_todos_docentes.get('titulo'),
-
-        #     'grafico_relacao_cursos':  grafico_relacao_cursos,
-        #     'grafico_bolsas': grafico_bolsas,
-        #     'tabela_bolsas': tabela_bolsas,
-        #     'grafico_prod_docentes': grafico_producao_total_departamento,
-        #     'grafico_historico_prod': grafico_historico_prod,
-
-        #     'numero_docentes': numero_docentes,
-
-        #     'informacoes_card': programas_departamento.get('programas'),
-        #     'dropdown_label':  programas_departamento.get('label'),
-        #     'card_2_titulo': 'Programas da Faculdade'
-        # }
-        
         utils = Utils()
         departamentos_ = ["Geral", *list(utils.siglas_dptos.keys())]
         context = {
-            'departamentos' : departamentos_
+            'departamentos' : departamentos_,
+            'caminho' : caminho,
+
+            'card_header_1' : {
+                    'title' : numero_docentes.get('titulo'),
+                    'text' : numero_docentes.get('texto_ativos').get('total')
+            },
+
+
         }
-
-
 
         return render(request, 'home/departamentos.html', context)
 
