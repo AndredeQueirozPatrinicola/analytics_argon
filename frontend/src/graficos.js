@@ -4,14 +4,10 @@ import ChartjsPluginStacked100 from "chartjs-plugin-stacked100";
 
 Chart.register(ChartjsPluginStacked100);
 
-async function plotaGraficoDefault(element){
-  const grafico = await pegaApi(element, "geral")
-  return new Chart(element, grafico)
-}
-
 async function plotaGrafico(element, option){
   let chart = Chart.getChart(element.id)
   if(!chart){
+    const config = await pegaApi(element, "geral")
     new Chart(element, config)
   }
   else{
@@ -32,7 +28,7 @@ async function addChartListener(element){
 async function coordenaGraficos(){
   const graficos = Array.from(document.getElementsByTagName('canvas'))
   graficos.forEach(tag => {
-      plotaGraficoDefault(tag)
+      plotaGrafico(tag)
       addChartListener(tag)
   });
 }
