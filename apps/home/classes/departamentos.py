@@ -181,11 +181,12 @@ class Departamentos():
         lista_nomes = df.value_counts().index.to_list()
         nomes = [i[0] for i in lista_nomes]
         lista_valores = df.value_counts().to_list()
-        print(nomes)
+
         resultado = []
         x = 0
         for nome in nomes:
             resultado.append([nome, lista_valores[x]])
+            x += 1
 
         return resultado
 

@@ -108,7 +108,9 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 
         if kwargs.get('departamento'):
             query = Departamento.objects.filter(sigla=sigla).values()
+
             query = query[0]
+
 
             resultado_departamentos = {}
             for coluna in kwargs.get('departamento'):
@@ -117,14 +119,14 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
             return resultado_departamentos
         
         if kwargs.get('docente'):
-            print(kwargs.get('docente'))
-            query = Docente.objects.values(*kwargs.get('docente'))
+            colunas = kwargs.get('docente')
+            query = Docente.objects.values(*colunas)
 
-            resultado_docentes = {}
-            for coluna in kwargs.get('docente'):
-                resultado_docentes[coluna] = query.get(str(coluna))
+            resultado = []
+            for dado in query:
+                resultado.append(dado)
 
-            return resultado_docentes
+            return resultado
 
 
 #########################################

@@ -86,28 +86,24 @@ class DadosDepartamento():
 
     def plota_tipo_vinculo_docente(self, api_docentes):
         dados = api_docentes
+        utils = Utils()
+        departamento = utils.dptos_siglas.get(self.sigla)
 
-        print(dados)
-
-        x = 0
         nomefnc = []
-        while x < len(dados):
-            nomefnc.append(dados[x].get('nomefnc'))
-
-            x += 1
+        for dado in dados:
+            nomefnc.append(dado.get('api_docentes'))
 
         df = pd.DataFrame(nomefnc)
+        df = df.loc[df['nomset'] == departamento]
+        funcoes = df['nomefnc'].value_counts().index.to_list()
+        dados = df['nomefnc'].value_counts().to_list()
 
-        lista_nomes = df.value_counts().index.to_list()
-        nomes = [i[0] for i in lista_nomes]
-        lista_valores = df.value_counts().to_list()
-
+        resultado = [] 
         x = 0
-        resultado = []
-        for nome in nomes:
-            resultado.append([nome, lista_valores[x]])
+        for funcao in funcoes:
+            resultado.append([funcao, dados[x]])
             x += 1
-        print(nomes)
+
         return resultado
 
     def plota_prod_departamento(self, api_programas_docente_limpo):
