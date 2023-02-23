@@ -160,9 +160,8 @@ class GraficoRacaAPIView(GraficoAPI):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo = 'bar', colors = [
-                                                        '#052e70', '#1a448a', 
-                                                        '#425e8f', '#7585a1', 
-                                                        '#91a8cf', '#cad5e8'
+                                                          '#cad5e8',  '#1a448a',  '#425e8f', 
+                                                          '#7585a1', '#91a8cf', '#052e70', 
                                                       ], 
                                             stacked = True, departamento = departamento)
             serializer = GraficoSerializer(dados)
@@ -196,8 +195,8 @@ class GraficoSexoAPIView(GraficoAPI):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo = 'bar',colors = [
-                                                                '#052e70', 
                                                                 '#91a8cf', 
+                                                                '#052e70'
                                                              ], 
                                        stacked = True, departamento = departamento)
             serializer = GraficoSerializer(dados)
@@ -232,8 +231,8 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo = 'pie',colors = [
-                                                                '#052e70', 
                                                                 '#91a8cf', 
+                                                                '#052e70', 
                                                              ], 
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
@@ -267,9 +266,8 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo = 'pie', colors = [
-                                                        '#052e70', '#1a448a', 
-                                                        '#425e8f', '#7585a1', 
-                                                        '#91a8cf', '#cad5e8'
+                                                          '#cad5e8',  '#1a448a',  '#425e8f', 
+                                                          '#7585a1', '#91a8cf', '#052e70', 
                                                       ],  
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
