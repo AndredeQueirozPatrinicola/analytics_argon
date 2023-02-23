@@ -35,3 +35,42 @@ class Mapa(models.Model):
 
     def __str__(self) -> str:
         return self.nome
+
+
+class AlunosGraduacao(models.Model):
+    numeroUSP_id = models.IntegerField(primary_key=True, db_column='numeroUSP')
+    nomeAluno = models.CharField(max_length=256)
+    anoNascimento = models.IntegerField()
+    email = models.CharField(max_length=128)
+    nacionalidade = models.CharField(max_length=128)
+    cidadeNascimento = models.CharField(max_length=128)
+    estadoNascimento = models.CharField(max_length=2)
+    paisNascimento = models.CharField(max_length=128)
+    raca = models.CharField(max_length=32)
+    sexo = models.CharField(max_length=1)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'alunos_graduacao'
+
+class Graduacoes(models.Model):
+    idGraduacao = models.CharField(max_length=32, primary_key=True)
+    numeroUSP_id = models.ForeignKey(AlunosGraduacao, on_delete=models.CASCADE, db_column='numeroUSP')
+    sequenciaCurso = models.SmallIntegerField()
+    situacao = models.CharField(max_length=16)
+    dataInicioVinculo = models.DateTimeField()
+    dataFimVinculo = models.DateTimeField()
+    codigoCurso = models.IntegerField()
+    nomeCurso = models.CharField(max_length=32)
+    tipoIngresso = models.CharField(max_length=64)
+    categoriaIngresso = models.CharField(max_length=64)
+    rankIngresso = models.SmallIntegerField()
+    tipoEncerramento = models.CharField(max_length=128)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'graduacoes'
