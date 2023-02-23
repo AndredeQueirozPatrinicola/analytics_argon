@@ -88,13 +88,15 @@
 
   </div>
 
-  <div class="card-dash-3">
-    <div>
+  <div class="card-dash-3 has-childs">
+    <div class="card-dash-child">
       <div class="grafico-container">
   
         <canvas id="professores"></canvas>
   
       </div>
+    </div>
+    <div class="card-dash-child">
       <div class="select-container">
         <select class="select-grafico tipo-vinculo">
           {% for departamento in departamentos %}

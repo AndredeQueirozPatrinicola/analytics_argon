@@ -327,6 +327,24 @@ ul, ol, li, input, hr{
     min-width: 100%;
 }
 
+.has-childs{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: none !important;
+}
+
+.card-dash-child{
+    border-radius: 5px;
+    min-height: 25rem;
+    background-color: #fff;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
+
+.card-dash-child:first-child{
+    margin-bottom: 1rem;
+}
+
 
 .select-container{
     min-height: 3rem;
@@ -354,6 +372,8 @@ ul, ol, li, input, hr{
     justify-content: center;
     align-items: center;
 }
+
+
 
 
 /* Responsividade !! */
