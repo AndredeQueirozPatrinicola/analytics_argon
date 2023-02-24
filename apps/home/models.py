@@ -94,7 +94,7 @@ class Habilitacoes(models.Model):
 
 class QuestionarioQuestoes(models.Model):
     idQuestao = models.CharField(max_length=12, primary_key=True)
-    codigoAlternativa = models.SmallIntegerField(primary_key=True)
+    codigoAlternativa = models.SmallIntegerField()
     descricaoQuestao = models.CharField(max_length=512)
     descricaoAlternativa = models.CharField(max_length=102)
     created_at = models.DateTimeField()
