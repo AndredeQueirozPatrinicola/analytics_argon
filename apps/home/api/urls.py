@@ -3,13 +3,18 @@ from apps.home import views
 
 from rest_framework import routers
 
-from .views import *
+from .graficos import *
 
 router = routers.DefaultRouter()
 
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    ##########################################
+    ##               GRAFICOS               ##
+    ##########################################
+
     path('graduacao/raca-por-ano', GraficoRacaAPIView.as_view(), name='raca'),
     path('graduacao/raca-por-ano/<str:graduacao>', GraficoRacaAPIView.as_view(), name='raca'),
 
@@ -38,4 +43,10 @@ urlpatterns = [
 
     path('departamentos/tipo-vinculo', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
     path('departamentos/tipo-vinculo/<str:departamento>', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
+
+
+    ##########################################
+    ##              TABELAS                 ##
+    ##########################################
+
     ]
