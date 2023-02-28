@@ -131,11 +131,12 @@ class ApiDepartamento:
 
         return api_programas_docentes_limpo
 
-    def atualiza_ou_cria_departamento(self, api_docentes, api_programas, api_pesquisa_vazio, api_pesquisa_parametros,api_defesas,api_programas_docentes,api_programas_docentes_limpo):
+    def atualiza_ou_cria_departamento(self, sigla, api_docentes, api_programas, api_pesquisa_vazio, api_pesquisa_parametros,api_defesas,api_programas_docentes,api_programas_docentes_limpo):
         departamento = Departamento.objects.filter(sigla=self.sigla)
 
         if departamento.exists():
             departamento.update(
+                sigla=sigla,
                 api_docentes=api_docentes,
                 api_programas=api_programas, 
                 api_pesquisa=api_pesquisa_vazio, 
@@ -147,6 +148,7 @@ class ApiDepartamento:
             print("Dados atualizados com sucesso")
         else:
             departamento = Departamento(
+                sigla=sigla,
                 api_docentes=api_docentes,
                 api_programas=api_programas, 
                 api_pesquisa=api_pesquisa_vazio, 
