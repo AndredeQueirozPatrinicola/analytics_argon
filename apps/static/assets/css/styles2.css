@@ -4,6 +4,7 @@
     padding: 0;
     margin: 0;
     padding: 0;
+    text-decoration: none;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -330,7 +331,6 @@ ul, ol, li, input, hr{
 .has-childs{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     box-shadow: none !important;
 }
 
@@ -342,9 +342,8 @@ ul, ol, li, input, hr{
 }
 
 .card-dash-child:first-child{
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
-
 
 .select-container{
     min-height: 3rem;
@@ -373,6 +372,52 @@ ul, ol, li, input, hr{
     align-items: center;
 }
 
+.table-container, .table-content{
+    width: 100%;
+}
+
+.table-container > div > div:first-child{
+    display: flex;
+    align-items: center;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+    color: #525f7f;
+}
+
+.table-container > div > div:last-child{
+    display: flex;
+    align-items: center;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+    color: #525f7f;
+}
+
+.table-row-header{
+    height: 2rem;
+    background-color: #f6f9fc;
+    color: #8898aa;
+    font-size: 0.9rem;
+}
+
+th, td{
+    padding: 1rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.celula-simples{
+    color: #525f7f;
+}
+
+.lattes-logo{
+    text-align: center;
+    color: #446395;
+}
+
+.nome-lattes{
+    text-decoration: none;
+    color: #446395;
+}
 
 
 

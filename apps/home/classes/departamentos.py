@@ -143,12 +143,12 @@ class Departamentos():
 
         titulo = 'Todos os docentes da faculdade'
 
-        resultado = {
-            'titulo' : titulo,
-            'df' : df
-        }
+        # resultado = {
+        #     'titulo' : titulo,
+        #     'df' : df
+        # }
 
-        return resultado
+        return df
 
     def plota_relacao_cursos(self):
         dados = self.api_docentes
@@ -353,3 +353,13 @@ class Departamentos():
         ]
 
         return resultado
+    
+    def tabela_defesas(self):
+        dados = self.api_defesas
+        dfs = []
+        for dado in dados:
+            dfs.append(pd.DataFrame(dado))
+        df = pd.concat(dfs, ignore_index=True)
+        df = df[['titulo', 'nome', 'nivel', 'nomare', 'data']]
+        df = df.drop_duplicates()
+        return df

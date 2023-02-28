@@ -1,45 +1,34 @@
-<div class="col-xl-8">
-    <div class="card">
-      <div class="card-header border-0">
-        <div class="row align-items-center">
-          <p class='titulo-tabela titulo-tabela-defesas'>{{ tabela_defesas.titulo }}</p>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table align-items-center table-flush" id="tabela-defesas">
-          <thead class="thead-light">
-            
-            <tr>
-              {% for item in tabela_defesas.headers %}
-                <th scope="col">{{ item }}</th>
-              {% endfor %}
-            </tr>
-            
-          </thead>
-          <tbody>
-                {% for tabela in tabela_defesas.tabela %}
-                <tr>
-                  {% for item in tabela %}
-                  <td style="white-space: normal;">
-                    {% if item == tabela|first %}
-                      {% if tabela.2 == 'ME' %}
-                        <a href="{{ tabela_defesas.link_mestrado|add:item }}" target="_blank">
-                          {{ item }}
-                        </a>
-                      {% else %}
-                        <a href="{{ tabela_defesas.link_doutorado|add:item }}" target="_blank">
-                          {{ item }}
-                        </a>
-                      {% endif %}
-                    {% else %}
-                      {{ item }}
-                    {% endif %}
-                  </td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<div class="table-container">
+  <table class="table-content" id="tabelas-defesas-06">
+      <thead class="">
+          <tr class="table-row-header">
+              <th>Titulo</th>
+              <th>Nome</th>
+              <th>Nivel</th>
+              <th>Programa</th>
+              <th>Data</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for index, row in df_defesas.iterrows %}
+          <tr>
+             <td class="nome-lattes">
+                {{ row.titulo }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nome }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nivel }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nomare }}
+             </td>
+             <td class="celula-simples">
+                {{ row.data }}
+             </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>

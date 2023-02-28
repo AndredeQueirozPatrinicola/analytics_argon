@@ -221,7 +221,8 @@ class DepartamentosView(View):
         tabela_todos_docentes = departamentos.tabela_todos_docentes()
         tabela_bolsas = departamentos.tabela_bolsas()
         programas_departamento = departamentos.pega_programas()
-
+        tabela_defesas = departamentos.tabela_defesas()
+        
 
         caminho = [
             {
@@ -239,8 +240,8 @@ class DepartamentosView(View):
                     'title' : numero_docentes.get('titulo'),
                     'text' : numero_docentes.get('texto_ativos').get('total')
             },
-
-
+            'df_docentes' : tabela_todos_docentes,
+            'df_defesas' : tabela_defesas
         }
 
         return render(request, 'home/departamentos.html', context)

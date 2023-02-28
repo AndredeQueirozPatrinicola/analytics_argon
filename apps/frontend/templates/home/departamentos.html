@@ -39,32 +39,7 @@
 </div>
 
 <div class="dashboard-row">
-  <div class="card-dash-3">
-
-  </div>
-  <div class="card-dash-6">
-    <div class="select-container">
-      <select class="select-grafico ic-bolsa-sem">
-        {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="grafico-container">
-
-      <canvas id="ic-bolsa-sem"></canvas>
-
-    </div>
-  </div>
-
-</div>
-
-<div class="dashboard-row">
   
-  <div class="card-dash-6">
-
-  </div>
-
   <div class="card-dash-3">
     <div class="select-container">
       <select class="select-grafico defesas">
@@ -80,11 +55,19 @@
     </div>
   </div>
 
+  <div class="card-dash-6">
+
+    {% include 'includes/tabelas/tabela_defesas.html' %}
+
+  </div>
+
 </div>
 
 <div class="dashboard-row">
   
   <div class="card-dash-6">
+    
+    {% include 'includes/tabelas/tabela_todos_docentes.html' %}
 
   </div>
 

@@ -1,5 +1,8 @@
-import getHostApi from "./host";
-
+async function getHostApi(){
+    const pathName = window.location.pathname
+    const apiUrl = `/api${pathName}`
+    return apiUrl
+}
 async function pegaApi(element, apiNome = ""){
     try {
         let apiUrl = await getHostApi();   

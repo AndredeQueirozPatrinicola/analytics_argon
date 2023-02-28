@@ -246,7 +246,6 @@ class DadosDepartamento():
 
         resultado = []
         for defesa in api_defesas:
-            
             codigo_departamento = defesa.get('codare')
             verifica_departamento = utils.pega_departamento_programa(codigo_departamento)
 
