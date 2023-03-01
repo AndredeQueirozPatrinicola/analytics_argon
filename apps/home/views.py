@@ -283,6 +283,59 @@ class GraduacaoViews(View):
         }
 
         return render(request, 'home/graduacao.html', context)
+    
+class Docente2View(View):
 
+    def queries(self, numero_lattes):
+        try:
+            querie = Docente.objects.filter(docente_id=numero_lattes).values()
+            querie = querie[0]
+
+            api_docente = querie.get('api_docente')
+            api_programas = querie.get('api_programas')
+            api_docentes = querie.get('api_docentes')
+        except:
+            docente = ApiDocente(numero_lattes)
+            api_programas = docente.pega_api_programas()
+            api_docente = docente.pega_api_docente()
+            api_docentes = docente.pega_api_docentes()
+
+        queries = {
+            'api_docente' : api_docente,
+            'api_programas' : api_programas,
+            'api_docentes' : api_docentes
+        }
+
+        return queries
+
+    def get(self, request, *args, **kwargs):
+        
+        if numerolattes:=self.kwargs.get('docente'):
+            docente = DadosDocente(numerolattes)
+            queries = self.queries(numerolattes)
+
+            api_docente = queries.get('api_docente')
+            api_programas = queries.get('api_programas')  
+            api_docentes = queries.get('api_docentes')
+
+            caminho = docente.pega_caminho(api_programas, api_docentes)
+            cards = docente.pega_informacoes_basicas(api_programas, api_docentes, novo="novo")
+            tabela_orientandos = docente.tabela_orientandos(api_docente)
+            tabela_publicacoes = docente.tabela_ultimas_publicacoes(api_docente)
+
+            context = {
+                'caminho' : caminho,
+                'card_header_1' :  cards.get('card_header_1'),
+                'card_header_2' :  cards.get('card_header_2'),
+                'card_header_3' :  cards.get('card_header_3'),
+                'card_header_4' :  cards.get('card_header_4'),
+                'tabela_orientandos' : tabela_orientandos,
+                'tabela_publicacoes' : tabela_publicacoes
+            } 
+
+
+            return render(request, 'home/_docente.html', context)
+        else:
+            return render(request, 'home/_docentes.html', context)
 
 

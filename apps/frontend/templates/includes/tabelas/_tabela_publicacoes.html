@@ -1,0 +1,21 @@
+<div class="table-container">
+    <table class="table-content">
+        <thead class="">
+            <tr class="table-row-header">
+                <th>{{ tabela_publicacoes.tabela_infos.titulo_trabalho }}</th>
+                <th>{{ tabela_publicacoes.tabela_infos.ano }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in tabela_publicacoes.publicacoes %}
+                <tr>
+                    {% for item in row %}
+                        <td class="celula-simples">
+                            {{ item }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

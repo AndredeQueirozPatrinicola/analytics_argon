@@ -328,6 +328,10 @@ ul, ol, li, input, hr{
     min-width: 100%;
 }
 
+.dark-card-dash{
+    background-color: #172b4d;
+}
+
 .has-childs{
     display: flex;
     flex-direction: column;
@@ -419,6 +423,19 @@ th, td{
     color: #446395;
 }
 
+.active > .page-link{
+    background-color: #042e6f !important;
+    border: #042e6f;
+}
+
+.page-link{
+    color: #042e6f;
+}
+
+.page-item .page-link{
+    border-radius: 10rem !important;
+    margin-right: 12px;
+}
 
 
 /* Responsividade !! */

@@ -14,7 +14,11 @@ urlpatterns = [
 
     path('departamentos/', views.DepartamentosView.as_view(), name='departamentos'),
 
-    path('graduacao/', views.GraduacaoViews.as_view(), name='graduacao'),
+    path('graduacao/', views.GraduacaoViews .as_view(), name='graduacao'),
+
+    path('docentes/', views.Docente2View.as_view(), name='docentes'),
+
+    path('docentes/<str:docente>', views.Docente2View.as_view(), name='graduacao-docente'),
 
     path('departamentos/<str:sigla>', views.DepartamentoView.as_view(), name='docentes'),
 

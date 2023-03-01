@@ -1,0 +1,41 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+
+{% block content %}
+
+    <div class="dashboard-row">
+        <div class="card-dash-6 dark-card-dash">
+
+        </div>
+
+        <div class="card-dash-3">
+
+            {% include 'includes/tabelas/_tabela_publicacoes.html' %}
+
+        </div>
+    </div>
+
+    <div class="dashboard-row">
+        <div class="card-dash-6">
+
+            {% include 'includes/tabelas/_tabela_orientandos.html' %}
+
+        </div>
+        <div class="card-dash-3">
+            <div class="grafico-container">
+                <canvas id="orientandos"></canvas>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}
