@@ -13,20 +13,45 @@ API_PROGRAMAS = API + 'programas/'
 
 class DadosDocente():
 
-    def __init__(self, numero_lattes, sigla):
+    def __init__(self, numero_lattes, sigla = ""):
         self.numero_lattes = numero_lattes
         self.sigla = sigla
 
 
-    def pega_informacoes_basicas(self, dados, dados_nome):
+    def pega_informacoes_basicas(self, dados, dados_nome, novo = ""):
         caminho = self.pega_caminho(dados, dados_nome)
 
-        docente = [{
-                    'nome': caminho[1].get('text'),
-                    'programa': '',
-                    'departamento': '',
-                    'link_lattes': 'http://lattes.cnpq.br/' + self.numero_lattes
-                   }]
+        if novo:
+            vinculo_situacao = self.pega_vinculo_situacao(dados_nome)
+            vinculo = vinculo_situacao.get('vinculo')
+            situacao = vinculo_situacao.get('situacao')
+
+            docente = {
+                    "card_header_1" : {
+                        "title" : "NOME / LATTES",
+                        "text" : False
+                    },
+                    "card_header_2" : {
+                        "title" : "Linhas de Pesquisa",
+                        "text" : False
+                    },
+                    "card_header_3" : {
+                        'title' : "Tipo de Vinculo",
+                        "text" : vinculo
+                    },
+                     "card_header_4" : {
+                        "title" : "Situacao Atual",
+                        "text" :  situacao
+                    }
+                }
+
+        else:
+            docente = [{
+                        'nome': caminho[1].get('text'),
+                        'programa': '',
+                        'departamento': '',
+                        'link_lattes': 'http://lattes.cnpq.br/' + self.numero_lattes
+                    }]
 
         return docente
 
@@ -81,12 +106,13 @@ class DadosDocente():
 
             Retorna lista de dicionários com caminho
         """
-        try:
-            self.nome_departamento = dados.get('nome')
 
+        try:
+            self.nome_departamento = dados[0].get('nome')
         except:
             res = requests.get(url=API_PROGRAMAS)
             dados = res.json()
+            print(dados)
 
             for i in dados['departamentos']:
                 if i['sigla'] == self.sigla:
@@ -156,7 +182,7 @@ class DadosDocente():
             nivpgm = list(df['nivpgm'])
             tipos = ['ME', 'DO', "DD"]
 
-            nivel = []
+            resultado = []
             x, y, z = 0, 0, 0
             for i in nivpgm:
                 if i == 'ME':
@@ -166,24 +192,9 @@ class DadosDocente():
                 if i == "DD":
                     z += 1
 
-            nivel.append(x)
-            nivel.append(y)
-            nivel.append(z)
-
-            figura = Grafico()
-
-            figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
-                        color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
-                        labels={
-                            'values': 'Valor',
-                            'names': 'Tipo',
-                            'color': 'Cor'
-                        }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
-
-            resultado = {
-                'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
-                'grafico' : figura
-            }
+            resultado.append(["ME", x])
+            resultado.append(["DO", y])
+            resultado.append(["DD", z])
 
             return resultado
         except:
@@ -197,7 +208,6 @@ class DadosDocente():
             retorna tabela com nome de todos os orientandos de Mestrado, Doutorado e Doutorado Direto
         """
         try:
-
             df = pd.DataFrame(dados['orientandos'])
             nomep = list(df['nompes'])
             nivpgm = list(df['nivpgm'])
@@ -215,7 +225,7 @@ class DadosDocente():
                     'nivel' : 'Nivel',
                     'programa' : 'Programa'
                 }
-
+            
             tabela = {
                 'tabela_infos' : tabela_infos,
                 'tabela_conteudo' : resultado

@@ -6,10 +6,12 @@ async function getHostApi(){
 async function pegaApi(element, apiNome = ""){
     try {
         let apiUrl = await getHostApi();   
+        console.log(apiUrl)
         apiUrl = apiUrl + element.id 
         if(apiNome != "geral"){
           apiUrl = apiUrl + '/' + apiNome;  
         }
+        console.log(apiUrl)
         const apiResponse = await fetch(apiUrl);
         const api = await apiResponse.json();
         return api;

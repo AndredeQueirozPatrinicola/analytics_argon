@@ -6,6 +6,7 @@ from apps.home.utils import Utils
 from apps.home.models import Docente
 from apps.home.classes.departamento import DadosDepartamento, Departamento
 from apps.home.classes.departamentos import Departamentos
+from apps.home.classes.docente import DadosDocente
 
 from .serializers import GraficoSerializer
 
@@ -483,6 +484,38 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
     def get(self, *args, **kwargs):
         try:
             departamento = self.kwargs['departamento']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                    '#2d528d',
+                                                    '#486492',
+                                                    '#6980a7',
+                                                    '#8291ac',
+                                                    '#9faec9',
+                                                    '#969ca8',
+                                                    '#c5cad3',
+                                                    ],
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)
+        
+class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        query = self.queries(docente = ['api_docente'])
+        docente = DadosDocente(self.kwargs.get('docente'))
+        return docente.plota_grafico_orientandos(query.get('api_docente'))
+
+    def get_titulo(self, departamento):
+        return f"Proporção entre os níveis de pós-graduação dos orientandos."
+
+    def get_labels(self):
+        return ['Mestrado', "Doutorado", "Doutorado Direto"]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['docente']
         except:
             departamento = False
         finally:
