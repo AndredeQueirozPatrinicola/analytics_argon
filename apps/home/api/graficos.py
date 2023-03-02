@@ -1,9 +1,12 @@
 from rest_framework import views
 from rest_framework.response import Response
+from django.db.models import Count
+from django.db.models.functions import ExtractYear
+from django.db.models import Q, Count, Case, When, Sum, IntegerField
 
 from apps.home.classes.etl import Etl
 from apps.home.utils import Utils
-from apps.home.models import Docente
+from apps.home.models import *
 from apps.home.classes.departamento import DadosDepartamento, Departamento
 from apps.home.classes.departamentos import Departamentos
 from apps.home.classes.docente import DadosDocente
@@ -137,11 +140,13 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 class GraficoRacaAPIView(GraficoAPI):
 
     def get_data(self):
-        if self.kwargs.get('graduacao'):
-            dados = self.etl.pega_dados_por_ano("raca", order_by='raca', where=self.kwargs['graduacao'])
+        if graduacao:=self.kwargs.get('graduacao'):
+            resultado = self.etl.pega_dados_por_ano('raca', order_by='raca', where=graduacao)
         else:
-            dados = self.etl.pega_dados_por_ano("raca", order_by='raca')
-        dados = pd.DataFrame(dados)
+            resultado = self.etl.pega_dados_por_ano('raca', order_by='raca')
+            
+        dados = pd.DataFrame(resultado)
+        dados = dados.fillna(0)
         dados = dados.values.tolist()
         return dados
 
@@ -172,8 +177,8 @@ class GraficoRacaAPIView(GraficoAPI):
 class GraficoSexoAPIView(GraficoAPI):
 
     def get_data(self):
-        if self.kwargs.get('graduacao'):
-            dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo', where=self.kwargs['graduacao'])
+        if graduacao:=self.kwargs.get('graduacao'):
+            dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo', where=graduacao)
         else:
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo')
         dados = pd.DataFrame(dados)
@@ -207,12 +212,16 @@ class GraficoSexoAPIView(GraficoAPI):
 class GraficoPizzaSexo(GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('graduacao'):
-            dados = self.etl.query_teste('sexo', self.kwargs['graduacao'])
+        if graduacao:=self.kwargs.get('graduacao'):
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo', alunos_graduacao__nomeCurso=graduacao).values('sexo').annotate(count=Count('*'))
         else:
-            dados = self.etl.query_teste('sexo')
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo').values('sexo').annotate(count=Count('*'))
+        
+        resultado = []
+        for dado in dados:
+            resultado.append([dado.get('sexo'), dado.get('count')])
 
-        dados = pd.DataFrame(dados)
+        dados = pd.DataFrame(resultado)
         dados = dados.values.tolist()
         return dados
 
@@ -232,8 +241,8 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo = 'pie',colors = [
-                                                                '#91a8cf', 
-                                                                '#052e70', 
+                                                                '#91a8cf',
+                                                                '#052e70'  
                                                              ], 
                                        departamento = departamento)
             serializer = GraficoSerializer(dados)
@@ -242,12 +251,16 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
 class GraficoPizzaRaca(GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('graduacao'):
-            dados = self.etl.query_teste('raca', self.kwargs['graduacao'])
+        if graduacao:=self.kwargs.get('graduacao'):
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo', alunos_graduacao__nomeCurso=graduacao).values('raca').annotate(count=Count('*')).order_by('raca')
         else:
-            dados = self.etl.query_teste('raca')
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo').values('raca').annotate(count=Count('*')).order_by('raca')
+        
+        resultado = []
+        for dado in dados:
+            resultado.append([dado.get('raca'), dado.get('count')])
 
-        dados = pd.DataFrame(dados)
+        dados = pd.DataFrame(resultado)
         dados = dados.values.tolist()
         return dados
 
