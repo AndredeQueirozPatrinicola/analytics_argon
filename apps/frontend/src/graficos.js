@@ -7,7 +7,7 @@ Chart.register(ChartjsPluginStacked100);
 async function plotaGrafico(element, option){
   let chart = Chart.getChart(element.id)
   if(!chart){
-    const config = await pegaApi(element, "geral")
+    const config = await pegaApi(element, option)
     new Chart(element, config)
   }
   else{

@@ -3,15 +3,13 @@ async function getHostApi(){
     const apiUrl = `/api${pathName}`
     return apiUrl
 }
-async function pegaApi(element, apiNome = ""){
+async function pegaApi(element, apiNome){
     try {
         let apiUrl = await getHostApi();   
-        console.log(apiUrl)
         apiUrl = apiUrl + element.id 
-        if(apiNome != "geral"){
+        if(apiNome && apiNome != 'geral'){
           apiUrl = apiUrl + '/' + apiNome;  
         }
-        console.log(apiUrl)
         const apiResponse = await fetch(apiUrl);
         const api = await apiResponse.json();
         return api;

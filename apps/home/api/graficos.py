@@ -516,8 +516,9 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        query = self.queries(docente = ['api_docente'])
         docente = DadosDocente(self.kwargs.get('docente'))
+        query = Docente.objects.filter(docente_id=self.kwargs.get('docente')).values('api_docente')
+        query = query[0]
         return docente.plota_grafico_orientandos(query.get('api_docente'))
 
     def get_titulo(self, departamento):
@@ -539,6 +540,38 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
                                                     '#8291ac',
                                                     '#9faec9',
                                                     '#969ca8',
+                                                    '#c5cad3',
+                                                    ],
+                                       departamento = departamento)
+            serializer = GraficoSerializer(dados)
+            return Response(serializer.data)
+        
+class GraficoProducaoHistoricaDocente(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+
+    def get_data(self):
+        docente = DadosDocente(self.kwargs.get('docente'))
+        query = Docente.objects.filter(docente_id=self.kwargs.get('docente')).values('api_docente')
+        query = query[0]
+        return docente.plota_grafico_historico(self.kwargs.get('tipo') , query.get('api_docente'))
+
+    def get_titulo(self, departamento):
+        return f"Produção histórica de {self.kwargs.get('tipo').capitalize()} do docente."
+
+    def get_labels(self):
+        data = self.get_data()
+        ano_ini = data[0][0]
+        anos = [ano for ano in range(ano_ini, int(datetime.now().year + 1))]
+        return anos   
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.kwargs['docente']
+        except:
+            departamento = False
+        finally:
+            dados = self.plota_grafico(tipo = 'pie', colors = [
+                                                    '#486492',
+                                                    '#9faec9',
                                                     '#c5cad3',
                                                     ],
                                        departamento = departamento)

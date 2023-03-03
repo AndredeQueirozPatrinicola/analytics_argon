@@ -9,6 +9,7 @@ from apps.home.classes.graficos import Grafico
 
 API = 'https://dados.fflch.usp.br/api/'
 API_PROGRAMAS = API + 'programas/'
+API_DOCENTES = API + 'docentes'
 
 
 class DadosDocente():
@@ -110,13 +111,12 @@ class DadosDocente():
         try:
             self.nome_departamento = dados[0].get('nome')
         except:
-            res = requests.get(url=API_PROGRAMAS)
+            res = requests.get(url=API_DOCENTES)
             dados = res.json()
-            print(dados)
-
-            for i in dados['departamentos']:
-                if i['sigla'] == self.sigla:
-                    self.nome_departamento = i['nome']
+            
+            for dado in dados:
+                if dado.get('id_lattes') == self.numero_lattes:
+                    self.nome_departamento = dado.get('nomset')            
 
         caminho = [
             {
@@ -143,31 +143,13 @@ class DadosDocente():
             ano_sortado = ano.sort_index(ascending=True)
             df = pd.DataFrame(ano_sortado)
 
-            anos = {}
-
+            resultado = []
             for i in range(int(df.index[0]), int(datetime.now().year) + 1):
-
                 try:
-                    anos[str(i)] = list(df.loc[(str(i))])[0]
+                    resultado.append([str(i), list(df.loc[(str(i))])[0]]) 
                 except:
-                    anos[str(i)] = 0
-
-            df = pd.DataFrame.from_dict(anos, orient='index')
-            eixo_x = df.index
-
-            grafico = Grafico()
-            grafico = grafico.grafico_linhas(df=df, x=eixo_x, y=0, height=390, labels={
-                'index': '',
-                '0': ''
-            }, margin=dict(l=0, r=30, t=20, b=50), font_color="white", showlegend=False, linecolor='#747474', gridcolor='#4d4d4d')
-
-            resultado = {
-                'titulo': f'Produção de {tipo} por ano ({df.index[0]}-{str(datetime.now().year)})',
-                'categoria': tipo,
-                'grafico' : grafico
-            }
-
-            return resultado
+                    resultado.append([str(i), 0])    
+            return resultado     
         except:
             return None
 
@@ -177,10 +159,13 @@ class DadosDocente():
             e retorna um grafico de pizza com a proporção entre orientandos de Mestrado, Doutorado e Doutorado Direto.
         """
         try:
-            df = pd.DataFrame(dados['orientandos'])
+            try:
+                dados.get('api_docentes')
+            except:
+                pass
 
+            df = pd.DataFrame(dados['orientandos'])
             nivpgm = list(df['nivpgm'])
-            tipos = ['ME', 'DO', "DD"]
 
             resultado = []
             x, y, z = 0, 0, 0
