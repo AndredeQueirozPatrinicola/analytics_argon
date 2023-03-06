@@ -7,6 +7,8 @@ async function pegaApi(element, apiNome){
     try {
         let apiUrl = await getHostApi();   
         apiUrl = apiUrl + element.id 
+        console.log(apiUrl)
+        console.log(apiNome)
         if(apiNome && apiNome != 'geral'){
           apiUrl = apiUrl + '/' + apiNome;  
         }

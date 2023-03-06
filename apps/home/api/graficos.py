@@ -17,6 +17,7 @@ import pandas as pd
 
 from datetime import datetime
 
+""" Classes pais que possuem os metodos que não mudam tanto. """
 class GraficoAPI(views.APIView):
 
     def __init__(self, **kwargs) -> None:
@@ -85,6 +86,7 @@ class GraficoPizzaAPIView(GraficoAPI):
                             "label" : "Total",
                             "data" : data,
                             "backgroundColor" : colors,
+                            "borderColor" : colors,
                             "borderWidth" : 1
                         }
                     ]
@@ -133,10 +135,7 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
             return resultado
 
 
-#########################################
-               # Filhos #
-#########################################
-
+""" Classes filhas que modificam os métodos de acordo com a necessidade de cada grafico """
 class GraficoRacaAPIView(GraficoAPI):
 
     def get_data(self):
@@ -546,34 +545,37 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         
-class GraficoProducaoHistoricaDocente(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
+class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
 
     def get_data(self):
         docente = DadosDocente(self.kwargs.get('docente'))
         query = Docente.objects.filter(docente_id=self.kwargs.get('docente')).values('api_docente')
         query = query[0]
-        return docente.plota_grafico_historico(self.kwargs.get('tipo') , query.get('api_docente'))
+        if tipo:=self.kwargs.get('tipo'):
+            return docente.plota_grafico_historico(tipo , query.get('api_docente'))
+        else:
+            return docente.plota_grafico_historico('artigos', query.get('api_docente'))
 
     def get_titulo(self, departamento):
-        return f"Produção histórica de {self.kwargs.get('tipo').capitalize()} do docente."
+        if tipo:=self.kwargs.get('tipo'):
+            return f"Produção histórica de {self.kwargs.get('tipo').capitalize()} do docente."
+        else:
+            return f"Produção histórica de livros do docente."
 
     def get_labels(self):
         data = self.get_data()
         ano_ini = data[0][0]
-        anos = [ano for ano in range(ano_ini, int(datetime.now().year + 1))]
-        return anos   
+        return [int(ano) for ano in range(int(ano_ini), int(datetime.now().year) + 1)]   
 
     def get(self, *args, **kwargs):
         try:
-            departamento = self.kwargs['docente']
-        except:
-            departamento = False
-        finally:
-            dados = self.plota_grafico(tipo = 'pie', colors = [
-                                                    '#486492',
-                                                    '#9faec9',
-                                                    '#c5cad3',
+            docente = self.kwargs['docente']
+            dados = self.plota_grafico(tipo = 'line', colors = [
+                                                    '#97bde8'
                                                     ],
-                                       departamento = departamento)
+                                        departamento = docente)
+
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
+        except:
+            return Response({'error' : 406})
