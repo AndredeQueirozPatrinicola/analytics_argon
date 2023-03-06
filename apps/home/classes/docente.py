@@ -26,11 +26,14 @@ class DadosDocente():
             vinculo_situacao = self.pega_vinculo_situacao(dados_nome)
             vinculo = vinculo_situacao.get('vinculo')
             situacao = vinculo_situacao.get('situacao')
-
+            lattes_icon = f"""<a href='http://lattes.cnpq.br/{self.numero_lattes}' target='_blank' >
+                                <i class='ai ai-lattes ai-2x f-20 nome-lattes'></i>
+                            </a>
+                          """
             docente = {
                     "card_header_1" : {
-                        "title" : "NOME / LATTES",
-                        "text" : False
+                        "title" : "LATTES",
+                        "text" : lattes_icon
                     },
                     "card_header_2" : {
                         "title" : "Linhas de Pesquisa",
