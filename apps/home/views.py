@@ -41,7 +41,7 @@ class IndexView(View):
             'tabela_mapa' : tabela_mapa,
         }
 
-        html_template = loader.get_template('home/index.html')
+        html_template = loader.get_template('home/_index.html')
         return HttpResponse(html_template.render(context, request))
 
 

@@ -1,3 +1,26 @@
+{% load static %}
+
+{% if landingpage %}
+<div class="landing-header">
+    <!-- Landing page "/" -->
+    <div class="logo-usp-fflch-row">
+        <div class="logo-fflch-analytics">
+            <a class="logo-fflch-link" target="_blank" href="https://www.fflch.usp.br">
+                <img src="{% static 'assets/img/brand/fundoazul.png' %}" class="logo-fflch">
+            </a>
+            <div class="logo-analytics">
+                <span class="analytics-logo-title">FACULDADE DE FILOSOFIA LETRAS E CIÊNCIAS HUMANAS</span>
+                <span class="analytics-logo-subtitle">Analytics</span>
+            </div>
+        </div>
+        <div class="logo-usp">
+            <a href="https://www5.usp.br/" target="_blank">
+                <img src="{% static 'assets/img/brand/usplogo.png' %}" class="img-logo-usp">
+            </a>
+        </div>
+    </div>
+</div>
+{% else %}
 <div class="header">
     <div class="caminho-header">
         <div class="caminho-box">
@@ -71,3 +94,4 @@
         </div>
     </div>
 </div>
+{% endif %}
