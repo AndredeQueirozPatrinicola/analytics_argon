@@ -415,9 +415,9 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Proporção entre alunos de Mestrado, Doutorado e Doutorado Direto de toda a faculdade."
+            return "Proporção entre alunos de pós-graduação que realizaram defesas em 2022"
         else:
-            return f"Proporção entre alunos de Mestrado, Doutorado e Doutorado Direto no departamento de {departamento.title()}."
+            return f"Proporção entre alunos de pós-graduação no departamento de {departamento.title()} que realizaram defesas em 2022."
 
     def get_labels(self):
         return ["Mestrado", "Doutorado", "Doutorado Direto"]

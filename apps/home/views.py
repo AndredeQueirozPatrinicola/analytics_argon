@@ -20,10 +20,9 @@ class IndexView(View):
     def get(self, request):
         index = Index()
         try:
-            globo, quantidade_alunos_sp = index.plota_mapa()
-        except:
             globo = index.plota_mapa()
-            quantidade_alunos_sp = None
+        except:
+            globo = None
 
         menu_nav_table, titulo_menu = index.tabela_sobrenos()
         tabela_mapa = index.tabela_alunos_estados()
@@ -37,7 +36,6 @@ class IndexView(View):
             'menu_table': menu_nav_table,
 
             'globo': globo,
-            'quantidade_alunos_sp' : quantidade_alunos_sp,
             'tabela_mapa' : tabela_mapa,
         }
 
