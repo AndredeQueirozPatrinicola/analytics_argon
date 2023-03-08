@@ -148,9 +148,7 @@ class DepartamentoView(View):
         return queries
     
     def get(self, request, sigla):
-
         departamento = DadosDepartamento(sigla)
-
         queries = self.queries(sigla)
 
         tabela_docentes = departamento.tabela_docentes(queries.get('api_programas'), queries.get('api_docentes'))
@@ -158,8 +156,6 @@ class DepartamentoView(View):
         tabela_bolsas = departamento.tabela_trabalhos(queries.get('api_pesquisa'))
         programas_dpto = departamento.pega_programa_departamento()
         tabela_defesas = departamento.pega_tabela_defesas(queries.get('api_defesas'))
-
-        
 
         caminho = [
             {
@@ -217,10 +213,7 @@ class DepartamentosView(View):
 
         numero_docentes = departamentos.pega_numero_docentes()
         tabela_todos_docentes = departamentos.tabela_todos_docentes()
-        tabela_bolsas = departamentos.tabela_bolsas()
-        programas_departamento = departamentos.pega_programas()
         tabela_defesas = departamentos.tabela_defesas()
-        
 
         caminho = [
             {
@@ -248,22 +241,13 @@ class DepartamentosView(View):
 class SobrenosView(View):
 
     def get(self, request):
-        menu_nav_table = [
-            {
-                'titulo': 'Sobre nós',
 
-                'text1': 'Sobre o projeto',
 
-                'text2': 'Portal de dados',
-
-                'text3': 'Escritório de apoio institucional ao pesquisador - EAIP | FFLCH'
-            }
-        ]
         context = {
-            'landingpage' : True,
-            'menu_table' : menu_nav_table
+            'landingpage': 'landingpage'
         }
-        return render(request, 'home/sobre-nos.html', context)
+
+        return render(request, 'home/projeto.html', context)
 
 
 class GraduacaoViews(View):

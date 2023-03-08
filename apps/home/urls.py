@@ -10,7 +10,7 @@ urlpatterns = [
     # The home page
     path('', views.IndexView.as_view(), name='home'),
 
-    path('sobre-nos', views.SobrenosView.as_view(), name='sobre-nos'),
+    path('projeto/', views.SobrenosView.as_view(), name='sobre-nos'),
 
     path('departamentos/', views.DepartamentosView.as_view(), name='departamentos'),
 
