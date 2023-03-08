@@ -1,46 +1,14 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/_base.html' %}
 
 {% block title %} FFLCH {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
 
+DOCENTEs
 
-<!-- Page content -->
-<div class="container-fluid mt--6 position-relative">
-
-  <div id='loading'>
-
-    {% include  "includes/loading.html" %}
-
-  </div>
-
-  <div class="row">
-
-    {% include "includes/graficos/grafico_historico.html" %}
-
-    {% if tabela_publicacoes != None %}
-      {% include "includes/tabelas/tabela_publicacoes.html" %}
-    {% endif %}
-
-
-  </div>
-
-  <div class="row">
-
-    {% include "includes/tabelas/tabela_orientandos.html" %}
-
-    {% include "includes/graficos/grafico_pizza_orientandos.html" %}
-
-  </div>
-
-
-  {% include "includes/footer.html" %}
-
-</div>
 
 {% endblock content %}
 

@@ -39,7 +39,7 @@ class IndexView(View):
             'tabela_mapa' : tabela_mapa,
         }
 
-        html_template = loader.get_template('home/_index.html')
+        html_template = loader.get_template('home/index.html')
         return HttpResponse(html_template.render(context, request))
 
 
@@ -316,8 +316,8 @@ class Docente2View(View):
             } 
 
 
-            return render(request, 'home/_docente.html', context)
+            return render(request, 'home/docente.html', context)
         else:
-            return render(request, 'home/_docentes.html', context)
+            return render(request, 'home/docentes.html')
 
 
