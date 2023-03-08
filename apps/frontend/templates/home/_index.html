@@ -56,15 +56,9 @@
                 {% for tabela in tabela_mapa.tabelas %}
                 <tr class="table-row-default">
                     {% for item in tabela %}
-                        {% if item|last %}
-                            <td class="is-last">
-                                {{ item }}
-                            </td>
-                        {% else %}
-                            <td>
-                                {{ item }}
-                            </td>
-                        {% endif %}
+                        <td class="is-last">
+                            {{ item }}
+                        </td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
