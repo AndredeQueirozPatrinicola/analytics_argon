@@ -22,9 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fontawesomefree',
     'debug_toolbar',
     'rest_framework',
-    'apps.home',  # Enable the inner home (home)
+    'apps.home',  
 ]
 
 MIDDLEWARE = [
