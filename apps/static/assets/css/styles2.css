@@ -571,6 +571,57 @@ th, td{
     border-top: 0.5px solid #e9ecef;
 }
 
+.contato-container{
+    border: 0.5px solid #32325d36;
+    margin: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 0 20px;
+    color: #32325d;
+}
+
+.container-sobre-nos > h5, .container-sobre-nos > h6{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 0.5rem;
+    font-weight: 600;
+}
+
+.container-sobre-nos-infos{
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.75rem;
+}
+
+.container-sobre-nos-text{
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+    text-indent: 2rem;
+}
+
+.container-sobre-nos-text > span{
+    margin-bottom: 2rem;
+}
+
+.container-sobre-nos-text > span > a{
+    color: #446395;
+}
+
+.container-sobre-nos-icons{
+    display: flex;
+    justify-content: space-around;
+    margin: 3rem 1.5rem ;
+}
+
+.container-sobre-nos-icons > a > i{
+    font-size: 3rem;
+}
+
+.container-sobre-nos-icons > a {
+    text-decoration: none;
+    color: black;
+}
+
 .card-title{
     display: flex;
     justify-content: center;
