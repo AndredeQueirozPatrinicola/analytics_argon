@@ -425,13 +425,13 @@ ul, ol, li, input, hr{
     color: #32325da8;
 }
 
-.table-row-default > td{
+.table-row-default > .table-cell-index{
     font-size: 13px;
     text-align: start;
     width: 25%;
 }
 
-.is-last{
+.table-cell-index{
     text-align: center;
     border-right: 0.5px solid #e9ecefa1;
 }
@@ -487,10 +487,6 @@ th, td{
 .logo-fflch-analytics{
     display: flex;
     align-items: center;
-}
-
-.logo-fflch-link{
-
 }
 
 .logo-fflch{
