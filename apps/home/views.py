@@ -67,59 +67,33 @@ class DocenteView(View):
 
         return queries
 
-    def get(self, request, sigla, numero_lattes):
-        docente = DadosDocente(numero_lattes, sigla)
-        queries = self.queries(numero_lattes)
-
-        api_docente = queries.get('api_docente')
-        api_programas = queries.get('api_programas')  
-        api_docentes = queries.get('api_docentes')
-
-        informacoes_docente = docente.pega_informacoes_basicas(api_programas, api_docentes)
-        tabela_orientandos = docente.tabela_orientandos(api_docente)
-        grafico_mestre_dout = docente.plota_grafico_orientandos(api_docente)
-        grafico_artigos = docente.plota_grafico_historico('artigos', api_docente)
-        grafico_livros = docente.plota_grafico_historico('livros', api_docente)
-        grafico_capitulos = docente.plota_grafico_historico('capitulos', api_docente)
-        tabela_publicacoes = docente.tabela_ultimas_publicacoes(api_docente)
-        caminho = docente.pega_caminho(api_programas, api_docentes)
-        linhas_pesquisa = docente.linhas_de_pesquisa(api_docente)
-        tipo_vinculo_situacao = docente.pega_vinculo_situacao(api_docentes)
+    def get(self, request, *args, **kwargs):
         
-        """
-            Dados dos cards que ficam no header da pagina.
-            O header é o mesmo para todas as paginas, por isso a necessidade
-            de alguns nomes genéricos como 'card_1', 'card_1_titulo'.
-            Existem algumas variações que são tratadas diretamente no template do header.
-        """ 
-        context = {
-            # Card 1
-            'sigla_departamento': sigla,
-            'docente': informacoes_docente, 
-            'card_1_titulo': 'Nome / Lattes',
-            # Card 2
-            'informacoes_card': linhas_pesquisa.get('linhas_pesquisa'),
-            'dropdown_label': linhas_pesquisa.get('label'),
-            'card_2_titulo': 'Linhas de pesquisa', 
-            # Card 3
-            'card_3': tipo_vinculo_situacao.get('vinculo'), 
-            'card_3_titulo': 'Tipo de vínculo',
-            # Card 4
-            'card_4': tipo_vinculo_situacao.get('situacao'),
-            'card_4_titulo': 'Situação atual',
-            # Caminho da navegação.
-            'caminho': caminho,
-            # Graficos e tabelas
-            'tabela_orientandos': tabela_orientandos,
-            'grafico_orientandos': grafico_mestre_dout,
-            'tabela_publicacoes': tabela_publicacoes,
-            'grafico_artigos': grafico_artigos,
-            'grafico_livros': grafico_livros,
-            'grafico_capitulos': grafico_capitulos,
-        }
+        if numerolattes:=self.kwargs.get('docente'):
+            docente = DadosDocente(numerolattes)
+            queries = self.queries(numerolattes)
 
-        return render(request, 'home/docentes.html', context)
+            api_docente = queries.get('api_docente')
+            api_programas = queries.get('api_programas')  
+            api_docentes = queries.get('api_docentes')
 
+            caminho = docente.pega_caminho(api_programas, api_docentes)
+            cards = docente.pega_informacoes_basicas(api_programas, api_docente, api_docentes, novo="novo")
+            tabela_orientandos = docente.tabela_orientandos(api_docente)
+            tabela_publicacoes = docente.tabela_ultimas_publicacoes(api_docente)
+
+            context = {
+                'caminho' : caminho,
+                'card_header_1' :  cards.get('card_header_1'),
+                'card_header_2' :  cards.get('card_header_2'),
+                'card_header_3' :  cards.get('card_header_3'),
+                'card_header_4' :  cards.get('card_header_4'),
+                'tabela_orientandos' : tabela_orientandos,
+                'tabela_publicacoes' : tabela_publicacoes
+            } 
+            return render(request, 'home/docente.html', context)
+        else:
+            return render(request, 'home/docentes.html')
 
 class DepartamentoView(View):
     
@@ -265,59 +239,3 @@ class GraduacaoViews(View):
         }
 
         return render(request, 'home/graduacao.html', context)
-    
-class Docente2View(View):
-
-    def queries(self, numero_lattes):
-        try:
-            querie = Docente.objects.filter(docente_id=numero_lattes).values()
-            querie = querie[0]
-
-            api_docente = querie.get('api_docente')
-            api_programas = querie.get('api_programas')
-            api_docentes = querie.get('api_docentes')
-        except:
-            docente = ApiDocente(numero_lattes)
-            api_programas = docente.pega_api_programas()
-            api_docente = docente.pega_api_docente()
-            api_docentes = docente.pega_api_docentes()
-
-        queries = {
-            'api_docente' : api_docente,
-            'api_programas' : api_programas,
-            'api_docentes' : api_docentes
-        }
-
-        return queries
-
-    def get(self, request, *args, **kwargs):
-        
-        if numerolattes:=self.kwargs.get('docente'):
-            docente = DadosDocente(numerolattes)
-            queries = self.queries(numerolattes)
-
-            api_docente = queries.get('api_docente')
-            api_programas = queries.get('api_programas')  
-            api_docentes = queries.get('api_docentes')
-
-            caminho = docente.pega_caminho(api_programas, api_docentes)
-            cards = docente.pega_informacoes_basicas(api_programas, api_docente, api_docentes, novo="novo")
-            tabela_orientandos = docente.tabela_orientandos(api_docente)
-            tabela_publicacoes = docente.tabela_ultimas_publicacoes(api_docente)
-
-            context = {
-                'caminho' : caminho,
-                'card_header_1' :  cards.get('card_header_1'),
-                'card_header_2' :  cards.get('card_header_2'),
-                'card_header_3' :  cards.get('card_header_3'),
-                'card_header_4' :  cards.get('card_header_4'),
-                'tabela_orientandos' : tabela_orientandos,
-                'tabela_publicacoes' : tabela_publicacoes
-            } 
-
-
-            return render(request, 'home/docente.html', context)
-        else:
-            return render(request, 'home/docentes.html')
-
-
