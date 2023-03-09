@@ -301,7 +301,7 @@ class Docente2View(View):
             api_docentes = queries.get('api_docentes')
 
             caminho = docente.pega_caminho(api_programas, api_docentes)
-            cards = docente.pega_informacoes_basicas(api_programas, api_docentes, novo="novo")
+            cards = docente.pega_informacoes_basicas(api_programas, api_docente, api_docentes, novo="novo")
             tabela_orientandos = docente.tabela_orientandos(api_docente)
             tabela_publicacoes = docente.tabela_ultimas_publicacoes(api_docente)
 

@@ -288,6 +288,34 @@ ul, ol, li, input, hr{
     font-weight: 600;
 }
 
+.dropdown-button{
+    cursor: pointer;
+    transition: transform 1s;
+}
+
+.dropdown-items{
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    width: 20rem;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border-radius: 0.375rem !important;
+    transition: transform 10s;
+}
+
+.dropdown-items > span{
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 14px;
+    color: #052e70;
+    transition: transform 1s;
+}
+
+.dropdown-is-toggled{
+    display: flex !important;
+}
+
 /* DashBoard */
 
 .main-dashboard{

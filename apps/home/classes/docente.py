@@ -19,7 +19,7 @@ class DadosDocente():
         self.sigla = sigla
 
 
-    def pega_informacoes_basicas(self, dados, dados_nome, novo = ""):
+    def pega_informacoes_basicas(self, dados, dados_docente, dados_nome, novo = ""):
         caminho = self.pega_caminho(dados, dados_nome)
 
         if novo:
@@ -37,7 +37,7 @@ class DadosDocente():
                     },
                     "card_header_2" : {
                         "title" : "Linhas de Pesquisa",
-                        "text" : False
+                        "text" : self.linhas_de_pesquisa(dados_docente)
                     },
                     "card_header_3" : {
                         'title' : "Tipo de Vinculo",
@@ -92,14 +92,23 @@ class DadosDocente():
         """
         linhas_pesquisa = dados.get('linhas_pesquisa')
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
-        label = 'Linhas'
+        
+        linhas_formatadas = []
+        for linha in linhas_pesquisa:
+            template = f"<span>{linha}</span>"
+            linhas_formatadas.append(template)
+        linhas_formatadas = " ".join(linhas_formatadas)
 
-        resultado = {
-            'label' : label,
-            'linhas_pesquisa' : linhas_pesquisa
-        }
-
-        return resultado
+        dropdown_linhas = f"""<div class="dropdown" id="dropdown">
+                                <div class="dropdown-button card-header-content" id="dropdown-button">
+                                    Linhas
+                                </div>
+                                <div class="dropdown-items">
+                                    {linhas_formatadas}
+                                </div>
+                              </div>
+                            """
+        return dropdown_linhas
 
     def pega_caminho(self, dados, dados_nome):
         """

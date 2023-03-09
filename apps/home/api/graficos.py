@@ -371,46 +371,6 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
 
-
-class GraficoBolsaSemICePosDoc(GraficoDepartamentosDocentesAPIView):
-
-    def get_data(self):
-        if self.kwargs.get('departamento'):
-            query = self.queries(departamento=['api_pesquisa_parametros'])
-            departamento = DadosDepartamento(self.get_sigla())
-            dados = departamento.plota_grafico_bolsa_sem(query)
-        else:
-            query_departamentos = Departamento.objects.values(
-                'api_pesquisa_parametros', 'api_programas_docente_limpo', 'api_programas_docente')
-            query_docentes = Docente.objects.values('api_docentes')
-            departamentos = Departamentos(query_departamentos, query_docentes)
-            dados = departamentos.grafico_bolsa_sem()
-        return dados
-
-    def get_titulo(self, departamento):
-        if not departamento:
-            return "Projetos de Iniciação Ciêntifica e pós-doutorado com e sem bolsa de todos os departamentos"
-        else:
-            return f"Projetos de Iniciação Ciêntifica e pós-doutorado com e sem bolsa de {departamento.title()}"
-
-    def get_labels(self):
-        return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year))]
-
-    def get(self, *args, **kwargs):
-        try:
-            departamento = self.kwargs['departamento']
-        except:
-            departamento = False
-        finally:
-            dados = self.plota_grafico(tipo='bar', colors=[
-                        '#052e70', '#1a448a',
-                        '#425e8f', '#7585a1',
-                        '#91a8cf', '#cad5e8'
-                    ], departamento=departamento)
-            serializer = GraficoSerializer(dados)
-            return Response(serializer.data)
-
-
 class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
@@ -428,9 +388,9 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Proporção entre alunos de pós-graduação que realizaram defesas em 2022"
+            return "Distribuição entre alunos de pós-graduação que realizaram defesas em 2022"
         else:
-            return f"Proporção entre alunos de pós-graduação no departamento de {departamento.title()} que realizaram defesas em 2022."
+            return f"Distribuição entre alunos de pós-graduação no departamento de {departamento.title()} que realizaram defesas em 2022."
 
     def get_labels(self):
         return ["Mestrado", "Doutorado", "Doutorado Direto"]
@@ -500,9 +460,9 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Proporção entre tipos de vínculo dos docentes de toda a universidade"
+            return "Distribuição dos docentes de acordo com os tipos de vínculo a faculdade"
         else:
-            return f"Proporção entre tipos de vínculo dos docentes do departamento de {departamento.title()}."
+            return f"Distribuição dos docentes de acordo com os tipos de vínculo no departamento de {departamento.title()}."
 
     def get_labels(self):
         return ['Prof Doutor', 'Prof Associado', 'Prof Titular', 'Prof Contratado III', 'Assistente', 'Prof Colab Ms-6', 'Prof Contratado II']
@@ -571,7 +531,7 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
         if tipo := self.kwargs.get('tipo'):
             return f"Produção histórica de {tipo.capitalize()} do docente."
         else:
-            return f"Produção histórica de livros do docente."
+            return f"Produção histórica de Artigos do docente."
 
     def get_labels(self):
         data = self.get_data()
