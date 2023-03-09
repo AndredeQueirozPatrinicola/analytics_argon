@@ -14,8 +14,12 @@ class Etl:
             _from = f'FROM graduacoes g'
             join = f'JOIN alunos_graduacao ag ON g.numeroUSP = ag.numeroUSP'
             group_by = f'GROUP BY ag.{coluna}'
+
             if where:
-                where = f"WHERE g.nomeCurso = '{where}'"
+                where = f"WHERE g.nomeCurso = '{where}' AND g.situacaoCurso = 'ativo'"
+            else:
+                where = "WHERE g.situacaoCurso = 'ativo'"
+
             if order_by:
                 order_by = f"ORDER BY {order_by}"
 
@@ -43,26 +47,8 @@ class Etl:
             self.cursor.execute(f"""
                                     SELECT COUNT(*) 
                                     FROM {tabela} g 
-                                    WHERE situacao = '{situacao}';
+                                    WHERE situacaoCurso = '{situacao}';
                                 """)
             return self.cursor.fetchall()
         except:
             raise Exception("Não foi possivel realizar a query") 
-        
-    def query_teste(self, coluna, departamento = False):
-        if departamento:
-            where = f"WHERE g.nomeCurso = '{departamento}' AND g.situacao = 'ativo'"
-        else:
-            where = f"WHERE g.situacao = 'ativo'"
-        self.cursor.execute(f"""
-                                SELECT
-                                    ag.{coluna},  
-                                    COUNT(*)	
-                                FROM alunos_graduacao ag 
-                                LEFT JOIN graduacoes g 
-                                    ON ag.numeroUSP = g.numeroUSP  
-                                {where}
-                                GROUP BY ag.{coluna}
-                                ORDER BY ag.{coluna} ;
-                             """)
-        return self.cursor.fetchall()

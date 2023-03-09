@@ -219,10 +219,10 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
     def get_data(self):
         if graduacao := self.kwargs.get('graduacao'):
             dados = AlunosGraduacao.objects.using('etl').filter(
-                alunos_graduacao__situacao='ativo', alunos_graduacao__nomeCurso=graduacao).values('sexo').annotate(count=Count('*'))
+                alunos_graduacao__situacaoCurso='ativo', alunos_graduacao__nomeCurso=graduacao).values('sexo').annotate(count=Count('*'))
         else:
             dados = AlunosGraduacao.objects.using('etl').filter(
-                alunos_graduacao__situacao='ativo').values('sexo').annotate(count=Count('*'))
+                alunos_graduacao__situacaoCurso='ativo').values('sexo').annotate(count=Count('*'))
 
         resultado = []
         for dado in dados:
@@ -259,10 +259,10 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
 
     def get_data(self):
         if graduacao := self.kwargs.get('graduacao'):
-            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo', alunos_graduacao__nomeCurso=graduacao).values(
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacaoCurso='ativo', alunos_graduacao__nomeCurso=graduacao).values(
                 'raca').annotate(count=Count('*')).order_by('raca')
         else:
-            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacao='ativo').values(
+            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacaoCurso='ativo').values(
                 'raca').annotate(count=Count('*')).order_by('raca')
 
         resultado = []

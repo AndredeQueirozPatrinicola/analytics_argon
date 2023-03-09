@@ -59,7 +59,7 @@ class Graduacoes(models.Model):
     idGraduacao = models.CharField(max_length=32, primary_key=True)
     numeroUSP_id = models.ForeignKey(AlunosGraduacao, related_name='alunos_graduacao', on_delete=models.CASCADE, db_column='numeroUSP')
     sequenciaCurso = models.SmallIntegerField()
-    situacao = models.CharField(max_length=16)
+    situacaoCurso = models.CharField(max_length=16)
     dataInicioVinculo = models.DateTimeField()
     dataFimVinculo = models.DateTimeField()
     codigoCurso = models.IntegerField()
