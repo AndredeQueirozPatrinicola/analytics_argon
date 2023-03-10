@@ -157,9 +157,9 @@ class GraficoRacaAPIView(GraficoAPI):
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Distribuição de todos os alunos de graduação por raça/ano(Percentual)."
+            return "Distribuição de todos os alunos de graduação por raça/ano(Absoluto)."
         else:
-            return f"DIstribuição dos alunos de {departamento.title()} por raça/ano(Percentual)."
+            return f"DIstribuição dos alunos de {departamento.title()} por raça/ano(Absoluto)."
 
     def get_labels(self):
         return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
@@ -171,10 +171,10 @@ class GraficoRacaAPIView(GraficoAPI):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo='bar', colors=[
-                '#cad5e8',  '#1a448a',  '#425e8f',
-                '#7585a1', '#91a8cf', '#052e70',
+                '#052e70', '#1a448a',  '#425e8f',
+                '#7585a1', '#91a8cf', '#cad5e8',
             ],
-                stacked=True, departamento=departamento)
+                stacked=False, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
 
@@ -289,8 +289,8 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
             departamento = False
         finally:
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#cad5e8',  '#1a448a',  '#425e8f',
-                        '#7585a1', '#91a8cf', '#052e70',
+                        '#052e70', '#1a448a',  '#425e8f',
+                        '#7585a1', '#91a8cf', '#cad5e8',
                     ],departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)

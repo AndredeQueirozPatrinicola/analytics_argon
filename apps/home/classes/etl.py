@@ -16,9 +16,7 @@ class Etl:
             group_by = f'GROUP BY ag.{coluna}'
 
             if where:
-                where = f"WHERE g.nomeCurso = '{where}' AND g.situacaoCurso = 'ativo'"
-            else:
-                where = "WHERE g.situacaoCurso = 'ativo'"
+                where = f"WHERE g.nomeCurso = '{where}'"
 
             if order_by:
                 order_by = f"ORDER BY {order_by}"
