@@ -209,7 +209,7 @@ class GraficoSexoAPIView(GraficoAPI):
             dados = self.plota_grafico(tipo='bar', colors=[
                         '#91a8cf',
                         '#052e70'
-                    ],stacked=True, departamento=departamento)
+                    ],stacked=False, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
 
