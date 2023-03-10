@@ -1,0 +1,22 @@
+<div class="table-container">
+    <table class="table-content">
+        <thead class="">
+            <tr class="table-row-header">
+                <th>{{ tabela_orientandos.tabela_infos.nome }}</th>
+                <th>{{ tabela_orientandos.tabela_infos.nivel }}</th>
+                <th>{{ tabela_orientandos.tabela_infos.programa }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in tabela_orientandos.tabela_conteudo %}
+                <tr class="table-row-default">
+                    {% for item in row %}
+                        <td class="celula-simples">
+                            {{ item }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

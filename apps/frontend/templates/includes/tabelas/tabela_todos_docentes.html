@@ -1,0 +1,46 @@
+<div class="table-container">
+    <table class="table-content" id="tabelas-dinamicas-15">
+        <thead class="">
+            <tr class="table-row-header">
+                <th>Nome</th>
+                <th>Curso</th>
+                <th>Situação</th>
+                <th>Lattes</th>
+                <th>Vínculo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in df_docentes.iterrows %}
+            <tr>
+                <td>
+                    {% if row.id_lattes != "0" %}
+                    <a href='/docentes/{{ row.id_lattes }}' class="nome-lattes">
+                        {{ row.nompes }}
+                    </a>
+                    {% else %}
+                        {{ row.nompes }}
+                    {% endif %}
+                </td>
+                <td class="celula-simples">{{ row.nomset }}</td>
+                <td class="celula-simples">
+                    {% if row.sitatl == 'A'%} 
+                        Ativo 
+                    {%else%} 
+                        Aposentado 
+                    {%endif%}
+                </td>
+                <td class="lattes-logo">
+                    {% if row.id_lattes != "0" %}
+                        <a href='http://lattes.cnpq.br/{{ row.id_lattes }}' target='_blank' >
+                            <i class='ai ai-lattes ai-2x f-20 nome-lattes'></i>
+                        </a>
+                    {% endif %}
+                </td>
+                <td class="celula-simples">
+                    {{ row.nomefnc }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

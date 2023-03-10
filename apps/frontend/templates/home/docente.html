@@ -1,0 +1,53 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+
+{% block content %}
+
+    <div class="dashboard-row">
+        <div class="card-dash-6 dark-card-dash">
+            <div class="select-container">
+                <select class="select-grafico producao-historica">
+                    <option value="artigos">Artigos</option>
+                    <option value="Livros">Livros</option>
+                    <option value="Capitulos">Capitulos</option>
+                </select>
+              </div>
+            <div class="grafico-container">
+                <canvas id="producao-historica"></canvas>
+            </div>
+        </div>
+        {% if tabela_publicacoes %}
+        <div class="card-dash-3">
+
+            {% include 'includes/tabelas/_tabela_publicacoes.html' %}
+
+        </div>
+        {% endif %}
+    </div>
+
+    {% if tabela_orientandos %}
+    <div class="dashboard-row">
+        <div class="card-dash-6">
+
+            {% include 'includes/tabelas/_tabela_orientandos.html' %}
+
+        </div>
+        <div class="card-dash-3">
+            <div class="grafico-container">
+                <canvas id="orientandos"></canvas>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}

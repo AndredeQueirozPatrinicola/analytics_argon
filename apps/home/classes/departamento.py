@@ -86,35 +86,28 @@ class DadosDepartamento():
 
     def plota_tipo_vinculo_docente(self, api_docentes):
         dados = api_docentes
+        utils = Utils()
+        departamento = utils.dptos_siglas.get(self.sigla)
 
-        x = 0
         nomefnc = []
-        while x < len(dados):
-            nomefnc.append(dados[x].get('nomefnc'))
-
-            x += 1
+        for dado in dados:
+            nomefnc.append(dado.get('api_docentes'))
 
         df = pd.DataFrame(nomefnc)
+        df = df.loc[df['nomset'] == departamento]
+        funcoes = df['nomefnc'].value_counts().index.to_list()
+        dados = df['nomefnc'].value_counts().to_list()
 
-        lista_nomes = df.value_counts().index.to_list()
-        nomes = [i[0] for i in lista_nomes]
-        lista_valores = df.value_counts().to_list()
-
-        titulo = 'Percentual entre tipos de vínculo de docente'
-        grafico = Grafico()
-        grafico = grafico.grafico_pizza(values=lista_valores, names=nomes, color=nomes, legend_orientation='h',
-                                        color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"], x=1, y=1.02,
-                                        margin={'l': 20, 'r': 20, 't': 20, 'b': 20})
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        resultado = [] 
+        x = 0
+        for funcao in funcoes:
+            resultado.append([funcao, dados[x]])
+            x += 1
 
         return resultado
 
     def plota_prod_departamento(self, api_programas_docente_limpo):
-        dados = api_programas_docente_limpo
+        dados = api_programas_docente_limpo.get('api_programas_docente_limpo')
         df = pd.DataFrame(dados)
         somas = df['total_livros'].to_list(), df['total_artigos'].to_list(), df['total_capitulos'].to_list()
 
@@ -125,27 +118,11 @@ class DadosDepartamento():
             lista_valores.append(sum(lista_valores_individuais))
             x += 1
 
-
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=lista_valores, color=['Livros', 'Artigos', 'Capitulos'],
-                     color_discrete_sequence=["#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
-                     linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-                     l=15, r=15, t=15, b=0), legend=dict(
-                        yanchor="top",
-                        y=0.99,
-                        xanchor="left",
-                        x=0.01),
-                     labels={
-                        'x': '',
-                        'color' : 'Legenda'
-                     })
-
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no Lattes'
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        resultado = [
+            ["Livros", lista_valores[0]],
+            ["Artigos", lista_valores[1]],
+            ["Capitulos", lista_valores[2]]
+        ]
 
         return resultado
 
@@ -184,51 +161,24 @@ class DadosDepartamento():
         return resultado
 
     def plota_grafico_bolsa_sem(self, api_pesquisa_parametros):
-        dados = api_pesquisa_parametros
+        dados = api_pesquisa_parametros.get('api_pesquisa_parametros')
 
         anos = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos_str = [str(i) for i in anos]
 
         df = pd.DataFrame(dados)
-        df = df.drop(['pesquisadores_colab'])
-        df = df.transpose()
-        df = df.rename(columns={
-            "ic_com_bolsa": "IC com bolsa",
-            "ic_sem_bolsa": "IC sem bolsa",
-            'pesquisas_pos_doutorado_com_bolsa': 'Pesquisas pós doutorado com bolsa',
-            'pesquisas_pos_doutorado_sem_bolsa': 'Pesquisas pós doutorado sem bolsa'
-        })
+        df = df.drop(['pesquisadores_colab', 'projetos_pesquisa'])
+        labels = ["IC com bolsa", "IC sem bolsa", 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa']
+        df = df.values.tolist()
+        x = 0
+        for element in df:
+            element.insert(0, labels[x])
+            x += 1
 
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos_str, y=['IC com bolsa', 'IC sem bolsa', 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa'],
-                           barmode='group', height=400, color_discrete_map={
-            "IC com bolsa": "#053787",
-            "IC sem bolsa": "#264a87",
-            "Pesquisas pós doutorado com bolsa": "#9facc2",
-            "Pesquisas pós doutorado sem bolsa": "#AFAFAF"},
-            labels={
-                'x': '',
-                'variable': 'Legenda',
-        }, margin=dict(
-            l=0, r=30, t=20, b=50), font_color="white", legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="", 
-            linecolor='white', gridcolor='#4d4b46')
-
-        titulo = f"Relação entre IC's e Pesquisas de pós-doutorado com e sem bolsa - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
-
-        return resultado
+        return df
 
     def plota_prod_serie_historica(self, api_programas_docente):
-        dados = api_programas_docente
+        dados = api_programas_docente.get('api_programas_docente')
 
         anos_int = [i for i in range(int(datetime.now().year) - 6, datetime.now().year)]
         anos = [str(i) for i in anos_int]
@@ -269,49 +219,13 @@ class DadosDepartamento():
             g = f
             f += len(dados[0].get(anos[0]))
 
-        resultado = {}
-        s = 0
-        while s < len(anos_int):
+        result = [
+            ["Livros", *resultado_livros],
+            ["Artigos", *resultado_artigos],
+            ["Capitulos", *resultado_capitulos],
+        ]
 
-            resultado[anos_int[s]] = {
-                'total_livros': resultado_livros[s],
-                'total_artigos': resultado_artigos[s],
-                'total_capitulos': resultado_capitulos[s]
-            }
-
-            s += 1
-
-        df = pd.DataFrame(resultado)
-        df = df.transpose()
-        df = df.rename(columns={'total_livros': 'Livros',
-                       'total_artigos': 'Artigos', 'total_capitulos': 'Capitulos'})
-        
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', color_discrete_map={
-            "Livros": "#053787",
-            "Artigos": "#9facc2",
-            "Capitulos": "#AFAFAF"
-        },
-            labels={
-            'x': '',
-            'variable': 'Legenda',
-        }, margin=dict(
-            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-        linecolor='#e0dfda', gridcolor='#e0dfda')
-        
-        titulo = f"Produção do departamento - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico 
-        }
-
-        return resultado
+        return result
 
     def pega_programa_departamento(self):
         programas_dpto = Utils()
@@ -332,7 +246,6 @@ class DadosDepartamento():
 
         resultado = []
         for defesa in api_defesas:
-            
             codigo_departamento = defesa.get('codare')
             verifica_departamento = utils.pega_departamento_programa(codigo_departamento)
 
@@ -362,7 +275,7 @@ class DadosDepartamento():
 
         x, y, z = 0, 0, 0
         nivel = []
-        for defesa in api_defesas:  
+        for defesa in api_defesas.get('api_defesas'):  
 
             if defesa.get('nivel') == 'ME':
                 x += 1
@@ -371,22 +284,10 @@ class DadosDepartamento():
             if defesa.get('nivel') == 'DD':
                 z += 1
 
-        nivel.append(x)
-        nivel.append(y)
-        nivel.append(z)
-
-        figura = Grafico()
-        figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
-                    color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
-                    labels={
-                        'values': 'Valor',
-                        'names': 'Tipo',
-                        'color': 'Cor'
-                    }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
-
-        resultado = {
-            'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
-            'grafico' : figura
-        }
+        resultado = [
+            ["Mestrado", x],
+            ["Doutorado", y],
+            ["Doutorado Direto", z]
+        ]
 
         return resultado

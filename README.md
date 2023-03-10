@@ -10,7 +10,7 @@ Mysql:
 
     sudo apt-get install python-dev default-libmysqlclient-dev
 
-Exemplo mysql .env:
+Exemplo .env:
 
     DEBUG=True
 
@@ -19,8 +19,14 @@ Exemplo mysql .env:
     DBNAME=analytics
     DBUSER=admin
     DBPASSWORD=admin
-    DBHOST=localhost  # Or an IP Address that your DB is hosted on
+    DBHOST=localhost  
     DBPORT=3306
+
+    ETL_DBNAME=etl
+    ETL_DBUSER=admin
+    ETL_DBPASSWORD=password
+    ETL_DBHOST=localhost
+    ETL_DBPORT=3306
 
 Up django:
 
@@ -30,4 +36,12 @@ Up django:
 Scripts para popular db:
 
     python3 populadb.py 
+
+Front-end:
+
+    npm install
+
+Dev server webpack bundle:
+
+    npm run dev
 

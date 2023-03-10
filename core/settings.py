@@ -22,9 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fontawesomefree',
     'debug_toolbar',
     'rest_framework',
-    'apps.home',  # Enable the inner home (home)
+    'apps.home',  
 ]
 
 MIDDLEWARE = [
@@ -40,9 +41,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
-LOGIN_REDIRECT_URL = "home"  # Route defined in home/urls.py
-LOGOUT_REDIRECT_URL = "home"  # Route defined in home/urls.py
-TEMPLATE_DIR = os.path.join(CORE_DIR, "apps/templates")  # ROOT dir for templates
+LOGIN_REDIRECT_URL = "home"  
+LOGOUT_REDIRECT_URL = "home"  
+TEMPLATE_DIR = os.path.join(CORE_DIR, "apps/frontend/templates")  
 
 TEMPLATES = [
     {
@@ -72,8 +73,16 @@ DATABASES = {
         'NAME': config('DBNAME'),
         'USER': config('DBUSER'),
         'PASSWORD': config('DBPASSWORD'),
-        'HOST': config('DBHOST'),   # Or an IP Address that your DB is hosted on
+        'HOST': config('DBHOST'),   
         'PORT': config('DBPORT'),
+    },
+    'etl': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': config('ETL_DBNAME'),
+        'USER': config('ETL_DBUSER'),
+        'PASSWORD': config('ETL_DBPASSWORD'),
+        'HOST': config('ETL_DBHOST'),   
+        'PORT': config('ETL_DBPORT'),
     }
 }
 

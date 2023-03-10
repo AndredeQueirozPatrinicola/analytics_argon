@@ -1,0 +1,97 @@
+{% load static %}
+
+{% if landingpage %}
+<div class="landing-header">
+    <!-- Landing page "/" -->
+    <div class="logo-usp-fflch-row">
+        <div class="logo-fflch-analytics">
+            <a class="logo-fflch-link" target="_blank" href="https://www.fflch.usp.br">
+                <img src="{% static 'assets/img/brand/fundoazul.png' %}" class="logo-fflch">
+            </a>
+            <a class="logo-analytics" href="/">
+                <span class="analytics-logo-title">Faculdade de Filosofia Letras e Ciências Humanas</span>
+                <span class="analytics-logo-subtitle">Analytics</span>
+            </a>
+        </div>
+        <div class="logo-usp">
+            <a href="https://www5.usp.br/" target="_blank">
+                <img src="{% static 'assets/img/brand/usplogo.png' %}" class="img-logo-usp">
+            </a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="header">
+    <div class="caminho-header">
+        <div class="caminho-box">
+            <a href="/">
+                <i class="fas fa-home header-icone"></i>
+            </a>
+            <span class="caminho-bar">/</span>
+            {% for item in caminho %}
+                {% if item == caminho|last %}
+                <span class="caminho-header-item last-item">{{ item.text }}</span>
+                {% else %}
+                <span class="caminho-header-item">
+                    <a href="{{ item.url }}" class="caminho-header-item">{{ item.text }}</a>
+                </span><span class="caminho-bar">/</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-header-container">
+        <div class="card-header-block">
+            {% if card_header_1 %}
+            <div class="card-header">
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_1.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_1.text|safe }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            {% if card_header_2 %}
+            <div class="card-header">
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_2.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_2.text|safe }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="card-header-block">
+            {% if card_header_3 %}
+            <div class="card-header">
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_3.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_3.text|safe }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            {% if card_header_4 %}
+            <div class="card-header">
+                <div class="card-header-infos">
+                    <h6 class="card-header-title">
+                        {{ card_header_4.title }}
+                    </h6>
+                    <p class="card-header-content">
+                        {{ card_header_4.text|safe }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}

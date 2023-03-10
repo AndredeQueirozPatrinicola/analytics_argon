@@ -1,0 +1,34 @@
+<div class="table-container">
+  <table class="table-content" id="tabelas-defesas-06">
+      <thead class="">
+          <tr class="table-row-header">
+              <th>Titulo</th>
+              <th>Nome</th>
+              <th>Nivel</th>
+              <th>Programa</th>
+              <th>Data</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for index, row in df_defesas.iterrows %}
+          <tr>
+             <td class="nome-lattes">
+                {{ row.titulo }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nome }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nivel }}
+             </td>
+             <td class="celula-simples">
+                {{ row.nomare }}
+             </td>
+             <td class="celula-simples">
+                {{ row.data }}
+             </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>

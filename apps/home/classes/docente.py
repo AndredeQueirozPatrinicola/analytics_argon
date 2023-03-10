@@ -9,24 +9,53 @@ from apps.home.classes.graficos import Grafico
 
 API = 'https://dados.fflch.usp.br/api/'
 API_PROGRAMAS = API + 'programas/'
+API_DOCENTES = API + 'docentes'
 
 
 class DadosDocente():
 
-    def __init__(self, numero_lattes, sigla):
+    def __init__(self, numero_lattes, sigla = ""):
         self.numero_lattes = numero_lattes
         self.sigla = sigla
 
 
-    def pega_informacoes_basicas(self, dados, dados_nome):
+    def pega_informacoes_basicas(self, dados, dados_docente, dados_nome, novo = ""):
         caminho = self.pega_caminho(dados, dados_nome)
 
-        docente = [{
-                    'nome': caminho[1].get('text'),
-                    'programa': '',
-                    'departamento': '',
-                    'link_lattes': 'http://lattes.cnpq.br/' + self.numero_lattes
-                   }]
+        if novo:
+            vinculo_situacao = self.pega_vinculo_situacao(dados_nome)
+            vinculo = vinculo_situacao.get('vinculo')
+            situacao = vinculo_situacao.get('situacao')
+            lattes_icon = f"""<a href='http://lattes.cnpq.br/{self.numero_lattes}' target='_blank' >
+                                <i class='ai ai-lattes ai-2x f-20 nome-lattes'></i>
+                            </a>
+                          """
+            docente = {
+                    "card_header_1" : {
+                        "title" : "LATTES",
+                        "text" : lattes_icon
+                    },
+                    "card_header_2" : {
+                        "title" : "Linhas de Pesquisa",
+                        "text" : self.linhas_de_pesquisa(dados_docente)
+                    },
+                    "card_header_3" : {
+                        'title' : "Tipo de Vinculo",
+                        "text" : vinculo
+                    },
+                     "card_header_4" : {
+                        "title" : "Situacao Atual",
+                        "text" :  situacao
+                    }
+                }
+
+        else:
+            docente = [{
+                        'nome': caminho[1].get('text'),
+                        'programa': '',
+                        'departamento': '',
+                        'link_lattes': 'http://lattes.cnpq.br/' + self.numero_lattes
+                    }]
 
         return docente
 
@@ -63,14 +92,23 @@ class DadosDocente():
         """
         linhas_pesquisa = dados.get('linhas_pesquisa')
         linhas_pesquisa = [i.casefold().capitalize() for i in linhas_pesquisa]
-        label = 'Linhas'
+        
+        linhas_formatadas = []
+        for linha in linhas_pesquisa:
+            template = f"<span>{linha}</span>"
+            linhas_formatadas.append(template)
+        linhas_formatadas = " ".join(linhas_formatadas)
 
-        resultado = {
-            'label' : label,
-            'linhas_pesquisa' : linhas_pesquisa
-        }
-
-        return resultado
+        dropdown_linhas = f"""<div class="dropdown" id="dropdown">
+                                <div class="dropdown-button card-header-content" id="dropdown-button">
+                                    Linhas
+                                </div>
+                                <div class="dropdown-items">
+                                    {linhas_formatadas}
+                                </div>
+                              </div>
+                            """
+        return dropdown_linhas
 
     def pega_caminho(self, dados, dados_nome):
         """
@@ -81,16 +119,16 @@ class DadosDocente():
 
             Retorna lista de dicionários com caminho
         """
+
         try:
-            self.nome_departamento = dados.get('nome')
-
+            self.nome_departamento = dados[0].get('nome')
         except:
-            res = requests.get(url=API_PROGRAMAS)
+            res = requests.get(url=API_DOCENTES)
             dados = res.json()
-
-            for i in dados['departamentos']:
-                if i['sigla'] == self.sigla:
-                    self.nome_departamento = i['nome']
+            
+            for dado in dados:
+                if dado.get('id_lattes') == self.numero_lattes:
+                    self.nome_departamento = dado.get('nomset')            
 
         caminho = [
             {
@@ -117,31 +155,13 @@ class DadosDocente():
             ano_sortado = ano.sort_index(ascending=True)
             df = pd.DataFrame(ano_sortado)
 
-            anos = {}
-
+            resultado = []
             for i in range(int(df.index[0]), int(datetime.now().year) + 1):
-
                 try:
-                    anos[str(i)] = list(df.loc[(str(i))])[0]
+                    resultado.append([str(i), list(df.loc[(str(i))])[0]]) 
                 except:
-                    anos[str(i)] = 0
-
-            df = pd.DataFrame.from_dict(anos, orient='index')
-            eixo_x = df.index
-
-            grafico = Grafico()
-            grafico = grafico.grafico_linhas(df=df, x=eixo_x, y=0, height=390, labels={
-                'index': '',
-                '0': ''
-            }, margin=dict(l=0, r=30, t=20, b=50), font_color="white", showlegend=False, linecolor='#747474', gridcolor='#4d4d4d')
-
-            resultado = {
-                'titulo': f'Produção de {tipo} por ano ({df.index[0]}-{str(datetime.now().year)})',
-                'categoria': tipo,
-                'grafico' : grafico
-            }
-
-            return resultado
+                    resultado.append([str(i), 0])    
+            return resultado     
         except:
             return None
 
@@ -151,12 +171,15 @@ class DadosDocente():
             e retorna um grafico de pizza com a proporção entre orientandos de Mestrado, Doutorado e Doutorado Direto.
         """
         try:
+            try:
+                dados.get('api_docentes')
+            except:
+                pass
+
             df = pd.DataFrame(dados['orientandos'])
-
             nivpgm = list(df['nivpgm'])
-            tipos = ['ME', 'DO', "DD"]
 
-            nivel = []
+            resultado = []
             x, y, z = 0, 0, 0
             for i in nivpgm:
                 if i == 'ME':
@@ -166,24 +189,9 @@ class DadosDocente():
                 if i == "DD":
                     z += 1
 
-            nivel.append(x)
-            nivel.append(y)
-            nivel.append(z)
-
-            figura = Grafico()
-
-            figura = figura.grafico_pizza(values=nivel, names=tipos,  color=tipos, 
-                        color_discrete_sequence=["#052e70", "#AFAFAF", "#667691"], 
-                        labels={
-                            'values': 'Valor',
-                            'names': 'Tipo',
-                            'color': 'Cor'
-                        }, height=490, margin=dict(l=10, r=10, t=10, b=10), legend_orientation="h", y=1.04, x=1)
-
-            resultado = {
-                'titulo' : 'Percentual entre mestrandos, doutorandos e doutorandos diretos',
-                'grafico' : figura
-            }
+            resultado.append(["ME", x])
+            resultado.append(["DO", y])
+            resultado.append(["DD", z])
 
             return resultado
         except:
@@ -197,7 +205,6 @@ class DadosDocente():
             retorna tabela com nome de todos os orientandos de Mestrado, Doutorado e Doutorado Direto
         """
         try:
-
             df = pd.DataFrame(dados['orientandos'])
             nomep = list(df['nompes'])
             nivpgm = list(df['nivpgm'])
@@ -215,7 +222,7 @@ class DadosDocente():
                     'nivel' : 'Nivel',
                     'programa' : 'Programa'
                 }
-
+            
             tabela = {
                 'tabela_infos' : tabela_infos,
                 'tabela_conteudo' : resultado

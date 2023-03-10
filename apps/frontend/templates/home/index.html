@@ -1,0 +1,78 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+
+{% block content %}
+
+
+<div class="dashboard-row">
+
+    <div class="card-dash-6">
+        <h6 class="texto-index">
+            O projeto Analytics | FFLCH surge para disponibilizar ao público informações atualizadas em
+            tempo real de forma dinâmica e interativa sobre a Faculdade
+            de Filosofia, Letras e Ciências Humanas - FFLCH, unidade de ensino, pesquisa e extensão
+            universitária que abrange as
+            áreas de Filosofia, História, Geografia, Letras e Ciências Sociais da Universidade de São Paulo.
+        </h6>
+    </div>
+
+    <div class="card-dash-3">
+
+        {% include 'includes/tabelas/tabela_sobrenos.html' %}
+
+    </div>
+
+</div>
+
+<div class="dashboard-row">
+    <div class="card-dash-6">
+        <div class="card-title">
+            <span class="map-title">
+                Quantidade de Alunos de Gradução, Pós Graduação, Pós Doutorado e de Cultura e Extensão da FFLCH por
+                estado.
+                <br><span class="inline-obs">(Sigla do estado onde foi expedido o documento de identificação)</span>.
+            </span>
+        </div>
+        {% autoescape off %}
+        {{ globo }}
+        {% endautoescape %}
+    </div>
+    <div class="card-dash-3">
+        <span class="map-title p-3">
+            Alunos contabilizados por Estado.
+        </span>
+        <table class="w-100">
+            <thead>
+                <tr class="table-row-header">
+                    {% for item in tabela_mapa.headers %}
+                    <th class="table-header-item">{{ item }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for tabela in tabela_mapa.tabelas %}
+                <tr class="table-row-default">
+                    {% for item in tabela %}
+                        <td class="table-cell-index">
+                            {{ item }}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}

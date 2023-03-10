@@ -1,0 +1,101 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+
+{% block content %}
+
+
+<div class="dashboard-row">
+  <div class="card-dash-6">
+    <div class="select-container">
+      <select class="select-grafico prod-por-ano">
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grafico-container">
+
+      <canvas id="prod-por-ano"></canvas>
+
+    </div>
+  </div>
+  <div class="card-dash-3">
+    <div class="select-container">
+      <select class="select-grafico prod-total">
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grafico-container">
+
+      <canvas id="prod-total"></canvas>
+
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-row">
+  
+  <div class="card-dash-3">
+    <div class="select-container">
+      <select class="select-grafico defesas">
+        {% for departamento in departamentos %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grafico-container">
+
+      <canvas id="defesas"></canvas>
+
+    </div>
+  </div>
+
+  <div class="card-dash-6">
+
+    {% include 'includes/tabelas/tabela_defesas.html' %}
+
+  </div>
+
+</div>
+
+<div class="dashboard-row">
+  
+  <div class="card-dash-6">
+    
+    {% include 'includes/tabelas/tabela_todos_docentes.html' %}
+
+  </div>
+
+  <div class="card-dash-3 has-childs">
+    <div class="card-dash-child">
+      <div class="grafico-container">
+  
+        <canvas id="professores"></canvas>
+  
+      </div>
+    </div>
+    <div class="card-dash-child">
+      <div class="select-container">
+        <select class="select-grafico tipo-vinculo">
+          {% for departamento in departamentos %}
+            <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="grafico-container">
+        
+        <canvas id="tipo-vinculo"></canvas>
+  
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% endblock content %}

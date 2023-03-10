@@ -1,0 +1,26 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <a class="sidebar-logo-link" href="/">
+            <img class='sidebar-logo' src="/static/assets/img/{{ logo }}">
+        </a>
+    </div>
+    <div class="sidebar-body">
+        <div class="sidebar-menu">
+            <ul class="sidebar-menu-items">
+                {% for item in menu %}
+                <li class="sidebar-menu-item">
+                    <a href="{{ item.url }}">
+                    {{ item.text }}
+                    </a>    
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <hr class="sidebar-line">
+        <div>
+              
+            <!-- ADICIONAR COISA -->
+
+        </div>
+    </div>
+</div>

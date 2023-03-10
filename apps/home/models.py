@@ -35,3 +35,117 @@ class Mapa(models.Model):
 
     def __str__(self) -> str:
         return self.nome
+
+
+class AlunosGraduacao(models.Model):
+    numeroUSP_id = models.IntegerField(primary_key=True, db_column='numeroUSP')
+    nomeAluno = models.CharField(max_length=256)
+    anoNascimento = models.IntegerField()
+    email = models.CharField(max_length=128)
+    nacionalidade = models.CharField(max_length=128)
+    cidadeNascimento = models.CharField(max_length=128)
+    estadoNascimento = models.CharField(max_length=2)
+    paisNascimento = models.CharField(max_length=128)
+    raca = models.CharField(max_length=32)
+    sexo = models.CharField(max_length=1)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'alunos_graduacao'
+
+class Graduacoes(models.Model):
+    idGraduacao = models.CharField(max_length=32, primary_key=True)
+    numeroUSP_id = models.ForeignKey(AlunosGraduacao, related_name='alunos_graduacao', on_delete=models.CASCADE, db_column='numeroUSP')
+    sequenciaCurso = models.SmallIntegerField()
+    situacaoCurso = models.CharField(max_length=16)
+    dataInicioVinculo = models.DateTimeField()
+    dataFimVinculo = models.DateTimeField()
+    codigoCurso = models.IntegerField()
+    nomeCurso = models.CharField(max_length=32)
+    tipoIngresso = models.CharField(max_length=64)
+    categoriaIngresso = models.CharField(max_length=64)
+    rankIngresso = models.SmallIntegerField()
+    tipoEncerramento = models.CharField(max_length=128)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'graduacoes'
+
+class Habilitacoes(models.Model):
+    idGraduacao_id = models.ForeignKey(Graduacoes, related_name='graduacao',on_delete=models.CASCADE, db_column='idGraduacao')
+    codigoCurso = models.IntegerField()
+    codigoHabilitacao = models.IntegerField()
+    nomeHabilitacao = models.CharField(max_length=64)
+    tipoHabilitacao = models.CharField(max_length=32)
+    periodoHabilitacao = models.CharField(max_length=32)
+    dataInicioHabilitacao = models.DateTimeField()
+    dataFimHabilitacao = models.DateTimeField()
+    tipoEncerramento = models.CharField(max_length=128)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'habilitacoes'
+
+class QuestionarioQuestoes(models.Model):
+    idQuestao = models.CharField(max_length=12, primary_key=True)
+    codigoAlternativa = models.SmallIntegerField()
+    descricaoQuestao = models.CharField(max_length=512)
+    descricaoAlternativa = models.CharField(max_length=102)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'questionario_questoes'
+
+class QuestionarioRespostas(models.Model):
+    idGraduacao_id = models.ForeignKey(Graduacoes, on_delete=models.CASCADE, db_column='idGraduacao')
+    idQuestao_id = models.ForeignKey(QuestionarioQuestoes, on_delete=models.CASCADE, db_column='idQuestao')
+    alternativaEscolhida = models.SmallIntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'questionario_respostas'
+
+
+class Iniciacoes(models.Model):
+    idProjeto = models.CharField(max_length=12, primary_key=True)
+    numeroUSP_id = models.ForeignKey(AlunosGraduacao, on_delete=models.CASCADE, db_column='numeroUSP')
+    statusProjeto = models.CharField(max_length=32)
+    anoProjeto = models.SmallIntegerField()
+    codigoDepartamento = models.IntegerField()
+    nomeDepartamento = models.CharField(max_length=64)
+    dataInicioProjeto = models.DateTimeField()
+    dataFimProjeto = models.DateTimeField()
+    numeroUSPorientador = models.IntegerField()
+    tituloProjeto = models.CharField(max_length=256)
+    palavrasChave = models.CharField(max_length=128)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'iniciacoes'
+
+
+class BolsasIC(models.Model):
+    idProjeto_id = models.ForeignKey(Iniciacoes, on_delete=models.CASCADE, db_column='idProjeto')
+    sequenciaBolsa = models.IntegerField()
+    nomePrograma = models.CharField(max_length=128)
+    bolsaEdital = models.IntegerField()
+    dataInicioBolsa = models.DateTimeField()
+    dataFimBolsa = models.DateTimeField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'bolsas_ic'

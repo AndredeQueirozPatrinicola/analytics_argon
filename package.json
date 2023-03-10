@@ -1,0 +1,31 @@
+{
+  "name": "analytics",
+  "version": "1.0.0",
+  "description": "Libraries instalation:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --watch --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fflch/analytics.git"
+  },
+  "author": "andre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fflch/analytics/issues"
+  },
+  "homepage": "https://github.com/fflch/analytics#readme",
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.2.0",
+    "chartjs-plugin-stacked100": "^1.3.0",
+    "datatables.net-bs5": "^1.13.3",
+    "jquery": "^3.6.3"
+  }
+}

@@ -77,19 +77,16 @@ class Index:
             df_merged = dados_alunos.join(df_estados)
             df_merged['Codigos'] = df_merged['Codigos'].fillna(0)
             df_merged['Codigos'] = df_merged['Codigos'].apply(int)
-            quantidade_alunos_sp = df_merged['Alunos'][26]
+
             df_merged.to_csv('apps/static/assets/csv/data.csv')
             df_merged = pd.read_csv('apps/static/assets/csv/data.csv')
 
             if os.path.exists('apps/static/assets/csv/data.csv'):
                 os.remove('apps/static/assets/csv/data.csv')
             
-            quantidade_alunos_sp = int(quantidade_alunos_sp) / 1000
-            quantidade_alunos_sp = round(quantidade_alunos_sp, 3)
             escala_numerica_grafico = self.regula_escala(df_merged['Alunos'].nlargest(2).tolist()[1])
             escala_string_legenda = [str(i) for i in escala_numerica_grafico]
             escala_string_legenda[-1] = ">" + escala_string_legenda[-1]
-
 
             fig = px.choropleth(
                                 df_merged, 
@@ -127,7 +124,7 @@ class Index:
                                                         'pan', 'toImage'
                                                         ]})
 
-            return fig, quantidade_alunos_sp
+            return fig 
         except:
             return None
             

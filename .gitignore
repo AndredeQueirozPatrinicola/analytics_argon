@@ -16,7 +16,11 @@ venv
 .DS_Store
 
 # javascript
-package-lock.json
+
+bundle.js
+apps/static/assets/js/bundle.js
+bundle.js.LICENSE.txt
+node_modules/
 
 staticfiles/*
 !staticfiles/.gitkeep 
@@ -161,3 +165,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+

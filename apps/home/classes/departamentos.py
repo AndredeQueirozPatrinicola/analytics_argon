@@ -21,16 +21,19 @@ class Departamentos():
         api_pesquisa_prametros = []
         api_programas_docente_limpo = []
         api_programas_docente = []
+        api_defesas = []
 
         for dado in dados:
             api_pesquisa_prametros.append(dado.get('api_pesquisa_parametros'))
             api_programas_docente_limpo.append(dado.get('api_programas_docente_limpo'))
             api_programas_docente.append(dado.get('api_programas_docente'))
+            api_defesas.append(dado.get('api_defesas'))
 
         resultado = {
             'api_pesquisa_prametros'      : api_pesquisa_prametros,
             'api_programas_docente_limpo' : api_programas_docente_limpo,
-            'api_programas_docente'       : api_programas_docente
+            'api_programas_docente'       : api_programas_docente,
+            'api_defesas' : api_defesas
         }
 
         return resultado
@@ -39,6 +42,11 @@ class Departamentos():
     def api_docentes(self):
         dados = self._api_docentes
         return [dado.get('api_docentes') for dado in dados]
+
+    @cached_property
+    def api_defesas(self):
+        dados = self.pega_api
+        return dados.get('api_defesas')
 
     @cached_property
     def api_pesquisa_parametros(self):
@@ -135,17 +143,15 @@ class Departamentos():
 
         titulo = 'Todos os docentes da faculdade'
 
-        resultado = {
-            'titulo' : titulo,
-            'df' : df
-        }
+        # resultado = {
+        #     'titulo' : titulo,
+        #     'df' : df
+        # }
 
-        return resultado
+        return df
 
     def plota_relacao_cursos(self):
-        
         dados = self.api_docentes
-
         df = pd.DataFrame(dados)
         valores_cursos = df['nomset'].value_counts().to_list()
         df2 = pd.DataFrame(df['nomset'].value_counts())
@@ -155,17 +161,32 @@ class Departamentos():
         while x < len(df2):
             nomes_cursos.append(df2.index[x])
             x += 1
+        
+        resultado = []
+        x = 0
+        for nome in nomes_cursos:
+            resultado.append([nome, valores_cursos[x]])
+            x += 1
 
-        titulo = 'Percentual de professores por departamento'
+        return resultado
 
-        grafico = Grafico()
-        grafico = grafico.grafico_pizza(values=valores_cursos, names=nomes_cursos, margin=dict(l=10, r=10, t=10, b=0), x=0.6, y=-0.5, color=df2.index, height=700,
-                                        color_discrete_sequence=["#052e70", '#1a448a', '#264a87', '#425e8f', '#667691', '#7585a1', '#7d8da8', "#9facc2", "#91a8cf", "#AFAFAF", "#d4d4d4"])
+    def plota_tipo_vinculo_docente(self):
+        docentes = Docente.objects.values('api_docentes')
 
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        funcoes = []
+        for docente in docentes:
+            funcoes.append(docente.get('api_docentes').get("nomefnc"))
+
+        df = pd.DataFrame(funcoes)
+        lista_nomes = df.value_counts().index.to_list()
+        nomes = [i[0] for i in lista_nomes]
+        lista_valores = df.value_counts().to_list()
+
+        resultado = []
+        x = 0
+        for nome in nomes:
+            resultado.append([nome, lista_valores[x]])
+            x += 1
 
         return resultado
 
@@ -177,36 +198,15 @@ class Departamentos():
         resultado = self.trata_dados_ic(dados)
             
         df = pd.DataFrame(resultado)
-        df = df.transpose()
-        df = df.rename(columns={'ic_com_bolsa': "IC's com bolsa", 'ic_sem_bolsa': "IC's sem bolsa",
-                       'pesquisa_pos_doutorado': "Pos Doutorado com bolsa",'pesquisa_pos_doutorado_sem_bolsa': "Pos Doutorado sem bolsa"})
+        labels = ["IC com bolsa", "IC sem bolsa", 'Pesquisas pós doutorado com bolsa', 'Pesquisas pós doutorado sem bolsa']
 
-        fig = Grafico()
-        fig = fig.grafico_barras(df=df, x=anos, y=["IC's com bolsa", "IC's sem bolsa", "Pos Doutorado com bolsa", "Pos Doutorado sem bolsa"], barmode='group', height=400, color_discrete_map={
-                                    "IC's com bolsa": "#053787",
-                                    "IC's sem bolsa": "#264a87",
-                                    "Pos Doutorado com bolsa": "#9facc2",
-                                    "Pos Doutorado sem bolsa": "#AFAFAF"},
-                                    labels={
-                                        'x': '',
-                                        'variable': 'Legenda',
-                                }, margin=dict(
-                                    l=0, r=30, t=20, b=50), font_color="white", legend=dict(
-                                    yanchor="top",
-                                    y=0.99,
-                                    xanchor="left",
-                                    x=0.01
-                                ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-                                    linecolor='white', gridcolor='#4d4b46')
+        df = df.values.tolist()
+        x = 0
+        for element in df:
+            element.insert(0, labels[x])
+            x += 1
 
-        titulo = "Relação entre IC's e Pós Doutorado com e sem bolsas"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : fig
-        }
-
-        return resultado
+        return df
 
     def tabela_bolsas(self):
         
@@ -254,28 +254,12 @@ class Departamentos():
                     total_artigos += int(docente.get('total_artigos'))
                     total_capitulos += int(docente.get('total_capitulos'))
 
-        resultado = [total_livros, total_artigos, total_capitulos]
-        fig = Grafico()
-        fig = fig.grafico_barras(x=['Livros', 'Artigos', 'Capitulos'], y=resultado, color=['Livros', 'Artigos', 'Capitulos'],
-                                 color_discrete_sequence=[
-                                     "#052e70", '#264a87', '#667691', '#7d8da8', "#9facc2", "#AFAFAF"],
-                                 linecolor='#e0dfda', gridcolor='#e0dfda', margin=dict(
-            l=15, r=15, t=15, b=0), legend=dict(
-                        yanchor="top",
-                        y=0.99,
-                        xanchor="left",
-                        x=0.01), labels={
-                                    'x': '',
-                                    'color': 'Legenda'
-                                    })
-
-        titulo = 'Produção total de Artigos, Livros e Capitulos de todos os docentes da faculdade registrados no lattes'
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : fig
-        }
-
+        resultado = [
+                        ["Livros", total_livros], 
+                        ["Artigos", total_artigos], 
+                        ["Capitulos", total_capitulos]
+                    ]
+        
         return resultado
 
     def prod_historica_total(self):
@@ -333,47 +317,11 @@ class Departamentos():
                 soma_lista, dados_terceiro_ano), reduce(soma_lista, dados_quarto_ano), reduce(soma_lista, dados_quinto_ano), reduce(soma_lista, dados_sexto_ano)])
             s += 1
 
-
-        w = 0
-        dado = {}
-        while w < len(anos):
-
-            dado[anos[w]] = {
-                'Livros' : resultado[0][w],
-                'Artigos' : resultado[1][w],
-                'Capitulos' : resultado[2][w]
-            }
-
-            w += 1
-
-        df = pd.DataFrame(dado)
-        df = df.transpose()
-
-        grafico = Grafico()
-        grafico = grafico.grafico_barras(df=df, x=anos, y=['Livros', 'Artigos', 'Capitulos'], height=478, barmode='group', 
-                                        color_discrete_map={
-                                            "Livros": "#053787",
-                                            "Artigos": "#9facc2",
-                                            "Capitulos": "#AFAFAF"
-                                        },
-                                            labels={
-                                            'x': '',
-                                            'variable': 'Legenda',
-                                        }, margin=dict(
-                                            l=0, r=30, t=20, b=50), font_color="black", legend=dict(
-                                            yanchor="top",
-                                            y=0.99,
-                                            xanchor="left",
-                                            x=0.01
-                                        ), bargroupgap=0, bargap=0.3, autosize=True, yaxis_title="",
-                                        linecolor='#e0dfda', gridcolor='#e0dfda')
-                                        
-        titulo = f"Produção da faculdade - ({anos[0]} - {anos[-1]})"
-
-        resultado = {
-            'titulo' : titulo,
-            'grafico' : grafico
-        }
+        x = 0
+        labels = ["Livros", "Artigos", "Capitulos"]
+        for dado in resultado:
+            dado.insert(0, labels[x])
+            x += 1
 
         return resultado
 
@@ -384,3 +332,34 @@ class Departamentos():
             'label' : 'Programas'
         }
         return resultado
+    
+    def grafico_defesas(self):
+        dados = self.api_defesas
+
+        x, y, z = 0, 0, 0     
+        for dado in dados:
+            for defesa in dado:
+                if defesa.get('nivel') == 'ME':
+                    x += 1
+                if defesa.get('nivel') == 'DO':
+                    y += 1
+                if defesa.get('nivel') == 'DD':
+                    z += 1
+
+        resultado = [
+            ["Mestrado", x],
+            ["Doutorado", y],
+            ["Doutorado Direto", z]
+        ]
+
+        return resultado
+    
+    def tabela_defesas(self):
+        dados = self.api_defesas
+        dfs = []
+        for dado in dados:
+            dfs.append(pd.DataFrame(dado))
+        df = pd.concat(dfs, ignore_index=True)
+        df = df[['titulo', 'nome', 'nivel', 'nomare', 'data']]
+        df = df.drop_duplicates()
+        return df
