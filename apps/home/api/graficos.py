@@ -193,9 +193,9 @@ class GraficoSexoAPIView(GraficoAPI):
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Distribuição de todos os alunos de graduação por sexo/ano(Percentual)."
+            return "Distribuição de todos os alunos de graduação por sexo/ano(Absoluto)."
         else:
-            return f"Distribuição dos alunos de {departamento.title()} por sexo/ano(Percentual)."
+            return f"Distribuição dos alunos de {departamento.title()} por sexo/ano(Absoluto)."
 
     def get_labels(self):
         return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
@@ -277,7 +277,7 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
         if not departamento:
             return "Distribuição de todos os alunos de graduação por raca(Percentual)."
         else:
-            return f"Distribuição dos alunos de {departamento.title()} por sexo(Percentual)."
+            return f"Distribuição dos alunos de {departamento.title()} por raca(Percentual)."
 
     def get_labels(self):
         return ["Amarela", "Branca", "Indígena", "Não informada", "Parda", "Preta"]
