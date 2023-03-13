@@ -20,13 +20,15 @@ class Etl:
     def pega_dados_por_ano(self, coluna, order_by='', where=''):
         try:
             if self.secure_input(coluna, order_by, where):
+                args = []
                 select = f"SELECT ag.{coluna}"
                 _from = f'FROM graduacoes g'
                 join = f'JOIN alunos_graduacao ag ON g.numeroUSP = ag.numeroUSP'
                 group_by = f'GROUP BY ag.{coluna}'
 
                 if where:
-                    where = f"WHERE g.nomeCurso = '{where}'"
+                    args = [where,]
+                    where = "WHERE g.nomeCurso = %s"
 
                 if order_by:
                     order_by = f"ORDER BY {order_by}"
@@ -45,7 +47,7 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
-                self.cursor.execute(query)
+                self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
         except:
@@ -53,11 +55,9 @@ class Etl:
         
     def conta_pessoa_por_categoria(self, tabela, situacao):
         try:
-            self.cursor.execute(f"""
-                                    SELECT COUNT(*) 
-                                    FROM {tabela} g 
-                                    WHERE situacaoCurso = '{situacao}';
-                                """)
-            return self.cursor.fetchall()
+            if self.secure_input(tabela, situacao):
+                self.cursor.execute(f"SELECT COUNT(*) FROM {tabela} WHERE situacaoCurso = %s", [situacao])
+                return self.cursor.fetchall()
+            raise Exception("SQLInjection Detected")
         except:
             raise Exception("Não foi possivel realizar a query") 
