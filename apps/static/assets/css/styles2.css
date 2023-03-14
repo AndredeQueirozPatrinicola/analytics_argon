@@ -412,6 +412,10 @@ ul, ol, li, input, hr{
     width: 100%;
 }
 
+.table-container > div{
+    overflow-x: auto;
+}
+
 .table-container > div > div:first-child{
     display: flex;
     align-items: center;
