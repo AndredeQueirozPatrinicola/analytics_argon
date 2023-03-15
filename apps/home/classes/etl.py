@@ -9,7 +9,7 @@ class Etl:
         self.anos = [i for i in range(int(datetime.now().year) - 6, int(datetime.now().year) + 1)]
 
     def secure_input(self, *args):
-        proibidos = ['--', ';', '.', 'select', 'delete', 'update', 'from', 'insert', 'table', '*', "''"]
+        proibidos = ['--', ';', '.', 'select', 'delete', 'update', 'from', 'insert', 'table', '*', "''", "/*", "'*\'", "'\'"]
         for caracter in proibidos:
             for entrada in args:
                 entrada.lower()
