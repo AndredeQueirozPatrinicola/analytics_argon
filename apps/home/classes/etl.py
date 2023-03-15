@@ -37,7 +37,7 @@ class Etl:
                 for ano in self.anos:
                     sum.append(f", SUM(CASE WHEN ({ano} >= YEAR(dataInicioVinculo)) AND ({ano} <= YEAR(dataFimVinculo) OR dataFimVinculo IS NULL) THEN 1 END) AS '{ano}'")
                 sum = "".join(sum)
-                
+
                 query = f"""
                             {  select  }
                             {   sum    }
@@ -51,6 +51,7 @@ class Etl:
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
         except:
+            self.cursor.close()
             raise Exception("Não foi possivel realizar a query") 
         
     def conta_pessoa_por_categoria(self, tabela, situacao):
