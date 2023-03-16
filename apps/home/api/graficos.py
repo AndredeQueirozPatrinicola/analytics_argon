@@ -47,6 +47,8 @@ class GraficoAPI(views.APIView):
         data = self.get_data()
         labels = self.get_labels()
         datasets = self.get_datasets(data, kwargs['colors'])
+        
+        if not data: raise(Exception("No-data"))
 
         plugins = {
             'title': {
