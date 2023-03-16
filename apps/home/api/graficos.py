@@ -26,6 +26,7 @@ class GraficoAPI(views.APIView):
         super().__init__(**kwargs)
         self.etl = Etl()
         self.utils = Utils()
+        self.error_message = {"error": {"status_code" : 400, "message": "Bad Request"}}
 
     def get_datasets(self, dados, colors):
         datasets = []
@@ -159,7 +160,7 @@ class GraficoRacaAPIView(GraficoAPI):
         if not departamento:
             return "Distribuição de todos os alunos de graduação por raça/ano(Absoluto)."
         else:
-            return f"DIstribuição dos alunos de {departamento.title()} por raça/ano(Absoluto)."
+            return f"Distribuição dos alunos de {departamento.title()} por raça/ano(Absoluto)."
 
     def get_labels(self):
         return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
@@ -178,7 +179,7 @@ class GraficoRacaAPIView(GraficoAPI):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoSexoAPIView(GraficoAPI):
@@ -189,9 +190,11 @@ class GraficoSexoAPIView(GraficoAPI):
                 "sexo", order_by='sexo', where=graduacao)
         else:
             dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo')
-        dados = pd.DataFrame(dados)
-        dados = dados.values.tolist()
-        return dados
+        df = pd.DataFrame(dados)
+        df[0] = df[0].str.replace("F", "Feminino")
+        df[0] = df[0].str.replace("M", "Masculino")
+        df = df.values.tolist()
+        return df
 
     def get_titulo(self, departamento):
         if not departamento:
@@ -215,7 +218,7 @@ class GraficoSexoAPIView(GraficoAPI):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoPizzaSexo(GraficoPizzaAPIView):
@@ -258,7 +261,7 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoPizzaRaca(GraficoPizzaAPIView):
@@ -301,7 +304,7 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
@@ -341,7 +344,7 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
@@ -381,7 +384,7 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
@@ -420,7 +423,7 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
@@ -457,7 +460,7 @@ class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, Grafi
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
@@ -502,7 +505,7 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
@@ -533,7 +536,7 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({"error": 400, "detail" : "Something whent wrong with your request"})
+            return Response(self.error_message)
 
 
 class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
@@ -570,4 +573,4 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
-            return Response({'error': 406})
+            return Response(self.error_message)
