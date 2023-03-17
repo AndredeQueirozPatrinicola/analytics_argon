@@ -29,15 +29,15 @@ urlpatterns = [
 
     re_path(r'^departamentos/defesas(/(?P<departamento>[\w\s\-]+))?$', GraficoDefesasDepartamentos.as_view(), name='defesas'),
 
-    re_path('departamentos/professores', GraficoDocentesNosDepartamentos.as_view(), name='professores-proporcoes'),
+    path('departamentos/professores', GraficoDocentesNosDepartamentos.as_view(), name='professores-proporcoes'),
 
     re_path(r'^departamentos/tipo-vinculo(/(?P<departamento>[\w\s\-]+))?$', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
 
-    re_path('docentes/<str:docente>/orientandos', GraficoOrientandos.as_view(), name='orientandos'),
+    path('docentes/<str:docente>/orientandos', GraficoOrientandos.as_view(), name='orientandos'),
 
-    re_path('docentes/<str:docente>/producao-historica', GraficoProducaoHistoricaDocente.as_view(), name='producao-historica'),
+    path('docentes/<str:docente>/producao-historica', GraficoProducaoHistoricaDocente.as_view(), name='producao-historica'),
     
-    re_path('docentes/<str:docente>/producao-historica/<str:tipo>', GraficoProducaoHistoricaDocente.as_view(), name='producao-historica'),
+    path('docentes/<str:docente>/producao-historica/<str:tipo>', GraficoProducaoHistoricaDocente.as_view(), name='producao-historica'),
 
     ##########################################
     ##              TABELAS                 ##
