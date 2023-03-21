@@ -10,12 +10,38 @@
 <div class="dashboard-row">
   <div class="card-dash-6">
     <div class="select-container">
+      <select class="select-grafico">
+
+        <option value="2014">2014</option>
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
+
+      </select>
+      <select class="select-grafico">
+
+        <option value="2021">2023</option>
+        <option value="2021">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>     
+
+      </select>
       <select class="select-grafico raca-por-ano">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
+
+      <btn class="btn btn-dark me-5">
+          Oe
+      </btn>
     </div>
+
     <div class="grafico-container">
 
       <canvas id="raca-por-ano"></canvas>
@@ -26,7 +52,7 @@
     <div class="select-container">
       <select class="select-grafico raca-atual">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
     </div>
@@ -42,7 +68,7 @@
     <div class="select-container">
       <select class="select-grafico sexo-atual">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
     </div>
@@ -56,7 +82,7 @@
     <div class="select-container">
       <select class="select-grafico sexo-por-ano">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
     </div>

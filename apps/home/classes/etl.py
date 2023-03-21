@@ -17,9 +17,9 @@ class Etl:
                     return False
         return True
 
-    def pega_dados_por_ano(self, coluna, order_by='', where=''):
+    def pega_dados_por_ano(self, coluna, order_by='', where='', anos=''):
         try:
-            if self.secure_input(coluna, order_by, where):
+            if self.secure_input(coluna, order_by, where, anos):
                 args = []
                 select = f"SELECT ag.{coluna}"
                 _from = f'FROM graduacoes g'
@@ -32,9 +32,9 @@ class Etl:
 
                 if order_by:
                     order_by = f"ORDER BY {order_by}"
-
+                print(anos)
                 sum = []
-                for ano in self.anos:
+                for ano in anos:
                     sum.append(f", SUM(CASE WHEN ({ano} >= YEAR(dataInicioVinculo)) AND ({ano} <= YEAR(dataFimVinculo) OR dataFimVinculo IS NULL) THEN 1 END) AS '{ano}'")
                 sum = "".join(sum)
 

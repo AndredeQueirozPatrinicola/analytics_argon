@@ -4,6 +4,7 @@ from apps.home import views
 from rest_framework import routers
 
 from .graficos import *
+from .mapas import *
 
 router = routers.DefaultRouter()
 
@@ -11,17 +12,19 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
 
+    path('teste', Teste.as_view(), name='teste'),
+
     ##########################################
     ##               GRAFICOS               ##
     ##########################################
 
-    re_path(r'^graduacao/raca-por-ano(/(?P<graduacao>[\w\s\-]+))?$', GraficoRacaAPIView.as_view(), name='raca'),
+    path('raca-por-ano', GraficoRacaAPIView.as_view(), name='raca'),
 
-    re_path(r'^graduacao/sexo-por-ano(/(?P<graduacao>[\w\s\-]+))?$', GraficoSexoAPIView.as_view(), name='sexo'),
+    path('sexo-por-ano', GraficoSexoAPIView.as_view(), name='sexo'),
 
-    re_path(r'^graduacao/sexo-atual(/(?P<graduacao>[\w\s\-]+))?$', GraficoPizzaSexo.as_view(), name='sexo-atual'),
+    path('sexo-atual', GraficoPizzaSexo.as_view(), name='sexo-atual'),
 
-    re_path(r'^graduacao/raca-atual(/(?P<graduacao>[\w\s\-]+))?$', GraficoPizzaRaca.as_view(), name='sexo-raca'),
+    path('raca-atual', GraficoPizzaRaca.as_view(), name='sexo-raca'),
 
     re_path(r'^departamentos/prod-por-ano(/(?P<departamento>[\w\s\-]+))?$', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
 

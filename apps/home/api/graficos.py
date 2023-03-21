@@ -147,11 +147,13 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 class GraficoRacaAPIView(GraficoAPI):
 
     def get_data(self):
-        if graduacao := self.kwargs.get('graduacao'):
-            resultado = self.etl.pega_dados_por_ano(
-                'raca', order_by='raca', where=graduacao)
-        else:
-            resultado = self.etl.pega_dados_por_ano('raca', order_by='raca')
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        print(ano_final, ano_final)
+        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+        graduacao = self.request.GET.get('departamento')
+        resultado = self.etl.pega_dados_por_ano(
+            'raca', order_by='raca', where=graduacao, anos=anos)
 
         dados = pd.DataFrame(resultado)
         dados = dados.fillna(0)
@@ -165,23 +167,21 @@ class GraficoRacaAPIView(GraficoAPI):
             return f"Distribuição dos alunos de {departamento.title()} por raça/ano(Absoluto)."
 
     def get_labels(self):
-        return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
 
     def get(self, *args, **kwargs):
-        try:
-            if departamento := self.kwargs.get('graduacao'):
-                departamento = departamento
-            else:
-                departamento = False
-
+        # try:
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#1a448a',  '#425e8f',
                 '#7585a1', '#91a8cf', '#cad5e8',
             ], stacked=False, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
-        except:
-            return Response(self.error_message)
+        # except:
+        #     return Response(self.error_message)
 
 
 class GraficoSexoAPIView(GraficoAPI):
