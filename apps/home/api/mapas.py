@@ -8,5 +8,5 @@ import json
 class Teste(views.APIView):
 
     def get(self, *args, **kwargs):
-        print(self.request.GET['ola'])
+
         return Response({"ola":"Mundo"})

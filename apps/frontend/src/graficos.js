@@ -10,6 +10,10 @@ const DEFAULT_PARAMS = {
   departamento: ""
 }
 
+async function raiseDataError(ctx){
+  ctx.classList.add('active-message')
+}
+
 async function plotaGrafico(element, parameters) {
   let chart = Chart.getChart(element.id)
   if (!chart) {
@@ -24,16 +28,22 @@ async function plotaGrafico(element, parameters) {
 }
 
 async function submitPost(element) {
+  const message = element.parentElement.parentElement.firstElementChild;
+  message.classList.remove('active-message')
   const parent = element.parentElement;
-  const parameters = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
   const chart = Array.from(parent.parentElement.children).filter(element => element.className == 'grafico-container')[0].firstElementChild;
-  
-  plotaGrafico(chart, {
-                        ano_inicial:parameters[0], 
-                        ano_final:parameters[1], 
-                        departamento:parameters[2]
-                      }
-              )
+  const parameters = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
+  const ano_inicial = parameters[0]
+  const ano_final = parameters[1]
+  const departamento = parameters[2]
+
+  if (ano_inicial > ano_final) {
+    raiseDataError(message)
+  }
+  else {
+    plotaGrafico(chart, {ano_inicial:ano_inicial, ano_final:ano_final, departamento:departamento})
+  }
+
 }
 
 export async function coordenaGraficos() {
