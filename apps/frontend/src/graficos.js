@@ -33,15 +33,24 @@ async function submitPost(element) {
   const parent = element.parentElement;
   const chart = Array.from(parent.parentElement.children).filter(element => element.className == 'grafico-container')[0].firstElementChild;
   const parameters = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
+  const checkBox = Array.from(parent.children).filter(element => element.tagName == 'INPUT').map(element => element.checked)
+  console.log(checkBox)
+  parameters.push(checkBox[0])
   const ano_inicial = parameters[0]
   const ano_final = parameters[1]
   const departamento = parameters[2]
+  const checked = parameters[3]
 
   if (ano_inicial > ano_final) {
     raiseDataError(message)
   }
   else {
-    plotaGrafico(chart, {ano_inicial:ano_inicial, ano_final:ano_final, departamento:departamento})
+    plotaGrafico(chart, {
+                          ano_inicial:ano_inicial, 
+                          ano_final:ano_final, 
+                          departamento:departamento, 
+                          stacked:checked
+                        })
   }
 
 }

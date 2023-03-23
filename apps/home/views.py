@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import HttpResponse
 from django.views import View
 from django.template import loader
@@ -231,11 +233,15 @@ class GraduacaoViews(View):
         departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
         numero_alunos = graduacao.pega_numero_alunos_ativos()
         caminho = graduacao.pega_caminho()
+        anos = [ano for ano in range(2013, datetime.now().year + 1)]
+        anos_reverse = list(reversed(anos))
 
-        context = {
+        context = { 
             "card_header_1": numero_alunos,
             'caminho' : caminho,
-            "departamentos" : departamentos
+            "departamentos" : departamentos,
+            "anos" : anos,
+            "anos_reverse": anos_reverse
         }
 
         return render(request, 'home/graduacao.html', context)

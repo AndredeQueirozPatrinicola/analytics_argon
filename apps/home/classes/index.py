@@ -105,11 +105,11 @@ class Index:
                                 range_color=[escala_numerica_grafico[0], escala_numerica_grafico[-1]]
                                 )
 
-            fig.update_geos(fitbounds="geojson", visible=False)
+            fig.update_geos(fitbounds="geojson", visible=True)
             fig.update_layout(
                                 margin={"r":0,"t":0,"l":0,"b":0},
                                 coloraxis_colorbar=dict(
-                                title="Escala",
+                                title="Legenda(Nº de pessoas)",
                                 tickvals=escala_numerica_grafico,
                                 ticktext=escala_string_legenda
                             ))

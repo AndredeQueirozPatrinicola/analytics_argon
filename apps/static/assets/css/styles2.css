@@ -12,7 +12,7 @@ html, body, .side-bar, .main-section, .main-content{
     height: 100%;
 }
 
-ul, ol, li, input, hr{
+ul, ol, li, hr{
     all:unset
 }
 
@@ -685,6 +685,11 @@ th, td{
     text-align: center;
     font-size: 10px;
     visibility: hidden;
+}
+
+.check-box{
+    margin-right: 2rem;
+    margin-left: 0.5rem;
 }
 
 btn{

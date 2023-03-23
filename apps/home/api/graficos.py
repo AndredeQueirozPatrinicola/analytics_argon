@@ -175,11 +175,15 @@ class GraficoRacaAPIView(GraficoAPI):
 
     def get(self, *args, **kwargs):
         try:
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
+            else:
+                stacked = False
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#1a448a',  '#425e8f',
                 '#7585a1', '#91a8cf', '#cad5e8',
-            ], stacked=False, departamento=departamento)
+            ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -203,6 +207,8 @@ class GraficoSexoAPIView(GraficoAPI):
         return df
 
     def get_titulo(self, departamento):
+
+
         if not departamento:
             return "Distribuição de todos os alunos de graduação por sexo/ano(Absoluto)."
         else:
@@ -215,11 +221,15 @@ class GraficoSexoAPIView(GraficoAPI):
 
     def get(self, *args, **kwargs):
         try:
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
+            else:
+                stacked = False
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#91a8cf',
                 '#052e70'
-            ], stacked=False, departamento=departamento)
+            ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:

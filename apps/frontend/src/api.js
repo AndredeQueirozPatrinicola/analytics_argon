@@ -5,7 +5,7 @@ async function getHostApi(){
 }
 async function pegaApi(element, parameters){
     try {
-        let apiUrl = `/api/${element.id}?ano_inicial=${parameters.ano_inicial}&ano_final=${parameters.ano_final}&departamento=${parameters.departamento}`
+        let apiUrl = `/api/${element.id}?ano_inicial=${parameters.ano_inicial}&ano_final=${parameters.ano_final}&departamento=${parameters.departamento}&stacked=${parameters.stacked}`
         let response = await fetch(apiUrl);
         let data = await response.json(apiUrl);
         return data
