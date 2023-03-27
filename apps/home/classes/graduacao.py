@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.db import connections
 
+from apps.home.models import *
 from apps.home.classes.graficos import Grafico
 from apps.home.utils import Utils
 from .etl import Etl
@@ -25,10 +26,10 @@ class Graduacao:
         ]
 
     def pega_numero_alunos_ativos(self):
-        dados = self.etl.conta_pessoa_por_categoria('graduacoes', 'ativo')
+        dados = Graduacoes.objects.using('etl').filter(situacao_curso = 'ativo')
         resultado = {
             'title' : 'Numero de Alunos Ativos',
-            'text' : f"Alunos: {dados[0][0]}"
+            'text' : f"Alunos: {len(dados)}"
         }
         return resultado
 

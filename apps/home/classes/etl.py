@@ -21,20 +21,20 @@ class Etl:
         try:
             if self.secure_input(coluna, order_by, where):
                 args = []
-                select = f"SELECT ag.{coluna}"
+                select = f"SELECT p.{coluna}"
                 _from = f'FROM graduacoes g'
-                join = f'JOIN alunos_graduacao ag ON g.numeroUSP = ag.numeroUSP'
-                group_by = f'GROUP BY ag.{coluna}'
+                join = f'JOIN pessoas p ON g.numero_usp = p.numero_usp'
+                group_by = f'GROUP BY p.{coluna}'
 
                 if where:
                     args = [where,]
-                    where = "WHERE g.nomeCurso = %s"
+                    where = "WHERE g.nome_curso = %s"
 
                 if order_by:
                     order_by = f"ORDER BY {order_by}"
                 sum = []
                 for ano in anos:
-                    sum.append(f", SUM(CASE WHEN ({ano} >= YEAR(dataInicioVinculo)) AND ({ano} <= YEAR(dataFimVinculo) OR dataFimVinculo IS NULL) THEN 1 END) AS '{ano}'")
+                    sum.append(f", SUM(CASE WHEN ({ano} >= YEAR(data_inicio_vinculo)) AND ({ano} <= YEAR(data_fim_vinculo) OR data_fim_vinculo IS NULL) THEN 1 END) AS '{ano}'")
                 sum = "".join(sum)
 
                 query = f"""
@@ -61,3 +61,4 @@ class Etl:
             raise Exception("SQLInjection Detected")
         except:
             raise Exception("Não foi possivel realizar a query") 
+            
