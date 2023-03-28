@@ -1,8 +1,7 @@
 from rest_framework import views
 from rest_framework.response import Response
 from django.db.models import Count
-from django.db.models.functions import ExtractYear
-from django.db.models import Q, Count, Case, When, Sum, IntegerField
+from django.db.models import Q, Count
 
 from apps.home.classes.etl import Etl
 from apps.home.utils import Utils
@@ -48,7 +47,12 @@ class GraficoAPI(views.APIView):
         data = self.get_data()
         labels = self.get_labels()
         datasets = self.get_datasets(data, kwargs['colors'])
-
+        # print(
+        #     titulo,
+        #     data,
+        #     labels,
+        #     datasets
+        # )
         if not data:
             raise(Exception("No-data"))
 
@@ -195,11 +199,12 @@ class GraficoSexoAPIView(GraficoAPI):
     def get_data(self):
         ano_inicial = self.request.GET.get('ano_inicial')
         ano_final = self.request.GET.get('ano_final')
-        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+        anos = [int(ano)
+                for ano in range(int(ano_inicial), int(ano_final) + 1)]
         graduacao = self.request.GET.get('departamento')
         dados = self.etl.pega_dados_por_ano(
             "sexo", order_by='sexo', where=graduacao, anos=anos)
-        
+
         df = pd.DataFrame(dados)
         df[0] = df[0].str.replace("F", "Feminino")
         df[0] = df[0].str.replace("M", "Masculino")
@@ -207,7 +212,6 @@ class GraficoSexoAPIView(GraficoAPI):
         return df
 
     def get_titulo(self, departamento):
-
 
         if not departamento:
             return "Distribuição de todos os alunos de graduação por sexo/ano(Absoluto)."
@@ -590,3 +594,89 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
             return Response(serializer.data)
         except:
             return Response(self.error_message)
+
+
+class GraficoRacaSexo(GraficoPizzaAPIView):
+
+    def plota_grafico(self, *args, **kwargs):
+        grafico = super().plota_grafico(*args, **kwargs)
+        options = grafico.get('options')
+        stacked_options = {
+            'indexAxis': 'y',
+            'scales': {
+                'x': {
+                    'stacked': True
+                },
+                'y': {
+                    'beginAtZero': True,
+                    'stacked': True
+                }
+            }
+        }
+        grafico['options'] = {**options, **stacked_options}
+        return grafico
+
+    def get_datasets(self, dados, colors):
+        datasets = []
+        for gender in dados:
+            data = []
+            for dado in dados.get(gender).get('data'):
+                data.append(dado[-1])
+
+            dataset = {
+                "label": gender.capitalize(),
+                "data": data,
+                "backgroundColor": dados.get(gender).get('color'),
+                "borderColor": dados.get(gender).get('color'),
+                "borderWidth": 1
+            }
+            datasets.append(dataset)
+        return datasets
+
+    def get_data(self):
+        if departamento := self.request.GET.get('departamento'):
+            raw_data = self.etl.relaciona_dados_em_determinado_ano(column_1='raca', column_2='sexo', table_1='graduacoes', table_2='pessoas', 
+                                                               data_inicio=int(self.request.GET.get('ano')) - 1, data_fim=self.request.GET.get('ano'), departamento=departamento)
+        else:
+            raw_data = self.etl.relaciona_dados_em_determinado_ano(column_1='raca', column_2='sexo', table_1='graduacoes', table_2='pessoas', 
+                                                               data_inicio=int(datetime.now().year) - 1, data_fim=datetime.now().year)
+        df = pd.DataFrame(raw_data)
+        df = df.rename(columns={0: "raca", 1: "sexo", 2: 'count'})
+
+        df['sexo'] = df['sexo'].str.replace("F", "Feminino")
+        df['sexo'] = df['sexo'].str.replace("M", "Masculino")
+        df_male = df.loc[df['sexo'] == 'Feminino']
+        df_female = df.loc[df['sexo'] == 'Masculino']
+
+        dados = {
+            'male': {
+                'data': df_male.values.tolist(),
+                'color': "#052e70"
+            },
+            'female': {
+                'data': df_female.values.tolist(),
+                'color': "#cad5e8"
+            },
+        }
+        return dados
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Proporção entre Gênero/Raca no departamento de {self.request.GET.get('departamento')} em {self.request.GET.get('ano')}"
+        else:
+            return f"Proporção entre Gênero/Raca em {self.request.GET.get('ano')}"
+
+    def get_labels(self):
+        labels = ["Amarela", "Branca", "Indígena",
+                  "Não informada", "Parda", "Preta"]
+        return labels
+
+    def get(self, *args, **kwargs):
+        # try:
+            departamento = self.request.GET.get('departamento')
+            dados = self.plota_grafico(tipo='bar', colors=[
+                '#97bde8'
+            ], departamento=departamento)
+            return Response(dados)
+        # except:
+        #     return Response(self.error_message)

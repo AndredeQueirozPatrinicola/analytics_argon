@@ -1,11 +1,17 @@
-async function getHostApi(){
-    const pathName = window.location.pathname
-    const apiUrl = `/api${pathName}`
-    return apiUrl
-}
+function objectToQueryString(obj) {
+    let result = "";
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        result += key + "=" + obj[key] + "&";
+      }
+    }
+    return result.slice(0, -1);
+  }
+  
 async function pegaApi(element, parameters){
+    
     try {
-        let apiUrl = `/api/${element.id}?ano_inicial=${parameters.ano_inicial}&ano_final=${parameters.ano_final}&departamento=${parameters.departamento}&stacked=${parameters.stacked}`
+        let apiUrl = `/api/${element.id}?` + objectToQueryString(parameters)
         let response = await fetch(apiUrl);
         let data = await response.json(apiUrl);
         return data

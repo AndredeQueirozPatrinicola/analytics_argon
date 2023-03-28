@@ -217,12 +217,9 @@ class DepartamentosView(View):
 class SobrenosView(View):
 
     def get(self, request):
-
-
         context = {
             'landingpage': 'landingpage'
         }
-
         return render(request, 'home/projeto.html', context)
 
 
@@ -235,7 +232,6 @@ class GraduacaoViews(View):
         caminho = graduacao.pega_caminho()
         anos = [ano for ano in range(2013, datetime.now().year + 1)]
         anos_reverse = list(reversed(anos))
-
         context = { 
             "card_header_1": numero_alunos,
             'caminho' : caminho,
@@ -243,5 +239,4 @@ class GraduacaoViews(View):
             "anos" : anos,
             "anos_reverse": anos_reverse
         }
-
         return render(request, 'home/graduacao.html', context)

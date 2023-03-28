@@ -10,7 +10,24 @@ const DEFAULT_PARAMS = {
   departamento: ""
 }
 
-async function raiseDataError(ctx){
+async function formataParametros(parameters) {
+  if (parameters.length === 4) {
+    return {
+      "ano_inicial": parameters[0],
+      "ano_final": parameters[1],
+      "departamento": parameters[2],
+      "stacked": parameters[3]
+    }
+  }
+  else if (parameters.length === 3) {
+    return {
+      "ano": parameters[0],
+      "departamento": parameters[1]
+    }
+  }
+}
+
+async function raiseDataError(ctx) {
   ctx.classList.add('active-message')
 }
 
@@ -32,27 +49,18 @@ async function submitPost(element) {
   message.classList.remove('active-message')
   const parent = element.parentElement;
   const chart = Array.from(parent.parentElement.children).filter(element => element.className == 'grafico-container')[0].firstElementChild;
-  const parameters = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
+  const labels = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
   const checkBox = Array.from(parent.children).filter(element => element.tagName == 'INPUT').map(element => element.checked)
-  console.log(checkBox)
-  parameters.push(checkBox[0])
-  const ano_inicial = parameters[0]
-  const ano_final = parameters[1]
-  const departamento = parameters[2]
-  const checked = parameters[3]
-
-  if (ano_inicial > ano_final) {
+  if (checkBox) {
+    labels.push(checkBox[0])
+  }
+  const parametros = await formataParametros(labels);
+  if (parametros.ano_inicial > parametros.ano_final) {
     raiseDataError(message)
   }
   else {
-    plotaGrafico(chart, {
-                          ano_inicial:ano_inicial, 
-                          ano_final:ano_final, 
-                          departamento:departamento, 
-                          stacked:checked
-                        })
+    plotaGrafico(chart, parametros)
   }
-
 }
 
 export async function coordenaGraficos() {

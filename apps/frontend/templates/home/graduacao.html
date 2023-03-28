@@ -107,6 +107,36 @@
   </div>
 </div>
 
+<div class="dashboard-row">
+  <div class="card-dash-6">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <label>Ano</label>
+      {% include 'includes/anos.html' %}
+
+      <select class="select-grafico teste">
+        {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+            <option value="">{{ departamento }}</option>
+          {% else %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+          Buscar
+      </btn>
+    </div>
+
+    <div class="grafico-container">
+
+      <canvas id="teste"></canvas>
+
+    </div>
+  </div>
+</div>
+
 
 {% endblock content %}
 
