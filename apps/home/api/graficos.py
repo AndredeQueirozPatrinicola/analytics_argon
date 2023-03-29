@@ -436,10 +436,7 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -476,10 +473,7 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -516,10 +510,7 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -593,10 +584,7 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#2d528d',
                 '#486492',
@@ -629,10 +617,7 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('docente'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',

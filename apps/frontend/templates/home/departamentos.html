@@ -15,6 +15,9 @@
           <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
     <div class="grafico-container">
 
@@ -29,7 +32,11 @@
           <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
+    
     <div class="grafico-container">
 
       <canvas id="prod-total"></canvas>
@@ -47,7 +54,11 @@
           <option value="{{ departamento }}">{{ departamento }}</option>
         {% endfor %}
       </select>
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
+    
     <div class="grafico-container">
 
       <canvas id="defesas"></canvas>
@@ -85,6 +96,9 @@
           {% for departamento in departamentos %}
             <option value="{{ departamento }}">{{ departamento }}</option>
           {% endfor %}
+          <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+            Buscar
+          </btn>
         </select>
       </div>
       <div class="grafico-container">

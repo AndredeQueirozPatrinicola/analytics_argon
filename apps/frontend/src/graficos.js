@@ -6,11 +6,12 @@ Chart.register(ChartjsPluginStacked100);
 
 const DEFAULT_PARAMS = {
   ano_inicial: 2017,
-  ano_final: 2023,
+  ano_final: 2022,
   departamento: ""
 }
 
 async function formataParametros(parameters) {
+  console.log(parameters)
   if (parameters.length === 4) {
     return {
       "ano_inicial": parameters[0],
@@ -24,6 +25,11 @@ async function formataParametros(parameters) {
       "ano": parameters[0],
       "departamento": parameters[1],
       "stacked" : parameters[2]
+    }
+  }
+  else if(parameters.length === 2){
+    return {
+      "departamento": parameters[0]
     }
   }
 }
