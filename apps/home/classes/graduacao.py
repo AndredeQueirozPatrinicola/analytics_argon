@@ -33,16 +33,6 @@ class Graduacao:
         }
         return resultado
 
-    def teste(self):
-        dados = self.etl.teste()
-        df = pd.DataFrame(dados)
-        df = df.rename(columns={0:"raca", 1:"sexo", 2:'count'})
-        df_male = df.loc[df['sexo'] == 'F']
-        # print(df_male.values.tolist())
-        df_female = df.loc[df['sexo'] == 'M']
-        # print(df_female)
-
-        return df
 
 
 

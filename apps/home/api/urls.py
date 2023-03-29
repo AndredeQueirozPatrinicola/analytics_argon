@@ -12,7 +12,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
 
-    path('teste', GraficoRacaSexo.as_view(), name='teste'),
+    path('raca-sexo', GraficoRacaSexo.as_view(), name='raca-sexo'),
 
     ##########################################
     ##               GRAFICOS               ##

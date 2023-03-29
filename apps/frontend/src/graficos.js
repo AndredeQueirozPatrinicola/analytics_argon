@@ -22,7 +22,8 @@ async function formataParametros(parameters) {
   else if (parameters.length === 3) {
     return {
       "ano": parameters[0],
-      "departamento": parameters[1]
+      "departamento": parameters[1],
+      "stacked" : parameters[2]
     }
   }
 }

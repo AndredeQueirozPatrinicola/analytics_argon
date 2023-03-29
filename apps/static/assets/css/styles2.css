@@ -388,6 +388,7 @@ ul, ol, li, hr{
     display: flex;
     justify-content: end;
     align-items: center;
+    padding-left: 2rem;
 }
 
 .select-grafico{
@@ -406,6 +407,13 @@ ul, ol, li, hr{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.grafico-container > p{
+    font-size: 12px;
+    margin-top: 2rem;
+    color: #847f7f;
 }
 
 .table-container, .table-content{

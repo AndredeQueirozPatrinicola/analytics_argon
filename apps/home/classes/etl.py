@@ -15,14 +15,14 @@ class Etl:
                      'from', 'insert', 'table', '*', "''", "/*", "'*\'", "'\'"]
         for caracter in proibidos:
             for entrada in args:
-                entrada.lower()
+                str(entrada).lower()
                 if caracter in entrada:
                     return False
         return True
 
     def pega_dados_por_ano(self, coluna, order_by='', where='', anos=''):
         try:
-            if self.secure_input(coluna, order_by, where):
+            if self.secure_input(coluna, order_by, where, anos):
                 args = []
                 select = f"SELECT p.{coluna}"
                 _from = f'FROM graduacoes g'
@@ -69,37 +69,38 @@ class Etl:
 
     def relaciona_dados_em_determinado_ano(self, *args, **kwargs):
         try:
-            # if self.secure_input()
-            args = [kwargs.get('data_inicio'), kwargs.get('data_fim')]
-            select = f"""
-                        SELECT 
-                            y.{kwargs.get('column_1')},
-                            y.{kwargs.get('column_2')},
-                            COUNT(*)
-                        FROM {kwargs.get('table_1')} x
-                     """
-            join = f"JOIN {kwargs.get('table_2')} y ON x.numero_usp = y.numero_usp"
-            where = """
-                            WHERE 
-                            YEAR(x.data_inicio_vinculo) >= %s AND YEAR(x.data_fim_vinculo) <= %s
-                            OR YEAR(x.data_fim_vinculo) IS NULL
+            if self.secure_input(args):
+                args = [kwargs.get('data_inicio'), kwargs.get('data_fim')]
+                select = f"""
+                            SELECT 
+                                y.{kwargs.get('column_1')},
+                                y.{kwargs.get('column_2')},
+                                COUNT(*)
+                            FROM {kwargs.get('table_1')} x
                         """
-            if kwargs.get('departamento'):
-                where = where + "AND x.nome_curso = %s"
-                args.append(kwargs.get('departamento'))
+                join = f"JOIN {kwargs.get('table_2')} y ON x.numero_usp = y.numero_usp"
+                where = """
+                                WHERE 
+                                YEAR(x.data_inicio_vinculo) >= %s AND YEAR(x.data_fim_vinculo) <= %s
+                                OR YEAR(x.data_fim_vinculo) IS NULL
+                            """
+                if kwargs.get('departamento'):
+                    where = where + "AND x.nome_curso = %s"
+                    args.append(kwargs.get('departamento'))
 
-            group_by = f"GROUP BY y.{kwargs.get('column_1')}, y.{kwargs.get('column_2')}"
-            order_by = f"ORDER BY y.{kwargs.get('column_1')}"
+                group_by = f"GROUP BY y.{kwargs.get('column_1')}, y.{kwargs.get('column_2')}"
+                order_by = f"ORDER BY y.{kwargs.get('column_1')}"
+                
+                query = f"""
+                            {select}
+                            {join}
+                            {where}
+                            {group_by}
+                            {order_by}
+                        """
 
-            query = f"""
-                        {select}
-                        {join}
-                        {where}
-                        {group_by}
-                        {order_by}
-                     """
-
-            self.cursor.execute(query, args)
-            return self.cursor.fetchall()
+                self.cursor.execute(query, args)
+                return self.cursor.fetchall()
+            raise Exception("SQLInjection Detected")
         except:
             raise Exception("Não possível realizar a query")
