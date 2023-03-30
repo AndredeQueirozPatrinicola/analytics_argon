@@ -104,8 +104,8 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 
     def get_sigla(self):
         sigla = self.utils.siglas_dptos
-        if "e" in self.kwargs.get('departamento').split():
-            departamento = self.kwargs.get('departamento').split()
+        if "e" in self.request.GET.get('departamento'):
+            departamento = self.request.GET.get('departamento').split()
             departamento_formatado = []
             for palavra in departamento:
                 if palavra != "e":
@@ -114,7 +114,7 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
             departamento_formatado = " ".join(departamento_formatado)
             sigla = sigla.get(departamento_formatado)
         else:
-            sigla = sigla.get(self.kwargs.get('departamento').title())
+            sigla = sigla.get(self.request.GET.get('departamento').title())
         return sigla
 
     def queries(self, **kwargs):
@@ -413,7 +413,7 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
 class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if departamento := self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_programas_docente'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_serie_historica(query)
@@ -450,7 +450,7 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
 class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_programas_docente_limpo'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_departamento(query)
@@ -487,7 +487,7 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
 class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_defesas'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.defesas_mestrado_doutorado(query)
@@ -561,7 +561,7 @@ class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, Grafi
 class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(docente=['api_docentes'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_tipo_vinculo_docente(query)
