@@ -42,7 +42,6 @@ class PopulaDB():
             dados_api_docentes = docente.pega_api_docentes()
 
             docente.atualiza_ou_cria_docente(dados_api_docente, dados_api_programas, dados_api_docentes)
-            sleep(3)
 
     def popula_departamentos(self):
         siglas_departamentos = utils.siglas_departamentos('siglas')
@@ -70,7 +69,6 @@ class PopulaDB():
                                                     api_programas_docentes_limpo,  
                                                     )
 
-            sleep(3)
 
     def popula_mapas(self):
         print("Começando a popular tabela de mapas...")

@@ -92,7 +92,6 @@ class ApiDepartamento:
         y = 0
         lista_programas_docentes = []
         while y < len(anos):
-            sleep(1)
             parametros_programas = {
                 'tipo': 'anual', 'ano': anos[y], 'ano_ini': '', 'ano_fim': ''}
 

@@ -12,8 +12,26 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
+AUTH_USER_MODEL= 'accounts.UserModel'
+
+OAUTH_CALLBACK_ID = config('OAUTH_CALLBACK_ID')
+
+AUTHLIB_OAUTH_CLIENTS = {
+    'usp': {
+        'client_id': config('OAUTH_CLIENT_ID'),
+        'client_secret': config('OAUTH_CLIENT_SECRET_KEY')
+    }
+}
+
+REDIRECT_AFTER_LOGOUT_URL = ""
+
+REDIRECT_URI = '/auth/authorize'
+
+ALLOWED_UNIDADES = [
+    config('ALLOWED_UNIDADES')
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -22,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_oauth_usp.accounts',
     'fontawesomefree',
     'debug_toolbar',
     'rest_framework',
