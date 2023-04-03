@@ -1,8 +1,7 @@
 from rest_framework import views
 from rest_framework.response import Response
 from django.db.models import Count
-from django.db.models.functions import ExtractYear
-from django.db.models import Q, Count, Case, When, Sum, IntegerField
+from django.db.models import Q, Count
 
 from apps.home.classes.etl import Etl
 from apps.home.utils import Utils
@@ -26,7 +25,8 @@ class GraficoAPI(views.APIView):
         super().__init__(**kwargs)
         self.etl = Etl()
         self.utils = Utils()
-        self.error_message = {"error": {"status_code" : 400, "message": "Bad Request"}}
+        self.error_message = {
+            "error": {"status_code": 400, "message": "Bad Request"}}
 
     def get_datasets(self, dados, colors):
         datasets = []
@@ -47,8 +47,9 @@ class GraficoAPI(views.APIView):
         data = self.get_data()
         labels = self.get_labels()
         datasets = self.get_datasets(data, kwargs['colors'])
-        
-        if not data: raise(Exception("No-data"))
+
+        if not data:
+            raise(Exception("No-data"))
 
         plugins = {
             'title': {
@@ -103,8 +104,8 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 
     def get_sigla(self):
         sigla = self.utils.siglas_dptos
-        if "e" in self.kwargs.get('departamento').split():
-            departamento = self.kwargs.get('departamento').split()
+        if "e" in self.request.GET.get('departamento'):
+            departamento = self.request.GET.get('departamento').split()
             departamento_formatado = []
             for palavra in departamento:
                 if palavra != "e":
@@ -113,7 +114,7 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
             departamento_formatado = " ".join(departamento_formatado)
             sigla = sigla.get(departamento_formatado)
         else:
-            sigla = sigla.get(self.kwargs.get('departamento').title())
+            sigla = sigla.get(self.request.GET.get('departamento').title())
         return sigla
 
     def queries(self, **kwargs):
@@ -147,11 +148,13 @@ class GraficoDepartamentosDocentesAPIView(GraficoAPI):
 class GraficoRacaAPIView(GraficoAPI):
 
     def get_data(self):
-        if graduacao := self.kwargs.get('graduacao'):
-            resultado = self.etl.pega_dados_por_ano(
-                'raca', order_by='raca', where=graduacao)
-        else:
-            resultado = self.etl.pega_dados_por_ano('raca', order_by='raca')
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano)
+                for ano in range(int(ano_inicial), int(ano_final) + 1)]
+        graduacao = self.request.GET.get('departamento')
+        resultado = self.etl.pega_dados_por_ano(
+            'raca', order_by='raca', where=graduacao, anos=anos)
 
         dados = pd.DataFrame(resultado)
         dados = dados.fillna(0)
@@ -160,24 +163,26 @@ class GraficoRacaAPIView(GraficoAPI):
 
     def get_titulo(self, departamento):
         if not departamento:
-            return "Distribuição de todos os alunos de graduação por raça/ano(Absoluto)."
+            return "Distribuição de todos os alunos de graduação por raça/ano."
         else:
-            return f"Distribuição dos alunos de {departamento.title()} por raça/ano(Absoluto)."
+            return f"Distribuição dos alunos de {departamento.title()} por raça/ano."
 
     def get_labels(self):
-        return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('graduacao'):
-                departamento = departamento
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
             else:
-                departamento = False
-
+                stacked = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#1a448a',  '#425e8f',
                 '#7585a1', '#91a8cf', '#cad5e8',
-            ], stacked=False, departamento=departamento)
+            ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -187,11 +192,14 @@ class GraficoRacaAPIView(GraficoAPI):
 class GraficoSexoAPIView(GraficoAPI):
 
     def get_data(self):
-        if graduacao := self.kwargs.get('graduacao'):
-            dados = self.etl.pega_dados_por_ano(
-                "sexo", order_by='sexo', where=graduacao)
-        else:
-            dados = self.etl.pega_dados_por_ano("sexo", order_by='sexo')
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano)
+                for ano in range(int(ano_inicial), int(ano_final) + 1)]
+        graduacao = self.request.GET.get('departamento')
+        dados = self.etl.pega_dados_por_ano(
+            "sexo", order_by='sexo', where=graduacao, anos=anos)
+
         df = pd.DataFrame(dados)
         df[0] = df[0].str.replace("F", "Feminino")
         df[0] = df[0].str.replace("M", "Masculino")
@@ -199,26 +207,119 @@ class GraficoSexoAPIView(GraficoAPI):
         return df
 
     def get_titulo(self, departamento):
+
         if not departamento:
-            return "Distribuição de todos os alunos de graduação por sexo/ano(Absoluto)."
+            return "Distribuição de todos os alunos de graduação por sexo/ano."
         else:
-            return f"Distribuição dos alunos de {departamento.title()} por sexo/ano(Absoluto)."
+            return f"Distribuição dos alunos de {departamento.title()} por sexo/ano."
 
     def get_labels(self):
-        return [int(ano) for ano in range(int(datetime.now().year) - 6, int(datetime.now().year + 1))]
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('graduacao'):
-                departamento = departamento
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
             else:
-                departamento = False
+                stacked = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
-                        '#91a8cf',
-                        '#052e70'
-                    ],stacked=False, departamento=departamento)
+                '#91a8cf',
+                '#052e70'
+            ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+
+
+class GraficoRacaSexo(GraficoPizzaAPIView):
+
+    def get_datasets(self, dados, colors):
+        datasets = []
+        for gender in dados:
+            data = []
+            for dado in dados.get(gender).get('data'):
+                data.append(dado[-1])
+
+            dataset = {
+                "label": gender.capitalize(),
+                "data": data,
+                "backgroundColor": dados.get(gender).get('color'),
+                "borderColor": dados.get(gender).get('color'),
+                "borderWidth": 1
+            }
+            datasets.append(dataset)
+        return datasets
+
+    def get_data(self):
+        ano = self.request.GET.get('ano')
+        if departamento := self.request.GET.get('departamento'):
+            raw_data = self.etl.relaciona_dados_em_determinado_ano(column_1='raca', column_2='sexo', table_1='graduacoes', table_2='pessoas', 
+                                                               data_inicio=int(ano) - 1, data_fim=ano, departamento=departamento)
+        else:
+            if not ano: ano = datetime.now().year 
+            raw_data = self.etl.relaciona_dados_em_determinado_ano(column_1='raca', column_2='sexo', table_1='graduacoes', table_2='pessoas', 
+                                                               data_inicio=int(ano) - 1, data_fim=ano)
+        df = pd.DataFrame(raw_data)
+        df = df.rename(columns={0: "raca", 1: "sexo", 2: 'count'})
+        
+        raca_values = df['raca'].unique()
+        for raca in raca_values:
+            if len(df[df['raca'] == raca]) == 1:
+                row = df[df['raca'] == raca]
+                gender = row['sexo'].values.tolist()
+                if gender[0] == 'F':
+                    gender = 'M'
+                else:
+                    gender = 'F'
+                df.loc[len(df)] = [raca, gender, 0]
+        
+        df = df.sort_values('raca')
+
+        df['sexo'] = df['sexo'].str.replace("F", "Feminino")
+        df['sexo'] = df['sexo'].str.replace("M", "Masculino")
+        df_male = df.loc[df['sexo'] == 'Masculino']
+        df_female = df.loc[df['sexo'] == 'Feminino']
+
+        dados = {
+            'Masculino': {
+                'data': df_male.values.tolist(),
+                'color': "#052e70"
+            },
+            'Feminino': {
+                'data': df_female.values.tolist(),
+                'color': "#cad5e8"
+            },
+        }
+        return dados
+
+    def get_titulo(self, departamento):
+        ano = self.request.GET.get('ano')
+        if departamento:
+            return f"Proporção entre Gênero/Raca no departamento de {ano} em {ano}"
+        else:
+            if not ano: ano = datetime.now().year
+            return f"Proporção entre Gênero/Raca em {ano}"
+
+    def get_labels(self):
+        labels = ["Amarela", "Branca", "Indígena",
+                  "Não informada", "Parda", "Preta"]
+        return labels
+
+    def get(self, *args, **kwargs):
+        try:
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
+            else:
+                stacked = False
+            departamento = self.request.GET.get('departamento')
+            dados = self.plota_grafico(tipo='bar', colors=[
+                '#97bde8'
+            ], departamento=departamento, stacked=stacked)
+            return Response(dados)
         except:
             return Response(self.error_message)
 
@@ -252,14 +353,14 @@ class GraficoPizzaSexo(GraficoPizzaAPIView):
 
     def get(self, *args, **kwargs):
         try:
-            if departamento :=  self.kwargs.get('graduacao'):
+            if departamento := self.kwargs.get('graduacao'):
                 departamento = departamento
             else:
                 departamento = False
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#91a8cf',
-                        '#052e70'
-                    ],departamento=departamento)
+                '#91a8cf',
+                '#052e70'
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -300,9 +401,9 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
             else:
                 departamento = False
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#052e70', '#1a448a',  '#425e8f',
-                        '#7585a1', '#91a8cf', '#cad5e8',
-                    ],departamento=departamento)
+                '#052e70', '#1a448a',  '#425e8f',
+                '#7585a1', '#91a8cf', '#cad5e8',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -312,7 +413,7 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
 class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if departamento := self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_programas_docente'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_serie_historica(query)
@@ -335,14 +436,11 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
-                        '#052e70', '#7585a1',
-                        '#91a8cf',
-                    ],departamento=departamento)
+                '#052e70', '#7585a1',
+                '#91a8cf',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -352,7 +450,7 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
 class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_programas_docente_limpo'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_departamento(query)
@@ -375,23 +473,21 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#052e70', '#7585a1',
-                        '#91a8cf',
-                    ],departamento=departamento)
+                '#052e70', '#7585a1',
+                '#91a8cf',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
             return Response(self.error_message)
 
+
 class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(departamento=['api_defesas'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.defesas_mestrado_doutorado(query)
@@ -414,14 +510,11 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#052e70', '#7585a1',
-                        '#91a8cf',
-                    ],departamento=departamento)
+                '#052e70', '#7585a1',
+                '#91a8cf',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -447,18 +540,18 @@ class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, Grafi
     def get(self, *args, **kwargs):
         try:
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#052e70',
-                        '#133f85',
-                        '#2d528d',
-                        '#486492',
-                        '#6980a7',
-                        '#8291ac',
-                        '#9faec9',
-                        '#969ca8',
-                        '#c5cad3',
-                        '#d6dae0',
-                        '#f5f6f8',
-                    ], departamento=False)
+                '#052e70',
+                '#133f85',
+                '#2d528d',
+                '#486492',
+                '#6980a7',
+                '#8291ac',
+                '#9faec9',
+                '#969ca8',
+                '#c5cad3',
+                '#d6dae0',
+                '#f5f6f8',
+            ], departamento=False)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -468,7 +561,7 @@ class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, Grafi
 class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.kwargs.get('departamento'):
+        if self.request.GET.get('departamento'):
             query = self.queries(docente=['api_docentes'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_tipo_vinculo_docente(query)
@@ -491,19 +584,16 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('departamento'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#2d528d',
-                        '#486492',
-                        '#6980a7',
-                        '#8291ac',
-                        '#9faec9',
-                        '#969ca8',
-                        '#c5cad3',
-                    ], departamento=departamento)
+                '#2d528d',
+                '#486492',
+                '#6980a7',
+                '#8291ac',
+                '#9faec9',
+                '#969ca8',
+                '#c5cad3',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -527,14 +617,11 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
 
     def get(self, *args, **kwargs):
         try:
-            if departamento := self.kwargs.get('docente'):
-                departamento = departamento
-            else:
-                departamento = False
+            departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='pie', colors=[
-                        '#052e70', '#7585a1',
-                        '#91a8cf',
-                    ], departamento=departamento)
+                '#052e70', '#7585a1',
+                '#91a8cf',
+            ], departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:

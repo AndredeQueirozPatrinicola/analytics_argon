@@ -4,6 +4,7 @@ from apps.home import views
 from rest_framework import routers
 
 from .graficos import *
+from .mapas import *
 
 router = routers.DefaultRouter()
 
@@ -11,27 +12,29 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
 
+    path('raca-sexo', GraficoRacaSexo.as_view(), name='raca-sexo'),
+
     ##########################################
     ##               GRAFICOS               ##
     ##########################################
 
-    re_path(r'^graduacao/raca-por-ano(/(?P<graduacao>[\w\s\-]+))?$', GraficoRacaAPIView.as_view(), name='raca'),
+    path('raca-por-ano', GraficoRacaAPIView.as_view(), name='raca'),
 
-    re_path(r'^graduacao/sexo-por-ano(/(?P<graduacao>[\w\s\-]+))?$', GraficoSexoAPIView.as_view(), name='sexo'),
+    path('sexo-por-ano', GraficoSexoAPIView.as_view(), name='sexo'),
 
-    re_path(r'^graduacao/sexo-atual(/(?P<graduacao>[\w\s\-]+))?$', GraficoPizzaSexo.as_view(), name='sexo-atual'),
+    path('sexo-atual', GraficoPizzaSexo.as_view(), name='sexo-atual'),
 
-    re_path(r'^graduacao/raca-atual(/(?P<graduacao>[\w\s\-]+))?$', GraficoPizzaRaca.as_view(), name='sexo-raca'),
+    path('raca-atual', GraficoPizzaRaca.as_view(), name='sexo-raca'),
 
-    re_path(r'^departamentos/prod-por-ano(/(?P<departamento>[\w\s\-]+))?$', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
+    path('prod-por-ano', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
 
-    re_path(r'^departamentos/prod-total(/(?P<departamento>[\w\s\-]+))?$', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
+    path('prod-total', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
 
-    re_path(r'^departamentos/defesas(/(?P<departamento>[\w\s\-]+))?$', GraficoDefesasDepartamentos.as_view(), name='defesas'),
+    path('defesas', GraficoDefesasDepartamentos.as_view(), name='defesas'),
 
-    path('departamentos/professores', GraficoDocentesNosDepartamentos.as_view(), name='professores-proporcoes'),
+    path('tipo-vinculo', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
 
-    re_path(r'^departamentos/tipo-vinculo(/(?P<departamento>[\w\s\-]+))?$', GraficoTipoVinculo.as_view(), name='tipo-vinculo'),
+    path('professores', GraficoDocentesNosDepartamentos.as_view(), name='professores-proporcoes'),
 
     path('docentes/<str:docente>/orientandos', GraficoOrientandos.as_view(), name='orientandos'),
 

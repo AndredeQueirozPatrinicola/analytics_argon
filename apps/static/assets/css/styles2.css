@@ -12,7 +12,7 @@ html, body, .side-bar, .main-section, .main-content{
     height: 100%;
 }
 
-ul, ol, li, input, hr{
+ul, ol, li, hr{
     all:unset
 }
 
@@ -388,6 +388,7 @@ ul, ol, li, input, hr{
     display: flex;
     justify-content: end;
     align-items: center;
+    padding-left: 2rem;
 }
 
 .select-grafico{
@@ -406,6 +407,13 @@ ul, ol, li, input, hr{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.grafico-container > p{
+    font-size: 12px;
+    margin-top: 2rem;
+    color: #847f7f;
 }
 
 .table-container, .table-content{
@@ -674,6 +682,34 @@ th, td{
     font-weight: 300;
 }
 
+.active-message{
+    visibility:visible !important;
+}
+
+.messages{
+    height: 1rem;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    font-size: 10px;
+    visibility: hidden;
+}
+
+.check-box{
+    margin-right: 2rem;
+    margin-left: 0.5rem;
+}
+
+btn{
+    transition: 600ms ease-in-out !important;
+}
+
+btn:hover{
+    background-color: #fff !important;
+    color: #052e70 !important;
+    border: 0.5px solid #052e70;
+    border-radius: 0.75rem;
+}
 
 /* Responsividade !! */
 

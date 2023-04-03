@@ -8,64 +8,110 @@
 
 
 <div class="dashboard-row">
-  <div class="card-dash-6">
+  <div class="card-dash-5">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
-      <select class="select-grafico raca-por-ano">
-        {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+      <label>Relativo</label>
+      <input type="checkbox" class="check-box">
+
+      <label>Ano</label>
+      <select class="select-grafico">
+        {% for ano in anos_reverse %}
+            <option value="{{ ano }}">{{ ano }}</option>
         {% endfor %}
       </select>
-    </div>
-    <div class="grafico-container">
 
-      <canvas id="raca-por-ano"></canvas>
-
-    </div>
-  </div>
-  <div class="card-dash-3">
-    <div class="select-container">
-      <select class="select-grafico raca-atual">
+      <select class="select-grafico raca-sexo">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% if departamento == 'Geral' %}
+        <option value="">{{ departamento }}</option>
+        {% else %}
+        <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endif %}
         {% endfor %}
       </select>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
+
     <div class="grafico-container">
 
-      <canvas id="raca-atual"></canvas>
+      <canvas id="raca-sexo"></canvas>
 
+      {% include 'includes/fonte.html' %}
     </div>
   </div>
-</div>
-<div class="dashboard-row">
-  <div class="card-dash-3">
+  <div class="card-dash-5">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
-      <select class="select-grafico sexo-atual">
-        {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="grafico-container">
+      <label>Relativo</label>
+      <input type="checkbox" class="check-box">
 
-      <canvas id="sexo-atual"></canvas>
+      <label>Ano inicial</label>
+      {% include 'includes/anos.html' %}
 
-    </div>
-  </div>
-  <div class="card-dash-6">
-    <div class="select-container">
+      <label>Ano final</label>
+      {% include 'includes/anos_reverse.html' %}
       <select class="select-grafico sexo-por-ano">
         {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        {% if departamento == 'Geral' %}
+        <option value="">{{ departamento }}</option>
+        {% else %}
+        <option value="{{ departamento }}">{{ departamento }}</option>
+        {% endif %}
         {% endfor %}
       </select>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
     <div class="grafico-container">
 
       <canvas id="sexo-por-ano"></canvas>
 
+      {% include 'includes/fonte.html' %}
     </div>
   </div>
+</div>
+<div class="dashboard-row">
+
+  <div class="card-dash-6">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <label>Relativo</label>
+      <input type="checkbox" class="check-box">
+
+      <label>Ano inicial</label>
+      {% include 'includes/anos.html' %}
+
+      <label>Ano final</label>
+      {% include 'includes/anos_reverse.html' %}
+      <select class="select-grafico raca-atual">
+        {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+            <option value="">{{ departamento }}</option>
+          {% else %}
+            <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
+    </div>
+
+    <div class="grafico-container">
+
+      <canvas id="raca-por-ano"></canvas>
+
+      {% include 'includes/fonte.html' %}
+    </div>
+  </div>
+
 </div>
 
 

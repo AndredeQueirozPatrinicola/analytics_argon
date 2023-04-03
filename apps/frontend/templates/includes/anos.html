@@ -1,0 +1,9 @@
+<select class="select-grafico">
+    {% for ano in anos %}
+        {% if forloop.counter == 5 %}
+            <option value="{{ ano }}" selected="selected">{{ ano }}</option>
+        {% else %}
+            <option value="{{ ano }}">{{ ano }}</option>
+        {% endif %}
+    {% endfor %}
+</select>
