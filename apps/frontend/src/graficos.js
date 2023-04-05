@@ -66,8 +66,6 @@ async function submitPost(element) {
   const loader = chart.parentElement.children[1]
   chart.classList.add('hide')
   loader.classList.add('show')
-  console.log(chart)
-  console.log(loader)
   const labels = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
   const checkBox = Array.from(parent.children).filter(element => element.tagName == 'INPUT').map(element => element.checked)
   if (checkBox) {
