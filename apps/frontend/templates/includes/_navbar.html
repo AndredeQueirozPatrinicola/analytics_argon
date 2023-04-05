@@ -26,12 +26,12 @@
     <div class="navbar-login">
         {% if user.is_authenticated %}
         <span class="navbar-username">{{ user.name }}</span>
-        <a href="logout" class="navbar-icon">
+        <a href="/logout" class="navbar-icon">
             <i class="fas fa-sign-out-alt"></i>
           </a> 
         {% else %}
         <span class="navbar-username">Não autenticado.</span>
-        <a href="login" class="navbar-icon">
+        <a href="/login" class="navbar-icon">
             <i class="fas fa-sign-in-alt"></i>
           </a> 
         {% endif %}
