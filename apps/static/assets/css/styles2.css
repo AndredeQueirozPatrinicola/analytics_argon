@@ -416,6 +416,10 @@ ul, ol, li, hr{
     color: #847f7f;
 }
 
+.grafico-container > .loader{
+    display: none;
+}
+
 .table-container, .table-content{
     width: 100%;
 }
@@ -710,6 +714,28 @@ btn:hover{
     border: 0.5px solid #052e70;
     border-radius: 0.75rem;
 }
+
+.loader {
+    border: 16px solid #f3f3f3; 
+    border-top: 16px solid #052e70; 
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+
+  .hide{
+    display: none !important;
+  }
+
+  .show{
+    display: block !important;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 
 /* Responsividade !! */
 

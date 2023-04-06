@@ -11,7 +11,6 @@ const DEFAULT_PARAMS = {
 }
 
 async function formataParametros(parameters) {
-  console.log(parameters)
   if (parameters.length === 4) {
     return {
       "ano_inicial": parameters[0],
@@ -39,14 +38,21 @@ async function raiseDataError(ctx) {
 }
 
 async function plotaGrafico(element, parameters) {
+  
   let chart = Chart.getChart(element.id)
   if (!chart) {
     const config = await pegaApi(element, DEFAULT_PARAMS)
+    element.classList.remove('hide')
+    const loader = element.parentElement.children[1]
+    loader.classList.remove('show')
     new Chart(element, config)
   }
   else {
     chart.destroy()
     const config = await pegaApi(element, parameters)
+    element.classList.remove('hide')
+    const loader = element.parentElement.children[1]
+    loader.classList.remove('show')
     new Chart(element, config)
   }
 }
@@ -54,8 +60,12 @@ async function plotaGrafico(element, parameters) {
 async function submitPost(element) {
   const message = element.parentElement.parentElement.firstElementChild;
   message.classList.remove('active-message')
+
   const parent = element.parentElement;
   const chart = Array.from(parent.parentElement.children).filter(element => element.className == 'grafico-container')[0].firstElementChild;
+  const loader = chart.parentElement.children[1]
+  chart.classList.add('hide')
+  loader.classList.add('show')
   const labels = Array.from(parent.children).filter(element => element.tagName == 'SELECT').map(element => element.value);
   const checkBox = Array.from(parent.children).filter(element => element.tagName == 'INPUT').map(element => element.checked)
   if (checkBox) {
