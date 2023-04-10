@@ -383,9 +383,8 @@ ul, ol, li, hr{
 
 .select-container{
     min-height: 3rem;
-    height: 3rem;
-    max-height: 3rem;
     display: flex;
+    flex-wrap: wrap;
     justify-content: end;
     align-items: center;
     padding-left: 2rem;
