@@ -299,7 +299,7 @@ class GraficoRacaSexo(GraficoPizzaAPIView):
     def get_titulo(self, departamento):
         ano = self.request.GET.get('ano')
         if departamento:
-            return f"Proporção entre Gênero/Raca no departamento de {ano} em {ano}"
+            return f"Proporção entre Gênero/Raca no departamento de {departamento} em {ano}"
         else:
             if not ano: ano = datetime.now().year
             return f"Proporção entre Gênero/Raca em {ano}"
