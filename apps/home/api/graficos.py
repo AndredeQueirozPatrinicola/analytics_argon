@@ -413,7 +413,8 @@ class GraficoPizzaRaca(GraficoPizzaAPIView):
 class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
 
     def get_data(self):
-        if departamento := self.request.GET.get('departamento'):
+        if self.request.GET.get('departamento') != "Geral":
+            departamento = self.request.GET.get('departamento')
             query = self.queries(departamento=['api_programas_docente'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_serie_historica(query)
@@ -437,6 +438,10 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
+
+            if departamento == 'Geral':
+                departamento = False
+            
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -450,7 +455,7 @@ class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView)
 class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.request.GET.get('departamento'):
+        if self.request.GET.get('departamento') != "Geral":
             query = self.queries(departamento=['api_programas_docente_limpo'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_prod_departamento(query)
@@ -474,6 +479,10 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
+
+            if departamento == 'Geral':
+                departamento = False
+            
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -487,7 +496,7 @@ class GraficoProducaoDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoP
 class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.request.GET.get('departamento'):
+        if self.request.GET.get('departamento') != "Geral":
             query = self.queries(departamento=['api_defesas'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.defesas_mestrado_doutorado(query)
@@ -511,6 +520,10 @@ class GraficoDefesasDepartamentos(GraficoDepartamentosDocentesAPIView, GraficoPi
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
+
+            if departamento == 'Geral':
+                departamento = False
+            
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
@@ -561,7 +574,7 @@ class GraficoDocentesNosDepartamentos(GraficoDepartamentosDocentesAPIView, Grafi
 class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIView):
 
     def get_data(self):
-        if self.request.GET.get('departamento'):
+        if self.request.GET.get('departamento') != "Geral":
             query = self.queries(docente=['api_docentes'])
             departamento = DadosDepartamento(self.get_sigla())
             dados = departamento.plota_tipo_vinculo_docente(query)
@@ -585,6 +598,10 @@ class GraficoTipoVinculo(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
+ 
+            if departamento == 'Geral':
+                departamento = False
+            
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#2d528d',
                 '#486492',
@@ -618,6 +635,10 @@ class GraficoOrientandos(GraficoDepartamentosDocentesAPIView, GraficoPizzaAPIVie
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
+
+            if departamento == 'Geral':
+                departamento = False
+            
             dados = self.plota_grafico(tipo='pie', colors=[
                 '#052e70', '#7585a1',
                 '#91a8cf',
