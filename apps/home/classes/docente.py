@@ -101,7 +101,8 @@ class DadosDocente():
 
         dropdown_linhas = f"""<div class="dropdown" id="dropdown">
                                 <div class="dropdown-button card-header-content" id="dropdown-button">
-                                    Linhas
+                                    <span>Linhas</span>
+                                    <i class="fa-solid fa-arrow-down"></i>
                                 </div>
                                 <div class="dropdown-items">
                                     {linhas_formatadas}
