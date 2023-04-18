@@ -412,9 +412,16 @@ hr {
     min-height: 3rem;
     display: flex;
     flex-wrap: wrap;
-    justify-content: end;
     align-items: center;
-    padding-left: 2rem;
+    justify-content: center;
+    padding-left: 1.7rem;
+}
+
+.select-container > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .select-grafico {
