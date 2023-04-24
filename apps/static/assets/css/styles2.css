@@ -85,7 +85,7 @@ hr {
 }
 
 .sidebar-menu-item {
-    width: 75%;
+    width: 90% !important;
     height: 0.1rem;
     display: flex;
     justify-content: center;

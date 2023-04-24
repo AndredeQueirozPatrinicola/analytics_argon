@@ -223,7 +223,7 @@ class SobrenosView(View):
         return render(request, 'home/projeto.html', context)
 
 
-class GraduacaoViews(View):
+class AbstractGraduacaoViews(View):
     
     def get(self, request):
         graduacao = Graduacao()
@@ -234,8 +234,6 @@ class GraduacaoViews(View):
         numero_ingressantes = graduacao.pega_ingressantes_ano_vigente()
         numero_egressos = graduacao.pega_egressos_ano_vigente()
 
-        caminho = graduacao.pega_caminho()
-
         anos = [ano for ano in range(2013, datetime.now().year + 1)]
         anos_reverse = list(reversed(anos))
 
@@ -244,9 +242,71 @@ class GraduacaoViews(View):
             "card_header_2" : numero_formandos,
             "card_header_3" : numero_ingressantes,
             "card_header_4" : numero_egressos,
-            'caminho' : caminho,
             "departamentos" : departamentos,
             "anos" : anos,
             "anos_reverse": anos_reverse
         }
-        return render(request, 'home/graduacao.html', context)
+        return [request, 'home/graduacao.html', context]
+    
+class GraduacaoDiversidade(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_diversidade.html'
+
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Diversidade',
+                'url' : '#'
+            }
+        ]
+
+        context['caminho'] = caminho
+
+        return render(*payload)
+    
+class GraduacaoGeral(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_geral.html'
+
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Geral',
+                'url' : '#'
+            }
+        ]
+
+        context['caminho'] = caminho
+        return render(*payload)
+    
+class GraduacaoPesquisa(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_pesquisa.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Pesquisa',
+                'url' : '#'
+            }
+        ]
+
+        context['caminho'] = caminho
+        return render(*payload)
