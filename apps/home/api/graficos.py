@@ -684,3 +684,69 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
             return Response(serializer.data)
         except:
             return Response(self.error_message)
+        
+    
+class GraficoIngressantesEgressos(GraficoPizzaAPIView):
+
+    def get_datasets(self, dados, colors):
+        
+        datasets = []
+        for dado in dados:
+            label = dado[0]
+            dado.pop(0)
+            data = {
+                "label": label,
+                "data": dado,
+                "borderColor" : [colors[dados.index(dado)]],
+                "backgroundColor": [colors[dados.index(dado)]],
+                "borderWidth": 1
+            }
+            datasets.append(data)
+        
+        return datasets
+
+    def get_data(self):
+        anos = [ano for ano in range(int(datetime.now().year) - 6, datetime.now().year + 1)]
+
+        if departamento := self.request.GET.get('departamento'):
+            dados_inicio_vinculo = self.etl.soma_por_ano(anos, "data_inicio_vinculo", where=departamento)
+            dados_fim_vinculo = self.etl.soma_por_ano(anos, "data_fim_vinculo", where=departamento)
+        else:
+            dados_inicio_vinculo = self.etl.soma_por_ano(anos, "data_inicio_vinculo")
+            dados_fim_vinculo = self.etl.soma_por_ano(anos, "data_fim_vinculo")
+
+        df = pd.DataFrame([], columns=anos)
+        df.loc[0] = list(*dados_inicio_vinculo)
+        df.loc[1] = list(*dados_fim_vinculo)
+        df = df.rename(index={0 : "Ingressantes", 1 : "Egressos"})
+
+        dados = df.values.tolist()
+        for dado in dados:
+            dado.insert(0, df.index.values.tolist()[dados.index(dado)])
+    
+        return dados
+    
+    def get_labels(self):
+        ano_inicial = datetime.now().year - 6
+        ano_final = datetime.now().year
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Alunos de graduação ingressantes e egressos do departamento de {departamento}."
+        else:
+            return "Alunos de graduação ingressantes e egressos."
+
+    def get(self, *args, **kwargs):
+        # try:
+            departamento = self.request.GET.get('departamento')
+
+            grafico = self.plota_grafico(tipo='line', colors=[
+                '#97bde8',
+                '#937c8d'
+            ], departamento=departamento)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        # except:
+        #     return Response(self.error_message)

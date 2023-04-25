@@ -35,6 +35,7 @@ class Etl:
 
                 if order_by:
                     order_by = f"ORDER BY {order_by}"
+
                 sum = []
                 for ano in anos:
                     sum.append(
@@ -50,12 +51,13 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
+
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
-        except:
+        except Exception as e:
             self.cursor.close()
-            raise Exception("Não foi possivel realizar a query")
+            raise Exception("Não foi possivel realizar a query:" + e)
 
     def conta_pessoa_por_categoria(self, tabela, situacao):
         try:
@@ -64,8 +66,8 @@ class Etl:
                     f"SELECT COUNT(*) FROM {tabela} WHERE situacaoCurso = %s", [situacao])
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
-        except:
-            raise Exception("Não foi possivel realizar a query")
+        except Exception as e:
+            raise Exception("Não foi possivel realizar a query:" + e)
 
     def relaciona_dados_em_determinado_ano(self, *args, **kwargs):
         try:
@@ -102,5 +104,31 @@ class Etl:
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
-        except:
-            raise Exception("Não possível realizar a query")
+        except Exception as e:
+            raise Exception("Não foi possivel realizar a query:" + e)
+        
+    def soma_por_ano(self, anos, coluna, where = ""):
+        try:
+            if self.secure_input(anos):
+                args = []
+
+                sum = []
+                for ano in anos:
+                    if ano == anos[0]:
+                        sum.append(
+                            f"SUM(CASE WHEN YEAR({coluna}) = {ano} THEN 1 ELSE 0 END) as total")
+                    else:
+                        sum.append(
+                            f", SUM(CASE WHEN YEAR({coluna}) = {ano} THEN 1 ELSE 0 END) as total")
+                sum = "".join(sum)
+
+                if where:
+                    args.append(where)
+                    where = "WHERE nome_curso = %s"
+
+                query = f"SELECT {sum} FROM graduacoes {where};"
+                self.cursor.execute(query, args)
+                return self.cursor.fetchall()
+            raise Exception("SQLInjection Detected")
+        except Exception as e:
+            raise Exception("Não foi possivel realizar a query:" + e)
