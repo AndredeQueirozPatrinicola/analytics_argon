@@ -4,35 +4,6 @@ import ChartjsPluginStacked100 from "chartjs-plugin-stacked100";
 
 Chart.register(ChartjsPluginStacked100);
 
-const DEFAULT_PARAMS = {
-  ano_inicial: 2017,
-  ano_final: 2022,
-  departamento: ""
-}
-
-async function formataParametros(parameters) {
-  if (parameters.length === 4) {
-    return {
-      "stacked": parameters[0],
-      "ano_inicial": parameters[1],
-      "ano_final": parameters[2],
-      "departamento": parameters[3],
-    }
-  }
-  else if (parameters.length === 3) {
-    return {
-      "stacked": parameters[0],
-      "ano": parameters[1],
-      "departamento": parameters[2]
-    }
-  }
-  else if (parameters.length === 1) {
-    return {
-      "departamento": parameters[0]
-    }
-  }
-}
-
 async function raiseDataError(ctx) {
   ctx.classList.add('active-message')
 }
