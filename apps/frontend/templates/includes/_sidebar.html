@@ -9,18 +9,23 @@
             <ul class="sidebar-menu-items">
                 {% for item in menu %}
                 <div class="sidebar-menu-item dropdown">
-                    <a href="{{ item.url }} dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ item.text }} 
-                    </a>  
-                    
+
                     {% if item.submenu %}
+                        <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ item.text }}
+                        </a>
 
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             {% for subitem in item.submenu %}
-                                <li><a class="dropdown-item" href="/{{ item.url }}/{{ subitem.url }}/">{{ subitem.text }}</a></li>
+                            <li><a class="dropdown-item" href="/{{ item.url }}/{{ subitem.url }}/">{{ subitem.text }}</a>
+                            </li>
                             {% endfor %}
                         </ul>
-                        
+                    {% else %}
+                        <a href="/{{ item.url }}/">
+                            {{ item.text }}
+                        </a>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -28,7 +33,7 @@
         </div>
         <hr class="sidebar-line">
         <div>
-              
+
             <!-- ADICIONAR COISA -->
 
         </div>

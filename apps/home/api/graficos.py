@@ -740,7 +740,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
             return "Alunos de graduação ingressantes e egressos."
 
     def get(self, *args, **kwargs):
-        # try:
+        try:
             departamento = self.request.GET.get('departamento')
 
             grafico = self.plota_grafico(tipo='line', colors=[
@@ -750,5 +750,5 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
 
             serializer = GraficoSerializer(grafico)
             return Response(serializer.data)
-        # except:
-        #     return Response(self.error_message)
+        except:
+            return Response(self.error_message)
