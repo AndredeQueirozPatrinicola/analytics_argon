@@ -11,12 +11,12 @@
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label>Relativo</label>
+        <label id="stacked">Relativo</label>
         <input type="checkbox" class="check-box">
       </div>
 
       <div>
-        <label>Ano</label>
+        <label id="ano">Ano</label>
         <select class="select-grafico">
           {% for ano in anos_reverse %}
           <option value="{{ ano }}">{{ ano }}</option>
@@ -25,7 +25,7 @@
       </div>
 
       <div>
-        <label>Departamento</label>
+        <label id="departamento">Departamento</label>
         <select class="select-grafico raca-sexo">
           {% for departamento in departamentos %}
             {% if departamento == 'Geral' %}
@@ -55,22 +55,22 @@
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label>Relativo</label>
+        <label id="stacked">Relativo</label>
         <input type="checkbox" class="check-box">
       </div>
 
       <div>
-        <label>Ano inicial</label>
+        <label id="ano_inicial">Ano inicial</label>
         {% include 'includes/anos.html' %}
       </div>
 
       <div>
-        <label>Ano final</label>
+        <label id="ano_final">Ano final</label>
         {% include 'includes/anos_reverse.html' %}
       </div>
 
       <div>
-        <label>Departamento</label>
+        <label id="departamento">Departamento</label>
         <select class="select-grafico sexo-por-ano">
           {% for departamento in departamentos %}
           {% if departamento == 'Geral' %}
@@ -103,22 +103,22 @@
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label>Relativo</label>
+        <label id="stacked">Relativo</label>
         <input type="checkbox" class="check-box">
       </div>
 
       <div>
-        <label>Ano inicial</label>
+        <label id="ano_inicial">Ano inicial</label>
         {% include 'includes/anos.html' %}
       </div>
 
       <div>
-        <label>Ano final</label>
+        <label id="ano_final">Ano final</label>
         {% include 'includes/anos_reverse.html' %}
       </div>
 
       <div>
-        <label>Departamento</label>
+        <label id="departamento">Departamento</label>
         <select class="select-grafico raca-atual">
           {% for departamento in departamentos %}
           {% if departamento == 'Geral' %}

@@ -699,14 +699,16 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
                 "data": dado,
                 "borderColor" : [colors[dados.index(dado)]],
                 "backgroundColor": [colors[dados.index(dado)]],
-                "borderWidth": 1
+                "borderWidth": 2
             }
             datasets.append(data)
         
         return datasets
 
     def get_data(self):
-        anos = [ano for ano in range(int(datetime.now().year) - 6, datetime.now().year + 1)]
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
 
         if departamento := self.request.GET.get('departamento'):
             dados_inicio_vinculo = self.etl.soma_por_ano(anos, "data_inicio_vinculo", where=departamento)
@@ -727,8 +729,8 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
         return dados
     
     def get_labels(self):
-        ano_inicial = datetime.now().year - 6
-        ano_final = datetime.now().year
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
         return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
 
     def get_titulo(self, departamento):

@@ -41,7 +41,7 @@ async function plotaGrafico(element, parameters) {
 
   let chart = Chart.getChart(element.id)
   if (!chart) {
-    const config = await pegaApi(element, DEFAULT_PARAMS)
+    const config = await pegaApi(element, parameters)
     element.classList.remove('hide')
     const loader = element.parentElement.children[1]
     loader.classList.remove('show')
@@ -68,19 +68,7 @@ async function submitPost(element) {
   chart.classList.add('hide')
   loader.classList.add('show')
 
-  let parametros = []
-  selectContainer.map((tag) => {
-    let parametro = tag.children[1] ? tag.children[1] : false;
-    if (parametro.tagName === 'INPUT') {
-      parametros.push(parametro.checked);
-    }
-    else if (parametro.tagName === 'SELECT') {
-      parametros.push(parametro.value);
-    }
-
-  })
-
-  parametros = await formataParametros(parametros);
+  const parametros = await getParametros(selectContainer);
 
   if (parametros.ano_inicial > parametros.ano_final) {
     raiseDataError(message)
@@ -90,10 +78,28 @@ async function submitPost(element) {
   }
 }
 
+async function getParametros(selectContainer){
+
+  let parametros = {}
+  selectContainer.map((tag) => {
+    let parametro = tag.children[1] ? tag.children[1] : false;
+    let label = tag.children[0];
+    if (parametro.tagName === 'INPUT') {
+      parametros[label.id] = parametro.checked
+    }
+    else if (parametro.tagName === 'SELECT') {
+      parametros[label.id] = parametro.value
+    }
+  })
+  return parametros
+}
+
 export async function coordenaGraficos() {
   const graficos = Array.from(document.getElementsByTagName('canvas'))
-  graficos.forEach(tag => {
-    plotaGrafico(tag)
+  graficos.forEach(async tag => {
+    const parentElement = Array.from(tag.parentElement.parentElement.children[1].children);
+    const parametros = await getParametros(parentElement);
+    plotaGrafico(tag, parametros)
   });
   const selectButtons = Array.from(document.getElementsByTagName('btn'))
   selectButtons.forEach(tag => {

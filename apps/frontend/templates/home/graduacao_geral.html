@@ -10,24 +10,24 @@
         <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
         <div class="select-container">      
             <div>
-              <label>Ano inicial</label>
+              <label id="ano_inicial">Ano inicial</label>
               {% include 'includes/anos.html' %}
             </div>
       
             <div>
-              <label>Ano final</label>
+              <label id="ano_final">Ano final</label>
               {% include 'includes/anos_reverse.html' %}
             </div>
       
             <div>
-              <label>Departamento</label>
+              <label id="departamento">Departamento</label>
               <select class="select-grafico sexo-por-ano">
                 {% for departamento in departamentos %}
-                {% if departamento == 'Geral' %}
-                <option value="">{{ departamento }}</option>
-                {% else %}
-                <option value="{{ departamento }}">{{ departamento }}</option>
-                {% endif %}
+                  {% if departamento == 'Geral' %}
+                    <option value="">{{ departamento }}</option>
+                  {% else %}
+                    <option value="{{ departamento }}">{{ departamento }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
             </div>
