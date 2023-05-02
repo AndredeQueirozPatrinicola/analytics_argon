@@ -42,7 +42,11 @@ urlpatterns = [
     
     path('docentes/<str:docente>/producao-historica/<str:tipo>', GraficoProducaoHistoricaDocente.as_view(), name='producao-historica'),
 
-    path("ingressantes-egressos", GraficoIngressantesEgressos.as_view(), name='ingressantes-egressos')
+    path("ingressantes-egressos", GraficoIngressantesEgressos.as_view(), name='ingressantes-egressos'),
+
+    path("tipo-ingresso", GraficoTipoIngresso.as_view(), name="tipo-ingresso"),
+
+    path("tipo-egresso", GraficoTipoEgresso.as_view(), name="tipo-egresso"),
 
     ##########################################
     ##              TABELAS                 ##

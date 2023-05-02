@@ -51,7 +51,7 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
-
+                print(query)
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
@@ -107,26 +107,31 @@ class Etl:
         except Exception as e:
             raise Exception("Não foi possivel realizar a query:" + e)
         
-    def soma_por_ano(self, anos, coluna, where = ""):
+    def soma_por_ano(self, anos, coluna_ano, coluna_select="", where = ""):
         try:
             if self.secure_input(anos):
                 args = []
+                group_by = ""
 
                 sum = []
                 for ano in anos:
                     if ano == anos[0]:
                         sum.append(
-                            f"SUM(CASE WHEN YEAR({coluna}) = {ano} THEN 1 ELSE 0 END) as total")
+                            f"SUM(CASE WHEN YEAR({coluna_ano}) = {ano} THEN 1 ELSE 0 END) as '{ano}'")
                     else:
                         sum.append(
-                            f", SUM(CASE WHEN YEAR({coluna}) = {ano} THEN 1 ELSE 0 END) as total")
+                            f", SUM(CASE WHEN YEAR({coluna_ano}) = {ano} THEN 1 ELSE 0 END) as '{ano}'")
                 sum = "".join(sum)
 
                 if where:
                     args.append(where)
                     where = "WHERE nome_curso = %s"
 
-                query = f"SELECT {sum} FROM graduacoes {where};"
+                if coluna_select:
+                    group_by = f"GROUP BY {coluna_select}"
+                    coluna_select = f"{coluna_select}, "
+
+                query = f"SELECT {coluna_select}{sum} FROM graduacoes {where}{group_by};"
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")

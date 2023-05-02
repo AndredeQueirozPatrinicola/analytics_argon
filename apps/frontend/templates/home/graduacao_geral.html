@@ -6,50 +6,137 @@
 {% block content %}
 
 <div class="dashboard-row">
-    <div class="card-dash-6">
-        <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
-        <div class="select-container">      
-            <div>
-              <label id="ano_inicial">Ano inicial</label>
-              {% include 'includes/anos.html' %}
-            </div>
-      
-            <div>
-              <label id="ano_final">Ano final</label>
-              {% include 'includes/anos_reverse.html' %}
-            </div>
-      
-            <div>
-              <label id="departamento">Departamento</label>
-              <select class="select-grafico sexo-por-ano">
-                {% for departamento in departamentos %}
-                  {% if departamento == 'Geral' %}
-                    <option value="">{{ departamento }}</option>
-                  {% else %}
-                    <option value="{{ departamento }}">{{ departamento }}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-      
-            <btn class="btn btn-dark me-5" style="background-color: #052e70;">
-              Buscar
-            </btn>
-          </div>
+  <div class="card-dash-6">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
 
-        <div class="grafico-container">
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
 
-            <canvas id="ingressantes-egressos"></canvas>
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico sexo-por-ano">
+          {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+      </div>
 
-            <div class="loader show"></div>
-
-            {% include 'includes/fonte.html' %}
-        </div>
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
     </div>
 
-    <div class="card-dash-3">
+    <div class="grafico-container">
 
+      <canvas id="ingressantes-egressos"></canvas>
+
+      <div class="loader show"></div>
+
+      {% include 'includes/fonte.html' %}
     </div>
+  </div>
+
+  <div class="card-dash-3">
+
+  </div>
+</div>
+
+<div class="dashboard-row">
+
+  <div class="card-dash-5">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico tipo-ingresso">
+          {% for departamento in departamentos %}
+            {% if departamento == 'Geral' %}
+              <option value="">{{ departamento }}</option>
+            {% else %}
+              <option value="{{ departamento }}">{{ departamento }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
+    </div>
+
+    <div class="grafico-container">
+
+      <canvas id="tipo-ingresso"></canvas>
+
+      <div class="loader show"></div>
+
+      {% include 'includes/fonte.html' %}
+    </div>
+  </div>
+
+  <div class="card-dash-5">
+
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico tipo-egresso">
+          {% for departamento in departamentos %}
+            {% if departamento == 'Geral' %}
+              <option value="">{{ departamento }}</option>
+            {% else %}
+              <option value="{{ departamento }}">{{ departamento }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
+    </div>
+
+    <div class="grafico-container">
+
+      <canvas id="tipo-egresso"></canvas>
+
+      <div class="loader show"></div>
+
+      {% include 'includes/fonte.html' %}
+    </div>
+  </div>
+
 </div>
 
 
