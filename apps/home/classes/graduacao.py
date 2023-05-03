@@ -3,14 +3,12 @@ import numpy as np
 from datetime import datetime
 
 from django.db import connections
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from apps.home.models import *
 from apps.home.classes.graficos import Grafico
 from apps.home.utils import Utils
 from .etl import Etl
-
-
 
 class Graduacao:
 
@@ -55,13 +53,23 @@ class Graduacao:
         ano_atual = datetime.now().year
         dados = Graduacoes.objects.using('etl').filter(~Q(tipo_encerramento_bacharel = "Conclusão"), data_fim_vinculo__year = ano_atual).count()
         return {
-            "title" : f"Numero de egressos em {ano_atual}",
+            "title" : f"Numero de concluintes em {ano_atual}",
             "text" : f"Egressos: {dados}"
         }
 
+    def tabela_alunos(self):
+        columns = ['Encerrado', 'Ativo', 'Trancado', 'Reativado', 'Suspenso']
+        dados = Graduacoes.objects.using("etl").values("situacao_curso", "nome_curso").annotate(dcount=Count('*'))
+        df = pd.DataFrame(dados)
+        df_pivot = pd.pivot_table(df, index='nome_curso', columns='situacao_curso', values='dcount', aggfunc='sum', fill_value=0)
+        df_pivot = df_pivot[columns]
+        df_pivot = df_pivot.reset_index()
+        
+        tabela = {
+            "columns" : ["Nome", *columns],
+            "values" : df_pivot.values.tolist()
+        }
 
-
-
-
+        return tabela
 
 

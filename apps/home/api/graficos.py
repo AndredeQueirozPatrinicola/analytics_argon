@@ -13,6 +13,7 @@ from apps.home.classes.docente import DadosDocente
 from .serializers import GraficoSerializer
 
 import pandas as pd
+import re
 
 from datetime import datetime
 
@@ -178,6 +179,7 @@ class GraficoRacaAPIView(GraficoAPI):
                 stacked = True
             else:
                 stacked = False
+
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#1a448a',  '#425e8f',
@@ -757,6 +759,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
 class GraficoTipoIngresso(GraficoIngressantesEgressos):
 
     def get_data(self):
+        labels = ["Fuvest", "Enem", "Transferência Interna e externa"]
         ano_inicial = self.request.GET.get('ano_inicial')
         ano_final = self.request.GET.get('ano_final')
         anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
@@ -767,10 +770,14 @@ class GraficoTipoIngresso(GraficoIngressantesEgressos):
             data = self.etl.soma_por_ano(anos, "data_inicio_vinculo", coluna_select="tipo_ingresso")
 
         df_raw = pd.DataFrame(data)
-        fuvest = pd.DataFrame([df_raw[df_raw[0].str.contains(r"FUVEST(?: - Lista extra)?")].sum()])
-        enem = pd.DataFrame([df_raw[df_raw[0].str.contains(r"SISU|ENEMUSP")].sum()])
-        transferencia = pd.DataFrame([df_raw[df_raw[0].str.contains(r"Transferência")].sum()])
+        fuvest = pd.DataFrame([df_raw[df_raw[0].str.contains(r"FUVEST(?: - Lista extra)?")].sum()], index=[0])
+        enem = pd.DataFrame([df_raw[df_raw[0].str.contains(r"SISU|ENEMUSP")].sum()], index=[1])
+        transferencia = pd.DataFrame([df_raw[df_raw[0].str.contains(r"Transferência")].sum()], index=[2])
         df = pd.concat([fuvest, enem, transferencia], axis=0)
+        
+        for i in range(3):
+            df.loc[i, 0] = labels[i]
+
         return df.values.tolist()
 
     def get_labels(self):
@@ -780,9 +787,9 @@ class GraficoTipoIngresso(GraficoIngressantesEgressos):
 
     def get_titulo(self, departamento):
         if departamento:
-            return f"Tipo do ingresso dos alunos de graduação de {departamento}."
+            return f"Forma de ingresso dos alunos de graduação de {departamento}."
         else:
-            return "Tipo do ingresso dos alunos de graduação."
+            return "Forma de ingresso dos alunos de graduação."
 
     def get(self, *args, **kwargs):
         try:
@@ -791,17 +798,7 @@ class GraficoTipoIngresso(GraficoIngressantesEgressos):
             grafico = self.plota_grafico(tipo='line', colors=[
                 '#97bde8',
                 '#b85149',
-                '#97bde8',
-                '#b85149',
-                '#97bde8',
-                '#b85149',
-                '#97bde8',
-                '#b85149',
-                '#97bde8',
-                '#b85149',
-                '#97bde8',
-                '#b85149',
-                '#97bde8',
+                '#198a11',
             ], departamento=departamento)
 
             serializer = GraficoSerializer(grafico)
@@ -810,7 +807,7 @@ class GraficoTipoIngresso(GraficoIngressantesEgressos):
             return Response(self.error_message)
 
 
-class GraficoTipoEgresso(GraficoIngressantesEgressos):
+class GraficoTipoEgresso(GraficoAPI):
 
     def get_data(self):
         ano_inicial = self.request.GET.get('ano_inicial')
@@ -823,13 +820,30 @@ class GraficoTipoEgresso(GraficoIngressantesEgressos):
             data = self.etl.soma_por_ano(anos, "data_fim_vinculo", coluna_select="tipo_encerramento_bacharel")
 
         df_raw = pd.DataFrame(data)
-        print(df_raw)
-        conclusao = pd.DataFrame([df_raw.loc[0]])
-        encerramento_novo_ingresso = pd.DataFrame([df_raw.loc[2]])
-        cancelamento_zero_credito = pd.DataFrame([df_raw.loc[3]])
-        desistencia = pd.DataFrame([df_raw.loc[4]])
-        abandono = pd.DataFrame([df_raw.loc[9]])
-        df = pd.concat([conclusao, encerramento_novo_ingresso, cancelamento_zero_credito, desistencia, abandono], axis=0)
+
+        linhas = []
+        for i in range(len(df_raw.index)):
+            label = str(df_raw.loc[i, 0])
+
+            if re.search("^Conclusão$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Cancelamento 0 créditos em dois semestres$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Desistência", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Abandono 2", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Encerramento", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("trancamento 4 semestres$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+        df = pd.DataFrame(linhas)
         return df.values.tolist()
 
     def get_labels(self):
@@ -839,21 +853,27 @@ class GraficoTipoEgresso(GraficoIngressantesEgressos):
 
     def get_titulo(self, departamento):
         if departamento:
-            return f"Tipo do ingresso dos alunos de graduação de {departamento}."
+            return f"Forma de egresso dos ex-alunos de graduação de {departamento}."
         else:
-            return "Tipo do ingresso dos alunos de graduação."
+            return "Forma de egresso dos ex-alunos de graduação."
 
     def get(self, *args, **kwargs):
         try:
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
+            else:
+                stacked = False
             departamento = self.request.GET.get('departamento')
 
-            grafico = self.plota_grafico(tipo='line', colors=[
+            grafico = self.plota_grafico(tipo='bar', colors=[
                 '#97bde8',
                 '#b85149',
                 '#fcba03',
                 '#198a11',
                 '#4f1369',
-            ], departamento=departamento)
+                "#fc6b03",
+                "#03d7fc"
+            ], departamento=departamento, stacked=stacked)
 
             serializer = GraficoSerializer(grafico)
             return Response(serializer.data)

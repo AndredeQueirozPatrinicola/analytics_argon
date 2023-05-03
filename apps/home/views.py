@@ -224,15 +224,16 @@ class SobrenosView(View):
 
 
 class AbstractGraduacaoViews(View):
-    
+    graduacao = Graduacao()
+
     def get(self, request):
-        graduacao = Graduacao()
+        
         departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
         
-        numero_alunos = graduacao.pega_numero_alunos_ativos()
-        numero_formandos = graduacao.pega_formandos_ano_passado()
-        numero_ingressantes = graduacao.pega_ingressantes_ano_vigente()
-        numero_egressos = graduacao.pega_egressos_ano_vigente()
+        numero_alunos = self.graduacao.pega_numero_alunos_ativos()
+        numero_formandos = self.graduacao.pega_formandos_ano_passado()
+        numero_ingressantes = self.graduacao.pega_ingressantes_ano_vigente()
+        numero_egressos = self.graduacao.pega_egressos_ano_vigente()
 
         anos = [ano for ano in range(2013, datetime.now().year + 1)]
         anos_reverse = list(reversed(anos))
@@ -288,7 +289,9 @@ class GraduacaoGeral(AbstractGraduacaoViews):
             }
         ]
 
+        tabela_alunos = self.graduacao.tabela_alunos()
         context['caminho'] = caminho
+        context["tabela_alunos"] = tabela_alunos
         return render(*payload)
     
 class GraduacaoPesquisa(AbstractGraduacaoViews):

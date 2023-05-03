@@ -48,7 +48,28 @@
   </div>
 
   <div class="card-dash-3">
-
+    <div class="table-container" style="height: 100%;">
+      <table class="table-content" style="height: 100%;">
+        <thead class="">
+          <tr class="table-row-header">
+            {% for column in tabela_alunos.columns %}
+              <th>{{ column }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in tabela_alunos.values %}
+          <tr class="table-row-default">
+            {% for cell in row %}
+            <td class="celula-simples">
+              {{ cell }}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -71,11 +92,11 @@
         <label id="departamento">Departamento</label>
         <select class="select-grafico tipo-ingresso">
           {% for departamento in departamentos %}
-            {% if departamento == 'Geral' %}
-              <option value="">{{ departamento }}</option>
-            {% else %}
-              <option value="{{ departamento }}">{{ departamento }}</option>
-            {% endif %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
           {% endfor %}
         </select>
       </div>
@@ -100,6 +121,11 @@
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
+        <label id="stacked">Relativo</label>
+        <input type="checkbox" class="check-box">
+      </div>
+
+      <div>
         <label id="ano_inicial">Ano inicial</label>
         {% include 'includes/anos.html' %}
       </div>
@@ -113,11 +139,11 @@
         <label id="departamento">Departamento</label>
         <select class="select-grafico tipo-egresso">
           {% for departamento in departamentos %}
-            {% if departamento == 'Geral' %}
-              <option value="">{{ departamento }}</option>
-            {% else %}
-              <option value="{{ departamento }}">{{ departamento }}</option>
-            {% endif %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
           {% endfor %}
         </select>
       </div>

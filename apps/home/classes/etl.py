@@ -128,7 +128,7 @@ class Etl:
                     where = "WHERE nome_curso = %s"
 
                 if coluna_select:
-                    group_by = f"GROUP BY {coluna_select}"
+                    group_by = f"GROUP BY {coluna_select} ORDER BY {coluna_select}"
                     coluna_select = f"{coluna_select}, "
 
                 query = f"SELECT {coluna_select}{sum} FROM graduacoes {where}{group_by};"
