@@ -94,7 +94,7 @@ class GraficoPizzaAPIView(GraficoAPI):
                 "label": "Total",
                 "data": data,
                 "backgroundColor": colors,
-                "borderColor": colors,
+                # "borderColor": colors,
                 "borderWidth": 1
             }
         ]
@@ -744,7 +744,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
-
+            print(self.request.GET.get('felipe'))
             grafico = self.plota_grafico(tipo='line', colors=[
                 '#97bde8',
                 '#b85149'
@@ -879,3 +879,65 @@ class GraficoTipoEgresso(GraficoAPI):
             return Response(serializer.data)
         except:
             return Response(self.error_message)
+        
+
+class GraficoTipoBolsa(GraficoPizzaAPIView):
+
+    def proxy_data(self):
+        parameters = {
+            "columns" : ["y.nome_fomento", "COUNT(*)"],
+            "tables" : ["iniciacoes", "bolsas_ic"],
+            "ids" : "id_projeto",
+            "condition" : {"situacao_projeto" : "Ativo"},
+            "group_by" : ["y.nome_fomento"]
+        }
+
+        if departamento := self.request.GET.get("departamento"):
+            data = self.etl.group_by(
+                                    columns=parameters.get("columns"),
+                                    tables=parameters.get("tables"),
+                                    ids=parameters.get("ids"),
+                                    condition=parameters.get("condition"),
+                                    group_by=parameters.get("group_by"),
+                                    where = departamento
+                                )
+        else:
+            data = self.etl.group_by(
+                                    columns=parameters.get("columns"),
+                                    tables=parameters.get("tables"),
+                                    ids=parameters.get("ids"),
+                                    condition=parameters.get("condition"),
+                                    group_by=parameters.get("group_by"),
+                                )
+        
+        return data
+
+    def get_data(self):
+        data = self.proxy_data()
+        df = pd.DataFrame(data)
+        return df.values.tolist()
+
+
+    def get_labels(self):
+        data = self.proxy_data()
+        labels = [i[0] for i in data]
+        return labels
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Forma de ingresso dos alunos de graduação de {departamento}."
+        else:
+            return "Forma de ingresso dos alunos de graduação."
+
+    def get(self, *args, **kwargs):
+        # try:
+            departamento = self.request.GET.get('departamento')
+
+            grafico = self.plota_grafico(tipo='pie', colors=[
+                "#619ED6", "#6BA547", "#F7D027", "#E48F1B", "#B77EA3", "#E64345", "#60CEED", "#9CF168",
+            ], departamento=departamento)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        # except:
+        #     return Response(self.error_message)

@@ -51,7 +51,6 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
-                print(query)
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
@@ -132,6 +131,42 @@ class Etl:
                     coluna_select = f"{coluna_select}, "
 
                 query = f"SELECT {coluna_select}{sum} FROM graduacoes {where}{group_by};"
+                self.cursor.execute(query, args)
+                return self.cursor.fetchall()
+            raise Exception("SQLInjection Detected")
+        except Exception as e:
+            raise Exception("Não foi possivel realizar a query:" + e)
+
+    def group_by(self, *args, **kwargs):
+        try:
+            if self.secure_input():
+                colunas_completas = ",".join(kwargs.get("columns"))
+                tabela_1 = kwargs.get("tables")[0]
+                tabela_2 = kwargs.get("tables")[1]
+                ids = kwargs.get("ids")
+                where_column = list(kwargs.get("condition").keys())[0]
+                where_condition = kwargs.get("condition").get(where_column)
+                group_by = ",".join(kwargs.get("group_by"))
+
+                select_statement = f"SELECT {colunas_completas}" 
+                from_statement = f"FROM {tabela_1} x" 
+                join_statement = f"JOIN {tabela_2} y ON x.{ids} = y.{ids}" 
+                where_statement = f"WHERE {where_column} in " + "(%s)" 
+                group_by_statement = f"GROUP BY {group_by}" 
+            
+                args = [where_condition]
+
+                if where := kwargs.get("where"):
+                    args.append(where)
+                    where_statement += "AND nome_departamento = %s "
+
+                query = f"""
+                            {select_statement}
+                            {from_statement}
+                            {join_statement}
+                            {where_statement}
+                            {group_by_statement}
+                        """
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")

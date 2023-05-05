@@ -225,10 +225,13 @@ class SobrenosView(View):
 
 class AbstractGraduacaoViews(View):
     graduacao = Graduacao()
+    utils = Utils()
 
     def get(self, request):
         
         departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
+        departamentos_pos = list(self.utils.dptos_siglas.values())
+        departamentos_pos.insert(0, "Geral")
         
         numero_alunos = self.graduacao.pega_numero_alunos_ativos()
         numero_formandos = self.graduacao.pega_formandos_ano_passado()
@@ -244,6 +247,7 @@ class AbstractGraduacaoViews(View):
             "card_header_3" : numero_ingressantes,
             "card_header_4" : numero_egressos,
             "departamentos" : departamentos,
+            "departamentos_pos" : departamentos_pos,
             "anos" : anos,
             "anos_reverse": anos_reverse
         }
@@ -300,6 +304,8 @@ class GraduacaoPesquisa(AbstractGraduacaoViews):
         payload = super().get(request)
         payload[1] = 'home/graduacao_pesquisa.html'
         context = payload[-1]
+        tabela_ics = self.graduacao.tabela_iniciacao()
+
         caminho = [
             {
                 'text' : 'Graduação',
@@ -312,4 +318,5 @@ class GraduacaoPesquisa(AbstractGraduacaoViews):
         ]
 
         context['caminho'] = caminho
+        context['tabela_ics'] = tabela_ics
         return render(*payload)
