@@ -779,6 +779,13 @@ btn:hover {
     }
 }
 
+.title-table{
+    margin: 0.35rem;
+    color: #052e70;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
 
 /* Responsividade !! */
 
