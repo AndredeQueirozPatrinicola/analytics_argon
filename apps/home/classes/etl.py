@@ -108,6 +108,7 @@ class Etl:
         
     def soma_por_ano(self, table, anos, coluna_ano, coluna_select="", where = ""):
         try:
+
             if self.secure_input(anos):
                 args = []
                 group_by = ""
@@ -123,14 +124,14 @@ class Etl:
                 sum = "".join(sum)
 
                 if where:
-                    args.append(where)
-                    where = "WHERE nome_curso = %s"
+                    args.append(list(where.values())[0])
+                    where = f"WHERE {list(where.keys())[0]} = %s"
 
                 if coluna_select:
                     group_by = f"GROUP BY {coluna_select} ORDER BY {coluna_select}"
                     coluna_select = f"{coluna_select}, "
 
-                query = f"SELECT {coluna_select}{sum} FROM {table} {where}{group_by};"
+                query = f"SELECT {coluna_select} {sum} FROM {table} {where} {group_by};"
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")

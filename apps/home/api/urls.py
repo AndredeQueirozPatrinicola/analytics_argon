@@ -50,7 +50,9 @@ urlpatterns = [
 
     path("bolsas-ic", GraficoTipoBolsa.as_view(), name="bolsas-ic"),
 
-    path("ic-por-ano", GraficoProjetosIcPorAno.as_view(), name="ic-por-ano")
+    path("ic-por-ano", GraficoProjetosIcPorAno.as_view(), name="ic-por-ano"),
+
+    path("ingressantes-pos", GraficoIngressantesPosPorNivelPorAno.as_view(), name="ingressantes-pos")
 
     ##########################################
     ##              TABELAS                 ##

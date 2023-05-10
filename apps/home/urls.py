@@ -20,6 +20,12 @@ urlpatterns = [
 
     path('graduacao/pesquisa/', views.GraduacaoPesquisa.as_view(), name='graduacao'),
 
+    path('pos-graduacao/geral/', views.PosGraduacaoView.as_view(), name='graduacao'),
+
+    path('pos-graduacao/diversidade/', views.GraduacaoDiversidade.as_view(), name='graduacao'),
+
+    path('pos-graduacao/pesquisa/', views.GraduacaoPesquisa.as_view(), name='graduacao'),
+
     path('docentes/', views.DocenteView.as_view(), name='docentes'),
 
     path('docentes/<str:docente>/', views.DocenteView.as_view(), name='graduacao-docente'),
