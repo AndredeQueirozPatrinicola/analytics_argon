@@ -6,51 +6,89 @@
 
 {% block content %}
 
-
 <div class="dashboard-row">
-  <div class="card-dash-6">
+  <div class="card-dash-5">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label id="departamento">Departamento</label>
-        <select class="select-grafico prod-por-ano">
-          {% for departamento in departamentos %}
-          <option value="{{ departamento }}">{{ departamento }}</option>
+        <label id="stacked">Relativo</label>
+        <input type="checkbox" class="check-box">
+      </div>
+
+      <div>
+        <label id="ano">Ano</label>
+        <select class="select-grafico">
+          {% for ano in anos_reverse %}
+          <option value="{{ ano }}">{{ ano }}</option>
           {% endfor %}
         </select>
       </div>
+
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico raca-sexo">
+          {% for departamento in departamentos %}
+            {% if departamento == 'Geral' %}
+              <option value="">{{ departamento }}</option>
+            {% else %}
+              <option value="{{ departamento }}">{{ departamento }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
       <btn class="btn btn-dark me-5" style="background-color: #052e70;">
         Buscar
       </btn>
     </div>
+
     <div class="grafico-container">
 
-      <canvas id="prod-por-ano"></canvas>
+      <canvas id="raca-sexo"></canvas>
 
       <div class="loader show"></div>
 
       {% include 'includes/fonte.html' %}
     </div>
   </div>
-  <div class="card-dash-3">
+  <div class="card-dash-5">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
+        <label id="stacked">Relativo</label>
+        <input type="checkbox" class="check-box">
+      </div>
+
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
         <label id="departamento">Departamento</label>
-        <select class="select-grafico prod-total">
+        <select class="select-grafico sexo-por-ano">
           {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
           <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
           {% endfor %}
         </select>
       </div>
+
       <btn class="btn btn-dark me-5" style="background-color: #052e70;">
         Buscar
       </btn>
     </div>
-
     <div class="grafico-container">
 
-      <canvas id="prod-total"></canvas>
+      <canvas id="sexo-por-ano"></canvas>
 
       <div class="loader show"></div>
 
@@ -61,17 +99,37 @@
 
 <div class="dashboard-row">
 
-  <div class="card-dash-3">
+  <div class="card-dash-6">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
+        <label id="stacked">Relativo</label>
+        <input type="checkbox" class="check-box">
+      </div>
+
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
         <label id="departamento">Departamento</label>
-        <select class="select-grafico defesas">
+        <select class="select-grafico raca-atual">
           {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
           <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
           {% endfor %}
         </select>
       </div>
+
       <btn class="btn btn-dark me-5" style="background-color: #052e70;">
         Buscar
       </btn>
@@ -79,7 +137,7 @@
 
     <div class="grafico-container">
 
-      <canvas id="defesas"></canvas>
+      <canvas id="raca-por-ano"></canvas>
 
       <div class="loader show"></div>
 
@@ -87,61 +145,13 @@
     </div>
   </div>
 
-  <div class="card-dash-6">
-
-    {% include 'includes/tabelas/tabela_defesas.html' %}
-
-  </div>
-
 </div>
-
-<div class="dashboard-row">
-
-  <div class="card-dash-6">
-
-    {% include 'includes/tabelas/tabela_todos_docentes.html' %}
-
-  </div>
-
-  <div class="card-dash-3 has-childs">
-    <div class="card-dash-child">
-      <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
-      <div class="grafico-container">
-
-        <canvas id="professores"></canvas>
-
-        <div class="loader show"></div>
-
-        {% include 'includes/fonte.html' %}
-      </div>
-    </div>
-    <div class="card-dash-child">
-      <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
-      <div class="select-container">
-        <div>
-          <label id="departamento">Departamento</label>
-          <select class="select-grafico tipo-vinculo">
-            {% for departamento in departamentos %}
-            <option value="{{ departamento }}">{{ departamento }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <btn class="btn btn-dark me-5" style="background-color: #052e70;">
-          Buscar
-        </btn>
-      </div>
-      <div class="grafico-container">
-
-        <canvas id="tipo-vinculo"></canvas>
-
-        <div class="loader show"></div>
-
-        {% include 'includes/fonte.html' %}
-      </div>
-    </div>
-  </div>
-
-</div>
-
 
 {% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}

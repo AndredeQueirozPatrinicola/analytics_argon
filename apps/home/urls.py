@@ -7,14 +7,18 @@ from django.views.static import serve
 from apps.home import views
 
 urlpatterns = [
-    # The home page
+
     path('', views.IndexView.as_view(), name='home'),
 
     path('projeto/', views.SobrenosView.as_view(), name='sobre-nos'),
 
     path('departamentos/', views.DepartamentosView.as_view(), name='departamentos'),
 
-    path('graduacao/', views.GraduacaoViews .as_view(), name='graduacao'),
+    path('graduacao/geral/', views.GraduacaoGeral.as_view(), name='graduacao'),
+
+    path('graduacao/diversidade/', views.GraduacaoDiversidade.as_view(), name='graduacao'),
+
+    path('graduacao/pesquisa/', views.GraduacaoPesquisa.as_view(), name='graduacao'),
 
     path('docentes/', views.DocenteView.as_view(), name='docentes'),
 

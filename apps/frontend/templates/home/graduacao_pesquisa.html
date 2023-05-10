@@ -1,0 +1,121 @@
+{% extends 'layouts/_base.html' %}
+
+{% block title %} FFLCH {% endblock title %}
+
+{% block content %}
+
+<!-- <div class="dashboard-row">
+  <div class="card-dash-6">
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico ic-por-ano">
+          {% for departamento in departamentos %}
+            {% if departamento == 'Geral' %}
+              <option value="">{{ departamento }}</option>
+            {% else %}
+              <option value="{{ departamento }}">{{ departamento }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
+    </div>
+    
+        <div class="grafico-container">
+    
+          <canvas id="ic-por-ano"></canvas>
+    
+          <div class="loader show"></div>
+    
+          {% include 'includes/fonte.html' %}
+        </div>
+  </div>
+</div> -->
+
+<div class="dashboard-row">  
+    <div class="card-dash-6">
+        
+        <h6 class="title-table">Tipo de bolsas de Iniciação Científica de projetos ativos({{ date }}).</h6>
+
+        <div class="table-container" style="height: 97%;">
+            <table class="table-content" style="height: 100%;">
+              <thead class="">
+                <tr class="table-row-header">
+                  {% for column in tabela_ics.columns %}
+                    <th>{{ column }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in tabela_ics.values %}
+                <tr class="table-row-default">
+                  {% for cell in row %}
+                  <td class="celula-simples text-center">
+                    {{ cell }}
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+    </div>
+    <div class="card-dash-3">
+        <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+        <div class="select-container">
+    
+          <div>
+            <label id="departamento">Departamento</label>
+            <select class="select-grafico bolsas-ic">
+              {% for departamento in departamentos_pos %}
+                {% if departamento == 'Geral' %}
+                    <option value="">{{ departamento }}</option>
+                {% else %}
+                    <option value="{{ departamento }}">{{ departamento }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+    
+          <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+            Buscar
+          </btn>
+        </div>
+    
+        <div class="grafico-container">
+    
+          <canvas id="bolsas-ic"></canvas>
+    
+          <div class="loader show"></div>
+    
+          {% include 'includes/fonte.html' %}
+        </div>
+      </div>
+  </div>
+  
+
+
+{% endblock content %}
+
+
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}

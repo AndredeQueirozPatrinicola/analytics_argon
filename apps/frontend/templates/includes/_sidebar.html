@@ -8,17 +8,32 @@
         <div class="sidebar-menu">
             <ul class="sidebar-menu-items">
                 {% for item in menu %}
-                <li class="sidebar-menu-item">
-                    <a href="{{ item.url }}" >
-                    {{ item.text }}
-                    </a>    
-                </li>
+                <div class="sidebar-menu-item dropdown">
+
+                    {% if item.submenu %}
+                        <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ item.text }}
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {% for subitem in item.submenu %}
+                            <li><a class="dropdown-item" href="/{{ item.url }}/{{ subitem.url }}/">{{ subitem.text }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <a href="/{{ item.url }}/">
+                            {{ item.text }}
+                        </a>
+                    {% endif %}
+                </div>
                 {% endfor %}
             </ul>
         </div>
         <hr class="sidebar-line">
         <div>
-              
+
             <!-- ADICIONAR COISA -->
 
         </div>

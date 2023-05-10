@@ -223,18 +223,20 @@ class SobrenosView(View):
         return render(request, 'home/projeto.html', context)
 
 
-class GraduacaoViews(View):
-    
-    def get(self, request):
-        graduacao = Graduacao()
-        departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
-        
-        numero_alunos = graduacao.pega_numero_alunos_ativos()
-        numero_formandos = graduacao.pega_formandos_ano_passado()
-        numero_ingressantes = graduacao.pega_ingressantes_ano_vigente()
-        numero_egressos = graduacao.pega_egressos_ano_vigente()
+class AbstractGraduacaoViews(View):
+    graduacao = Graduacao()
+    utils = Utils()
 
-        caminho = graduacao.pega_caminho()
+    def get(self, request):
+        
+        departamentos = ["Geral", "Geografia" , "Historia", "Letras", "Ciências Sociais", "Filosofia"]
+        departamentos_pos = list(self.utils.dptos_siglas.values())
+        departamentos_pos.insert(0, "Geral")
+        
+        numero_alunos = self.graduacao.pega_numero_alunos_ativos()
+        numero_formandos = self.graduacao.pega_formandos_ano_passado()
+        numero_ingressantes = self.graduacao.pega_ingressantes_ano_vigente()
+        numero_egressos = self.graduacao.pega_egressos_ano_vigente()
 
         anos = [ano for ano in range(2013, datetime.now().year + 1)]
         anos_reverse = list(reversed(anos))
@@ -244,9 +246,77 @@ class GraduacaoViews(View):
             "card_header_2" : numero_formandos,
             "card_header_3" : numero_ingressantes,
             "card_header_4" : numero_egressos,
-            'caminho' : caminho,
             "departamentos" : departamentos,
+            "departamentos_pos" : departamentos_pos,
             "anos" : anos,
             "anos_reverse": anos_reverse
         }
-        return render(request, 'home/graduacao.html', context)
+        return [request, 'home/graduacao.html', context]
+    
+class GraduacaoDiversidade(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_diversidade.html'
+
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Diversidade',
+                'url' : '#'
+            }
+        ]
+
+        context['caminho'] = caminho
+
+        return render(*payload)
+    
+class GraduacaoGeral(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_geral.html'
+
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Geral',
+                'url' : '#'
+            }
+        ]
+
+        tabela_alunos = self.graduacao.tabela_alunos()
+        context['caminho'] = caminho
+        context["tabela_alunos"] = tabela_alunos
+        return render(*payload)
+    
+class GraduacaoPesquisa(AbstractGraduacaoViews):
+
+    def get(self, request):
+        payload = super().get(request)
+        payload[1] = 'home/graduacao_pesquisa.html'
+        context = payload[-1]
+        tabela_ics = self.graduacao.tabela_iniciacao()
+
+        caminho = [
+            {
+                'text' : 'Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Pesquisa',
+                'url' : '#'
+            }
+        ]
+
+        context['caminho'] = caminho
+        context['tabela_ics'] = tabela_ics
+        return render(*payload)

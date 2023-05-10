@@ -2,76 +2,25 @@
 
 {% block title %} FFLCH {% endblock title %}
 
-<!-- Specific CSS goes HERE -->
 
 {% block content %}
 
-
 <div class="dashboard-row">
-  <div class="card-dash-5">
+  <div class="card-dash-6">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label>Relativo</label>
-        <input type="checkbox" class="check-box">
-      </div>
-
-      <div>
-        <label>Ano</label>
-        <select class="select-grafico">
-          {% for ano in anos_reverse %}
-          <option value="{{ ano }}">{{ ano }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div>
-        <label>Departamento</label>
-        <select class="select-grafico raca-sexo">
-          {% for departamento in departamentos %}
-            {% if departamento == 'Geral' %}
-              <option value="">{{ departamento }}</option>
-            {% else %}
-              <option value="{{ departamento }}">{{ departamento }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-      </div>
-
-      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
-        Buscar
-      </btn>
-    </div>
-
-    <div class="grafico-container">
-
-      <canvas id="raca-sexo"></canvas>
-
-      <div class="loader show"></div>
-
-      {% include 'includes/fonte.html' %}
-    </div>
-  </div>
-  <div class="card-dash-5">
-    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
-    <div class="select-container">
-      <div>
-        <label>Relativo</label>
-        <input type="checkbox" class="check-box">
-      </div>
-
-      <div>
-        <label>Ano inicial</label>
+        <label id="ano_inicial">Ano inicial</label>
         {% include 'includes/anos.html' %}
       </div>
 
       <div>
-        <label>Ano final</label>
+        <label id="ano_final">Ano final</label>
         {% include 'includes/anos_reverse.html' %}
       </div>
 
       <div>
-        <label>Departamento</label>
+        <label id="departamento">Departamento</label>
         <select class="select-grafico sexo-por-ano">
           {% for departamento in departamentos %}
           {% if departamento == 'Geral' %}
@@ -87,39 +36,64 @@
         Buscar
       </btn>
     </div>
+
     <div class="grafico-container">
 
-      <canvas id="sexo-por-ano"></canvas>
+      <canvas id="ingressantes-egressos"></canvas>
 
       <div class="loader show"></div>
 
       {% include 'includes/fonte.html' %}
     </div>
   </div>
+
+  <div class="card-dash-3">
+
+    <h6 class="title-table">Situação cadastral dos alunos (01/01/2013 - {{ date }}).</h6>
+
+    <div class="table-container" style="height: 97%;">
+      <table class="table-content" style="height: 100%;">
+        <thead class="">
+          <tr class="table-row-header">
+            {% for column in tabela_alunos.columns %}
+              <th>{{ column }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in tabela_alunos.values %}
+          <tr class="table-row-default">
+            {% for cell in row %}
+            <td class="celula-simples">
+              {{ cell }}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
 <div class="dashboard-row">
 
-  <div class="card-dash-6">
+  <div class="card-dash-5">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
-        <label>Relativo</label>
-        <input type="checkbox" class="check-box">
-      </div>
-
-      <div>
-        <label>Ano inicial</label>
+        <label id="ano_inicial">Ano inicial</label>
         {% include 'includes/anos.html' %}
       </div>
 
       <div>
-        <label>Ano final</label>
+        <label id="ano_final">Ano final</label>
         {% include 'includes/anos_reverse.html' %}
       </div>
 
       <div>
-        <label>Departamento</label>
-        <select class="select-grafico raca-atual">
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico tipo-ingresso">
           {% for departamento in departamentos %}
           {% if departamento == 'Geral' %}
           <option value="">{{ departamento }}</option>
@@ -137,7 +111,54 @@
 
     <div class="grafico-container">
 
-      <canvas id="raca-por-ano"></canvas>
+      <canvas id="tipo-ingresso"></canvas>
+
+      <div class="loader show"></div>
+
+      {% include 'includes/fonte.html' %}
+    </div>
+  </div>
+
+  <div class="card-dash-5">
+
+    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+    <div class="select-container">
+      <div>
+        <label id="stacked">Relativo</label>
+        <input type="checkbox" class="check-box">
+      </div>
+
+      <div>
+        <label id="ano_inicial">Ano inicial</label>
+        {% include 'includes/anos.html' %}
+      </div>
+
+      <div>
+        <label id="ano_final">Ano final</label>
+        {% include 'includes/anos_reverse.html' %}
+      </div>
+
+      <div>
+        <label id="departamento">Departamento</label>
+        <select class="select-grafico tipo-egresso">
+          {% for departamento in departamentos %}
+          {% if departamento == 'Geral' %}
+          <option value="">{{ departamento }}</option>
+          {% else %}
+          <option value="{{ departamento }}">{{ departamento }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+        Buscar
+      </btn>
+    </div>
+
+    <div class="grafico-container">
+
+      <canvas id="tipo-egresso"></canvas>
 
       <div class="loader show"></div>
 
@@ -148,9 +169,10 @@
 </div>
 
 
+
 {% endblock content %}
 
-<!-- Specific JS goes HERE -->
+
 {% block javascripts %}
 
 

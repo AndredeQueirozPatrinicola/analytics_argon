@@ -85,7 +85,7 @@ hr {
 }
 
 .sidebar-menu-item {
-    width: 75%;
+    width: 90% !important;
     height: 0.1rem;
     display: flex;
     justify-content: center;
@@ -777,6 +777,13 @@ btn:hover {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.title-table{
+    margin: 0.35rem;
+    color: #052e70;
+    font-weight: 500;
+    font-size: 1.1rem;
 }
 
 

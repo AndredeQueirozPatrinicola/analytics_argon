@@ -13,6 +13,7 @@ from apps.home.classes.docente import DadosDocente
 from .serializers import GraficoSerializer
 
 import pandas as pd
+import re
 
 from datetime import datetime
 
@@ -93,7 +94,7 @@ class GraficoPizzaAPIView(GraficoAPI):
                 "label": "Total",
                 "data": data,
                 "backgroundColor": colors,
-                "borderColor": colors,
+                # "borderColor": colors,
                 "borderWidth": 1
             }
         ]
@@ -178,6 +179,7 @@ class GraficoRacaAPIView(GraficoAPI):
                 stacked = True
             else:
                 stacked = False
+
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
                 '#052e70', '#1a448a',  '#425e8f',
@@ -684,3 +686,309 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
             return Response(serializer.data)
         except:
             return Response(self.error_message)
+        
+    
+class GraficoIngressantesEgressos(GraficoPizzaAPIView):
+
+    def get_datasets(self, dados, colors):
+        
+        datasets = []
+        for dado in dados:
+            label = dado[0]
+            dado.pop(0)
+            data = {
+                "label": label,
+                "data": dado,
+                "borderColor" : [colors[dados.index(dado)]],
+                "backgroundColor": [colors[dados.index(dado)]],
+                "borderWidth": 2
+            }
+            datasets.append(data)
+        
+        return datasets
+
+    def get_data(self):
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+        if departamento := self.request.GET.get('departamento'):
+            dados_inicio_vinculo = self.etl.soma_por_ano("graduacoes", anos, "data_inicio_vinculo", where=departamento)
+            dados_fim_vinculo = self.etl.soma_por_ano("graduacoes", anos, "data_fim_vinculo", where=departamento)
+        else:
+            dados_inicio_vinculo = self.etl.soma_por_ano("graduacoes", anos, "data_inicio_vinculo")
+            dados_fim_vinculo = self.etl.soma_por_ano("graduacoes", anos, "data_fim_vinculo")
+
+        df = pd.DataFrame([], columns=anos)
+        df.loc[0] = list(*dados_inicio_vinculo)
+        df.loc[1] = list(*dados_fim_vinculo)
+        df = df.rename(index={0 : "Ingressantes", 1 : "Egressos"})
+
+        dados = df.values.tolist()
+        for dado in dados:
+            dado.insert(0, df.index.values.tolist()[dados.index(dado)])
+    
+        return dados
+    
+    def get_labels(self):
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Alunos de graduação ingressantes e egressos do departamento de {departamento}."
+        else:
+            return "Alunos de graduação ingressantes e egressos."
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.request.GET.get('departamento')
+            print(self.request.GET.get('felipe'))
+            grafico = self.plota_grafico(tipo='line', colors=[
+                '#97bde8',
+                '#b85149'
+            ], departamento=departamento)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+        
+
+class GraficoTipoIngresso(GraficoIngressantesEgressos):
+
+    def get_data(self):
+        labels = ["Fuvest", "Enem", "Transferência Interna e externa"]
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+        if departamento := self.request.GET.get("departamento"):
+            data = self.etl.soma_por_ano("graduacoes", anos, "data_inicio_vinculo", coluna_select="tipo_ingresso", where=departamento)
+        else:    
+            data = self.etl.soma_por_ano("graduacoes", anos, "data_inicio_vinculo", coluna_select="tipo_ingresso")
+
+        df_raw = pd.DataFrame(data)
+        fuvest = pd.DataFrame([df_raw[df_raw[0].str.contains(r"FUVEST(?: - Lista extra)?")].sum()], index=[0])
+        enem = pd.DataFrame([df_raw[df_raw[0].str.contains(r"SISU|ENEMUSP")].sum()], index=[1])
+        transferencia = pd.DataFrame([df_raw[df_raw[0].str.contains(r"Transferência")].sum()], index=[2])
+        df = pd.concat([fuvest, enem, transferencia], axis=0)
+        
+        for i in range(3):
+            df.loc[i, 0] = labels[i]
+
+        return df.values.tolist()
+
+    def get_labels(self):
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Forma de ingresso dos alunos de graduação de {departamento}."
+        else:
+            return "Forma de ingresso dos alunos de graduação."
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.request.GET.get('departamento')
+
+            grafico = self.plota_grafico(tipo='line', colors=[
+                '#97bde8',
+                '#b85149',
+                '#198a11',
+            ], departamento=departamento)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+
+
+class GraficoTipoEgresso(GraficoAPI):
+
+    def get_data(self):
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+        if departamento := self.request.GET.get("departamento"):
+            data = self.etl.soma_por_ano("graduacoes", anos, "data_fim_vinculo", coluna_select="tipo_encerramento_bacharel", where=departamento)
+        else:    
+            data = self.etl.soma_por_ano("graduacoes", anos, "data_fim_vinculo", coluna_select="tipo_encerramento_bacharel")
+
+        df_raw = pd.DataFrame(data)
+
+        linhas = []
+        for i in range(len(df_raw.index)):
+            label = str(df_raw.loc[i, 0])
+
+            if re.search("^Conclusão$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Cancelamento 0 créditos em dois semestres$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Desistência", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Abandono 2", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("^Encerramento", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+            elif re.search("trancamento 4 semestres$", label):
+                linhas.append(df_raw.iloc[i].tolist())
+
+        df = pd.DataFrame(linhas)
+        return df.values.tolist()
+
+    def get_labels(self):
+        ano_inicial = self.request.GET.get('ano_inicial')
+        ano_final = self.request.GET.get('ano_final')
+        return [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Forma de egresso dos ex-alunos de graduação de {departamento}."
+        else:
+            return "Forma de egresso dos ex-alunos de graduação."
+
+    def get(self, *args, **kwargs):
+        try:
+            if self.request.GET.get('stacked') == 'true':
+                stacked = True
+            else:
+                stacked = False
+            departamento = self.request.GET.get('departamento')
+
+            grafico = self.plota_grafico(tipo='bar', colors=[
+                '#97bde8',
+                '#b85149',
+                '#fcba03',
+                '#198a11',
+                '#4f1369',
+                "#fc6b03",
+                "#03d7fc"
+            ], departamento=departamento, stacked=stacked)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+        
+
+class GraficoTipoBolsa(GraficoPizzaAPIView):
+
+    def proxy_data(self):
+        parameters = {
+            "columns" : ["y.nome_fomento", "COUNT(*)"],
+            "tables" : ["iniciacoes", "bolsas_ic"],
+            "ids" : "id_projeto",
+            "condition" : {"situacao_projeto" : "Ativo"},
+            "group_by" : ["y.nome_fomento"]
+        }
+
+        if departamento := self.request.GET.get("departamento"):
+            data = self.etl.group_by(
+                                    columns=parameters.get("columns"),
+                                    tables=parameters.get("tables"),
+                                    ids=parameters.get("ids"),
+                                    condition=parameters.get("condition"),
+                                    group_by=parameters.get("group_by"),
+                                    where = departamento
+                                )
+        else:
+            data = self.etl.group_by(
+                                    columns=parameters.get("columns"),
+                                    tables=parameters.get("tables"),
+                                    ids=parameters.get("ids"),
+                                    condition=parameters.get("condition"),
+                                    group_by=parameters.get("group_by"),
+                                )
+        
+        return data
+
+    def get_data(self):
+        data = self.proxy_data()
+        df = pd.DataFrame(data)
+        return df.values.tolist()
+
+
+    def get_labels(self):
+        data = self.proxy_data()
+        labels = [i[0] for i in data]
+        return labels
+
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Relação entre tipos de bolsas dos projetos do departamento de {departamento}."
+        else:
+            return "Relação entre tipos de bolsas dos projetos de todos os departamentos."
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.request.GET.get('departamento')
+
+            grafico = self.plota_grafico(tipo='pie', colors=[
+                "#619ED6", "#6BA547", "#F7D027", "#E48F1B", "#B77EA3", "#E64345", "#60CEED", "#9CF168",
+            ], departamento=departamento)
+
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+        
+
+class GraficoProjetosIcPorAno(GraficoPizzaAPIView):
+
+    def get_datasets(self, dados, colors):
+        
+        datasets = []
+        for dado in dados:
+            data = {
+                "label": "Total",
+                "data": dado,
+                "borderColor" : [colors[dados.index(dado)]],
+                "backgroundColor": [colors[dados.index(dado)]],
+                "borderWidth": 2
+            }
+            datasets.append(data)
+        
+        return datasets
+    
+    def get_data(self):
+        ano_inicial = self.request.GET.get("ano_inicial")
+        ano_final = self.request.GET.get("ano_final")
+        anos = [ano for ano in range(int(ano_inicial), int(ano_final) + 1)]
+
+        if departamento := self.request.GET.get("departamento"):
+            data = self.etl.soma_por_ano("iniciacoes", anos, "data_inicio_projeto", where=departamento)
+        else:
+            data = self.etl.soma_por_ano("iniciacoes", anos, "data_inicio_projeto")
+        
+        df = pd.DataFrame(data)
+        return df.values.tolist()
+    
+    def get_titulo(self, departamento):
+        if departamento:
+            return f"Numero de projetos de IC iniciados por ano no departamento de {departamento}."
+        else:
+            return "Numero de projetos de IC iniciados por ano."
+    
+    def get_labels(self):
+        ano_inicial = self.request.GET.get("ano_inicial")
+        ano_final = self.request.GET.get("ano_final")
+        return [ano for ano in range(int(ano_inicial), int(ano_final) + 1)]
+    
+    def get(self, *args, **kwargs):
+        # try:
+            departamento = self.request.GET.get('departamento')
+            grafico = self.plota_grafico(tipo='line', colors=["#97bde8"], departamento=departamento)
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        # except:
+        #     return Response(self.error_message)
