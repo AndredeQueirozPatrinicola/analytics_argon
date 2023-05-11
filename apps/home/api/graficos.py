@@ -1,7 +1,6 @@
 from rest_framework import views
 from rest_framework.response import Response
 from django.db.models import Count
-from django.db.models import Q, Count
 
 from apps.home.classes.etl import Etl
 from apps.home.utils import Utils
@@ -16,6 +15,7 @@ import pandas as pd
 import re
 
 from datetime import datetime
+from functools import cached_property
 
 """ Classes pais que possuem os metodos que não mudam tanto. """
 
@@ -28,7 +28,8 @@ class GraficoAPI(views.APIView):
         self.utils = Utils()
         self.error_message = {
             "error": {"status_code": 400, "message": "Bad Request"}}
-        
+
+    @cached_property
     def get_anos(self):
         ano_inicial = self.request.GET.get("ano_inicial")
         ano_final = self.request.GET.get("ano_final")
@@ -99,10 +100,28 @@ class GraficoPizzaAPIView(GraficoAPI):
                 "label": "Total",
                 "data": data,
                 "backgroundColor": colors,
-                # "borderColor": colors,
                 "borderWidth": 1
             }
         ]
+        return datasets
+    
+class GraficoLinhasAPIView(GraficoAPI):
+
+    def get_datasets(self, dados, colors):
+        
+        datasets = []
+        for dado in dados:
+            label = dado[0]
+            dado.pop(0)
+            data = {
+                "label": label,
+                "data": dado,
+                "borderColor" : [colors[dados.index(dado)]],
+                "backgroundColor": [colors[dados.index(dado)]],
+                "borderWidth": 2
+            }
+            datasets.append(data)
+        
         return datasets
 
 
@@ -174,7 +193,7 @@ class GraficoRacaAPIView(GraficoAPI):
             return f"Distribuição dos alunos de {departamento.title()} por raça/ano."
 
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
 
     def get(self, *args, **kwargs):
         try:
@@ -219,7 +238,7 @@ class GraficoSexoAPIView(GraficoAPI):
             return f"Distribuição dos alunos de {departamento.title()} por sexo/ano."
 
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
 
     def get(self, *args, **kwargs):
         try:
@@ -689,27 +708,10 @@ class GraficoProducaoHistoricaDocente(GraficoPizzaAPIView):
             return Response(self.error_message)
         
     
-class GraficoIngressantesEgressos(GraficoPizzaAPIView):
-
-    def get_datasets(self, dados, colors):
-        
-        datasets = []
-        for dado in dados:
-            label = dado[0]
-            dado.pop(0)
-            data = {
-                "label": label,
-                "data": dado,
-                "borderColor" : [colors[dados.index(dado)]],
-                "backgroundColor": [colors[dados.index(dado)]],
-                "borderWidth": 2
-            }
-            datasets.append(data)
-        
-        return datasets
+class GraficoIngressantesEgressos(GraficoLinhasAPIView):
 
     def get_data(self):
-        anos = self.get_anos()
+        anos = self.get_anos
 
         if departamento := self.request.GET.get('departamento'):
             dados_inicio_vinculo = self.etl.soma_por_ano("graduacoes", anos, "data_inicio_vinculo", where={"nome_curso" : departamento})
@@ -730,7 +732,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
         return dados
     
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
 
     def get_titulo(self, departamento):
         if departamento:
@@ -741,7 +743,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
     def get(self, *args, **kwargs):
         try:
             departamento = self.request.GET.get('departamento')
-            print(self.request.GET.get('felipe'))
+
             grafico = self.plota_grafico(tipo='line', colors=[
                 '#97bde8',
                 '#b85149'
@@ -753,7 +755,7 @@ class GraficoIngressantesEgressos(GraficoPizzaAPIView):
             return Response(self.error_message)
         
 
-class GraficoTipoIngresso(GraficoIngressantesEgressos):
+class GraficoTipoIngresso(GraficoLinhasAPIView):
 
     def get_data(self):
         labels = ["Fuvest", "Enem", "Transferência Interna e externa"]
@@ -778,7 +780,7 @@ class GraficoTipoIngresso(GraficoIngressantesEgressos):
         return df.values.tolist()
 
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
 
     def get_titulo(self, departamento):
         if departamento:
@@ -842,7 +844,7 @@ class GraficoTipoEgresso(GraficoAPI):
         return df.values.tolist()
 
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
 
     def get_titulo(self, departamento):
         if departamento:
@@ -908,7 +910,7 @@ class GraficoTipoBolsa(GraficoPizzaAPIView):
 
 
     def get_labels(self):
-        return self.get_anos()
+        return [i[0] for i in self.get_data()]
 
     def get_titulo(self, departamento):
         if departamento:
@@ -930,25 +932,10 @@ class GraficoTipoBolsa(GraficoPizzaAPIView):
             return Response(self.error_message)
         
 
-class GraficoProjetosIcPorAno(GraficoPizzaAPIView):
-
-    def get_datasets(self, dados, colors):
-        
-        datasets = []
-        for dado in dados:
-            data = {
-                "label": "Total",
-                "data": dado,
-                "borderColor" : [colors[dados.index(dado)]],
-                "backgroundColor": [colors[dados.index(dado)]],
-                "borderWidth": 2
-            }
-            datasets.append(data)
-        
-        return datasets
-    
+class GraficoProjetosIcPorAno(GraficoLinhasAPIView):
+   
     def get_data(self):
-        anos = self.get_anos()
+        anos = self.get_anos
 
         if departamento := self.request.GET.get("departamento"):
             data = self.etl.soma_por_ano("iniciacoes", anos, "data_inicio_projeto", where={"nome_curso" : departamento})
@@ -965,7 +952,7 @@ class GraficoProjetosIcPorAno(GraficoPizzaAPIView):
             return "Numero de projetos de IC iniciados por ano."
     
     def get_labels(self):
-        return self.get_anos()
+        return self.get_anos
     
     def get(self, *args, **kwargs):
         try:
@@ -977,33 +964,16 @@ class GraficoProjetosIcPorAno(GraficoPizzaAPIView):
             return Response(self.error_message)
         
 
-class GraficoIngressantesPosPorNivelPorAno(GraficoPizzaAPIView):
-
-    def get_datasets(self, dados, colors):
-        
-        datasets = []
-        for dado in dados:
-            label = dado[0]
-            dado.pop(0)
-            data = {
-                "label": label,
-                "data": dado,
-                "borderColor" : [colors[dados.index(dado)]],
-                "backgroundColor": [colors[dados.index(dado)]],
-                "borderWidth": 2
-            }
-            datasets.append(data)
-        
-        return datasets
+class GraficoIngressantesPosPorNivelPorAno(GraficoLinhasAPIView):
 
     def get_data(self):
 
         map = {"ME" : "Mestrado", "DO" : "Doutorado", "DD" : "Doutorado Direto"}
         
         if departamento := self.request.GET.get('departamento'):
-            data = self.etl.soma_por_ano("posgraduacoes", self.get_anos(), "primeira_matricula", coluna_select="nivel_programa", where={"nome_area" : departamento})
+            data = self.etl.soma_por_ano("posgraduacoes", self.get_anos, "primeira_matricula", coluna_select="nivel_programa", where={"nome_area" : departamento})
         else:
-            data = self.etl.soma_por_ano("posgraduacoes", self.get_anos(), "primeira_matricula", coluna_select="nivel_programa")
+            data = self.etl.soma_por_ano("posgraduacoes", self.get_anos, "primeira_matricula", coluna_select="nivel_programa")
 
         df = pd.DataFrame(data)
         x = 0
@@ -1021,15 +991,75 @@ class GraficoIngressantesPosPorNivelPorAno(GraficoPizzaAPIView):
             return "Numero de alunos ingressantes na pós graduação da FFLCH por ano."
 
     def get_labels(self):
-        return self.get_anos() 
+        return self.get_anos 
 
     def get(self, *args, **kwargs):
-        # try:
+        try:
             departamento = self.request.GET.get('departamento')
             grafico = self.plota_grafico(tipo='line', colors=['#97bde8',
                 '#b85149',
                 '#198a11',], departamento=departamento)
             serializer = GraficoSerializer(grafico)
             return Response(serializer.data)
-        # except:
-            # return Response(self.error_message)
+        except:
+            return Response(self.error_message)
+        
+class GraficoDistribuicaoNivelPos(GraficoPizzaAPIView):
+
+    def get_data(self):
+        
+        if departamento := self.request.GET.get('departamento'):
+            data = Posgraduacoes.objects.using('etl').values('nivel_programa').filter(nome_area=departamento, tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*'))
+        else:
+            data = Posgraduacoes.objects.using('etl').values('nivel_programa').filter(tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*'))
+
+        df = pd.DataFrame(data)
+        x = 0
+        for i in df['nivel_programa'].values:
+            df.loc[x, 'nivel_programa'] = self.utils.pos_niveis.get(i)
+            x+=1
+
+        return df.values.tolist()
+
+    def get_titulo(self, departamento):
+        
+        if departamento:
+            return f"Numero total de alunos ativos por nível do programa de pós-graduacao de {departamento}."
+        else:
+            return "Numero total de alunos ativos por nível da pós graduação da FFLCH."
+
+    def get_labels(self):
+        return [i[0] for i in self.get_data()]
+
+    def get(self, *args, **kwargs):
+        try:
+            departamento = self.request.GET.get('departamento')
+            grafico = self.plota_grafico(tipo='pie', colors=[
+                '#b85149',
+                '#198a11',
+                '#97bde8'], departamento=departamento)
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)
+        
+class GraficoAlunosPorPrograma(GraficoPizzaAPIView):
+
+    def get_data(self):
+        data = Posgraduacoes.objects.using('etl').values('nome_area').filter(tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*')).order_by('total')
+        df = pd.DataFrame(data)
+        return df.values.tolist()
+
+    def get_titulo(self, departamento):
+        return "Numero total de alunos de pós-graduação ativos por programa."
+
+    def get_labels(self):
+        return [i[0] for i in self.get_data()]
+
+    def get(self, *args, **kwargs):
+        try:
+            grafico = self.plota_grafico(tipo="bar", colors=['#97bde8'], departamento=False)
+            serializer = GraficoSerializer(grafico)
+            return Response(serializer.data)
+        except:
+            return Response(self.error_message)

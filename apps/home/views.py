@@ -343,4 +343,43 @@ class PosGraduacaoView(View):
             "programas" : programas
         }
 
-        return render(request, "home/posgraduacao.html", context)
+        return [request, "", context]
+    
+
+class PosGraduacaoGeral(PosGraduacaoView):
+
+    def get(self, request, *args, **kwargs):
+        payload = super().get(request)
+        payload[1] = 'home/posgraduacao_geral.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Pós-Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Geral',
+                'url' : '#'
+            }
+        ]
+        context['caminho'] = caminho
+        return render(*payload)
+    
+class PosGraduacaoDiversidade(PosGraduacaoView):
+
+    def get(self, request, *args, **kwargs):
+        payload = super().get(request)
+        payload[1] = 'home/posgraduacao_diversidade.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Pós-Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Diversidade',
+                'url' : '#'
+            }
+        ]
+        context['caminho'] = caminho
+        return render(*payload)

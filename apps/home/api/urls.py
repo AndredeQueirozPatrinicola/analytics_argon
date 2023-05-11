@@ -52,7 +52,11 @@ urlpatterns = [
 
     path("ic-por-ano", GraficoProjetosIcPorAno.as_view(), name="ic-por-ano"),
 
-    path("ingressantes-pos", GraficoIngressantesPosPorNivelPorAno.as_view(), name="ingressantes-pos")
+    path("ingressantes-pos", GraficoIngressantesPosPorNivelPorAno.as_view(), name="ingressantes-pos"),
+
+    path("nivel-pos", GraficoDistribuicaoNivelPos.as_view(), name="nivel-pos"),
+
+    path("alunos-programa", GraficoAlunosPorPrograma.as_view(), name="alunos-programa")
 
     ##########################################
     ##              TABELAS                 ##

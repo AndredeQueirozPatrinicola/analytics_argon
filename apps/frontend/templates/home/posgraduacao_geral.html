@@ -45,6 +45,58 @@
             {% include 'includes/fonte.html' %}
         </div>
     </div>
+
+    <div class="card-dash-3">
+        <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+        <div class="select-container">
+
+            <div>
+                <label id="departamento">Departamento</label>
+                <select class="select-grafico nivel-pos">
+                    {% for departamento in programas %}
+                        {% if departamento == 'Geral' %}
+                            <option value="">{{ departamento }}</option>
+                        {% else %}
+                            <option value="{{ departamento }}">{{ departamento }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <btn class="btn btn-dark me-5" style="background-color: #052e70;">
+                Buscar
+            </btn>
+        </div>
+
+        <div class="grafico-container">
+
+            <canvas id="nivel-pos"></canvas>
+
+            <div class="loader show"></div>
+
+            {% include 'includes/fonte.html' %}
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+    <div class="card-dash-10">
+        <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
+        <div class="select-container">
+            <div>
+
+            </div>
+        </div>
+
+        <div class="grafico-container">
+
+            <canvas id="alunos-programa"></canvas>
+
+            <div class="loader show"></div>
+
+            {% include 'includes/fonte.html' %}
+        </div>
+    </div>
 </div>
 
 {% endblock content %}
