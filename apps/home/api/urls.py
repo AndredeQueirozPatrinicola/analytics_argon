@@ -56,7 +56,9 @@ urlpatterns = [
 
     path("nivel-pos", GraficoDistribuicaoNivelPos.as_view(), name="nivel-pos"),
 
-    path("alunos-programa", GraficoAlunosPorPrograma.as_view(), name="alunos-programa")
+    path("alunos-programa", GraficoAlunosPorPrograma.as_view(), name="alunos-programa"),
+
+    path("raca-por-ano-pos", GraficoRacaPorAnoPosGraduacao.as_view(), name="raca-por-ano-pos")
 
     ##########################################
     ##              TABELAS                 ##

@@ -24,7 +24,7 @@ urlpatterns = [
 
     path('pos-graduacao/diversidade/', views.PosGraduacaoDiversidade.as_view(), name='graduacao'),
 
-    path('pos-graduacao/pesquisa/', views.PosGraduacaoView.as_view(), name='graduacao'),
+    path('pos-graduacao/pesquisa/', views.PosGraduacaoPesquisa.as_view(), name='graduacao'),
 
     path('docentes/', views.DocenteView.as_view(), name='docentes'),
 
