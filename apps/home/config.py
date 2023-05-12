@@ -18,6 +18,18 @@ def get_submenu_graduacao():
         }
     ]
 
+def get_submenu_posgraduacao():
+    return [
+        {
+            'text' : 'Geral',
+            'url' : 'geral',
+        },
+        {
+            'text' : "Diversidade",
+            'url' : 'diversidade',
+        }
+    ]
+
 def config(request):
     date = datetime.now().date()
     date = datetime.strptime(str(date), "%Y-%m-%d").strftime("%d/%m/%Y")
@@ -30,6 +42,7 @@ def config(request):
     anos_reverse = list(reversed(anos))
 
     submenu_graduacao = get_submenu_graduacao()
+    submenu_posgraduacao = get_submenu_posgraduacao()
 
     return  {
                 'menu':[
@@ -45,7 +58,7 @@ def config(request):
                             {
                                 'text' : 'Pós-Graduação',
                                 'url' : 'pos-graduacao',
-                                'submenu' : submenu_graduacao
+                                'submenu' : submenu_posgraduacao
                             }
                         ],
                 'logo': 'brand/logo.png',

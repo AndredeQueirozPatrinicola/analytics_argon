@@ -258,8 +258,7 @@ class GraficoSexoAPIView(GraficoAPI):
                 stacked = False
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
-                '#91a8cf',
-                '#052e70'
+                "#a2c272", "#323B81"
             ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
@@ -320,11 +319,11 @@ class GraficoRacaSexo(GraficoPizzaAPIView):
         dados = {
             'Masculino': {
                 'data': df_male.values.tolist(),
-                'color': "#052e70"
+                'color': "#a2c272"
             },
             'Feminino': {
                 'data': df_female.values.tolist(),
-                'color': "#cad5e8"
+                'color': "#323B81"
             },
         }
         return dados
@@ -355,95 +354,6 @@ class GraficoRacaSexo(GraficoPizzaAPIView):
             return Response(dados)
         except:
             return Response(self.error_message)
-
-
-class GraficoPizzaSexo(GraficoPizzaAPIView):
-
-    @cached_property
-    def get_data(self):
-        if graduacao := self.kwargs.get('graduacao'):
-            dados = AlunosGraduacao.objects.using('etl').filter(
-                alunos_graduacao__situacaoCurso='ativo', alunos_graduacao__nomeCurso=graduacao).values('sexo').annotate(count=Count('*'))
-        else:
-            dados = AlunosGraduacao.objects.using('etl').filter(
-                alunos_graduacao__situacaoCurso='ativo').values('sexo').annotate(count=Count('*'))
-
-        resultado = []
-        for dado in dados:
-            resultado.append([dado.get('sexo'), dado.get('count')])
-
-        dados = pd.DataFrame(resultado)
-        dados = dados.values.tolist()
-        return dados
-
-    def get_titulo(self, departamento):
-        if not departamento:
-            return "Distribuição de todos os alunos de graduação por sexo(Percentual)."
-        else:
-            return f"Distribuição dos alunos de {departamento.title()} por sexo(Percentual)."
-
-    def get_labels(self):
-        return ["Feminino", "Masculino"]
-
-    def get(self, *args, **kwargs):
-        try:
-            if departamento := self.kwargs.get('graduacao'):
-                departamento = departamento
-            else:
-                departamento = False
-            dados = self.plota_grafico(tipo='pie', colors=[
-                '#91a8cf',
-                '#052e70'
-            ], departamento=departamento)
-            serializer = GraficoSerializer(dados)
-            return Response(serializer.data)
-        except:
-            return Response(self.error_message)
-
-
-class GraficoPizzaRaca(GraficoPizzaAPIView):
-
-    @cached_property
-    def get_data(self):
-        if graduacao := self.kwargs.get('graduacao'):
-            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacaoCurso='ativo', alunos_graduacao__nomeCurso=graduacao).values(
-                'raca').annotate(count=Count('*')).order_by('raca')
-        else:
-            dados = AlunosGraduacao.objects.using('etl').filter(alunos_graduacao__situacaoCurso='ativo').values(
-                'raca').annotate(count=Count('*')).order_by('raca')
-
-        resultado = []
-        for dado in dados:
-            resultado.append([dado.get('raca'), dado.get('count')])
-
-        dados = pd.DataFrame(resultado)
-        dados = dados.values.tolist()
-        return dados
-
-    def get_titulo(self, departamento):
-        if not departamento:
-            return "Distribuição de todos os alunos de graduação por raca(Percentual)."
-        else:
-            return f"Distribuição dos alunos de {departamento.title()} por raca(Percentual)."
-
-    def get_labels(self):
-        return ["Amarela", "Branca", "Indígena", "Não informada", "Parda", "Preta"]
-
-    def get(self, *args, **kwargs):
-        try:
-            if departamento := self.kwargs.get('graduacao'):
-                departamento = departamento
-            else:
-                departamento = False
-            dados = self.plota_grafico(tipo='pie', colors=[
-                '#052e70', '#1a448a',  '#425e8f',
-                '#7585a1', '#91a8cf', '#cad5e8',
-            ], departamento=departamento)
-            serializer = GraficoSerializer(dados)
-            return Response(serializer.data)
-        except:
-            return Response(self.error_message)
-
 
 class GraficoProducaoHistoricaDepartamentos(GraficoDepartamentosDocentesAPIView):
 
@@ -1074,7 +984,7 @@ class GraficoAlunosPorPrograma(GraficoPizzaAPIView):
 
     @cached_property
     def get_data(self):
-        data = Posgraduacoes.objects.using('etl').values('nome_area').filter(tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*')).order_by('total')
+        data = Posgraduacoes.objects.using('etl').values('nome_area').filter(tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*')).order_by('-total')
         df = pd.DataFrame(data)
         return df.values.tolist()
 
@@ -1093,7 +1003,7 @@ class GraficoAlunosPorPrograma(GraficoPizzaAPIView):
             return Response(self.error_message)
         
 
-class GraficoRacaPorAnoPosGraduacao(GraficoAPI):
+class GraficoRacaPorAnoPosGraduacao(GraficoRacaAPIView):
 
     @cached_property
     def get_data(self):
@@ -1119,22 +1029,31 @@ class GraficoRacaPorAnoPosGraduacao(GraficoAPI):
         else:
             return "Distribuição de todos os alunos de pós-graduacao por Raça/Ano."
 
-    def get_labels(self):
-        return self.get_anos
+class GraficoSexoPorAnoPosGraduacao(GraficoSexoAPIView):
 
-    def get(self, *args, **kwargs):
-        try:
-            if self.request.GET.get('stacked') == 'true':
-                stacked = True
-            else:
-                stacked = False
+    @cached_property
+    def get_data(self):
+        
+        if departamento := self.request.GET.get('departamento'):
+            data = self.etl.pega_dados_por_ano("posgraduacoes",
+                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    order_by='sexo', anos=self.get_anos, where={"nome_area" : departamento}
+                    )
+        else:
+            data = self.etl.pega_dados_por_ano("posgraduacoes",
+                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    order_by='sexo', anos=self.get_anos
+                    )
 
-            departamento = self.request.GET.get('departamento')
-            grafico = self.plota_grafico(tipo='bar', colors=[
-                "#a2c272", "#82C272", "#00A88F", 
-                "#0087AC", "#005FAA", "#323B81"
-            ], departamento=departamento, stacked=stacked)
-            serializer = GraficoSerializer(grafico)
-            return Response(serializer.data)
-        except:
-            return Response(self.error_message)
+        df = pd.DataFrame(data)
+        df[0] = df[0].str.replace("F", "Feminino")
+        df[0] = df[0].str.replace("M", "Masculino")
+        return df.values.tolist()
+
+    def get_titulo(self, departamento):
+        
+        if departamento:
+            return f"Distribuição dos alunos de pós-graduação de {departamento} por Sexo/Ano."
+        else:
+            return "Distribuição de todos os alunos de pós-graduacao por Raça/Ano."
+

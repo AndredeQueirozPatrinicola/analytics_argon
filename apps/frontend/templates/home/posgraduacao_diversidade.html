@@ -7,50 +7,7 @@
 {% block content %}
 
 <div class="dashboard-row">
-  <div class="card-dash-5">
-    <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
-    <div class="select-container">
-      <div>
-        <label id="stacked">Relativo</label>
-        <input type="checkbox" class="check-box">
-      </div>
 
-      <div>
-        <label id="ano">Ano</label>
-        <select class="select-grafico">
-          {% for ano in anos_reverse %}
-          <option value="{{ ano }}">{{ ano }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div>
-        <label id="departamento">Departamento</label>
-        <select class="select-grafico raca-sexo">
-          {% for departamento in programas %}
-            {% if departamento == 'Geral' %}
-              <option value="">{{ departamento }}</option>
-            {% else %}
-              <option value="{{ departamento }}">{{ departamento }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-      </div>
-
-      <btn class="btn btn-dark me-5" style="background-color: #052e70;">
-        Buscar
-      </btn>
-    </div>
-
-    <div class="grafico-container">
-
-      <canvas id="raca-sexo"></canvas>
-
-      <div class="loader show"></div>
-
-      {% include 'includes/fonte.html' %}
-    </div>
-  </div>
   <div class="card-dash-5">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
@@ -71,7 +28,7 @@
 
       <div>
         <label id="departamento">Departamento</label>
-        <select class="select-grafico sexo-por-ano">
+        <select class="select-grafico sexo-por-ano-pos">
           {% for departamento in programas %}
             {% if departamento == 'Geral' %}
                 <option value="">{{ departamento }}</option>
@@ -88,18 +45,15 @@
     </div>
     <div class="grafico-container">
 
-      <canvas id="sexo-por-ano"></canvas>
+      <canvas id="sexo-por-ano-pos"></canvas>
 
       <div class="loader show"></div>
 
       {% include 'includes/fonte.html' %}
     </div>
   </div>
-</div>
 
-<div class="dashboard-row">
-
-  <div class="card-dash-6">
+  <div class="card-dash-5">
     <span class="messages"><i class="fa-regular fa-circle-exclamation"></i> Ano inicial maior que ano final</span>
     <div class="select-container">
       <div>
@@ -147,11 +101,14 @@
 
 </div>
 
+<div class="dashboard-row">
+
+  
+
+</div>
+
 {% endblock content %}
 
-<!-- Specific JS goes HERE -->
 {% block javascripts %}
-
-
 
 {% endblock javascripts %}

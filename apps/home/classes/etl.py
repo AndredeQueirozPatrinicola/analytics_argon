@@ -39,7 +39,7 @@ class Etl:
                 sum = []
                 for ano in anos:
                     sum.append(
-                        f", SUM(CASE WHEN ({ano} >= YEAR({coluna_datas[0]})) AND ({ano} <= YEAR({coluna_datas[1]}) OR {coluna_datas[1]} IS NULL) THEN 1 END) AS '{ano}'")
+                        f", SUM(CASE WHEN ({ano} >= YEAR({coluna_datas[0]})) AND ({ano} <= YEAR({coluna_datas[1]}) OR {coluna_datas[1]} IS NULL) THEN 1 ELSE 0 END) AS '{ano}'")
                 sum = "".join(sum)
 
                 query = f"""
@@ -51,8 +51,7 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
-                print(query)
-                print(args)
+
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
