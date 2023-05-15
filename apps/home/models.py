@@ -308,8 +308,6 @@ class Posgraduacoes(models.Model):
     data_ultima_ocorrencia = models.DateField(blank=True, null=True)
     data_deposito_trabalho = models.DateField(blank=True, null=True)
     data_aprovacao_trabalho = models.DateField(blank=True, null=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False

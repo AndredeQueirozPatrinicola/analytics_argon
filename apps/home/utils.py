@@ -104,6 +104,12 @@ class Utils:
             "Dezembro"
         ]
 
+        self.pos_niveis = {
+                            "ME" : "Mestrado", 
+                            "DO" : "Doutorado", 
+                            "DD" : "Doutorado Direto"
+                        }
+
     def pega_programas_departamento(self, *departamento):
         try:
             if len(departamento) > 1:

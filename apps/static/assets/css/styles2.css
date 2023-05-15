@@ -854,6 +854,10 @@ btn:hover {
         display: none;
     }
 
+    .table-container{
+        overflow: scroll;
+    }
+
 }
 
 @media only screen and (max-width: 650px) {
@@ -901,11 +905,17 @@ btn:hover {
 
     .dashboard-row {
         justify-content: center;
+        flex-direction: column;
+        width: 87%;
     }
 
     .card-dash {
         width: 100%;
         margin: 0 1rem;
+    }
+
+    .card-dash-3, .card-dash-5, .card-dash-6, .card-dash-9, .card-dash-10{
+        width: 100%;
     }
 }
 

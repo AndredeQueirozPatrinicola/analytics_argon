@@ -7,13 +7,14 @@ from django.shortcuts import  render
 
 from services.populadb.Docentes import ApiDocente
 
-from apps.home.models import Docente, Departamento
+from apps.home.models import *
 
 from .classes.docente import DadosDocente
 from .classes.departamento import DadosDepartamento
 from .classes.departamentos import Departamentos
 from .classes.index import Index
 from .classes.graduacao import Graduacao
+from .classes.posgraduacao import PosGraduacao
 from .utils import Utils
 
 
@@ -319,4 +320,85 @@ class GraduacaoPesquisa(AbstractGraduacaoViews):
 
         context['caminho'] = caminho
         context['tabela_ics'] = tabela_ics
+        return render(*payload)
+
+
+class PosGraduacaoView(View):
+
+    def get(self, request, *args, **kwargs):
+        pos_graduacao = PosGraduacao()
+
+        numero_alunos = pos_graduacao.alunos_ativos()
+        numero_formandos = pos_graduacao.alunos_concluintes()
+        numero_ingressos = pos_graduacao.alunos_ingressantes()
+        numero_desligados = pos_graduacao.desligados()
+
+        programas = pos_graduacao.nome_areas()
+
+        context = { 
+            "card_header_1": numero_alunos,
+            "card_header_2" : numero_formandos,
+            "card_header_3" : numero_ingressos,
+            "card_header_4" : numero_desligados,
+            "programas" : programas
+        }
+
+        return [request, "", context]
+    
+
+class PosGraduacaoGeral(PosGraduacaoView):
+
+    def get(self, request, *args, **kwargs):
+        payload = super().get(request)
+        payload[1] = 'home/posgraduacao_geral.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Pós-Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Geral',
+                'url' : '#'
+            }
+        ]
+        context['caminho'] = caminho
+        return render(*payload)
+    
+class PosGraduacaoDiversidade(PosGraduacaoView):
+
+    def get(self, request, *args, **kwargs):
+        payload = super().get(request)
+        payload[1] = 'home/posgraduacao_diversidade.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Pós-Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Diversidade',
+                'url' : '#'
+            }
+        ]
+        context['caminho'] = caminho
+        return render(*payload)
+    
+class PosGraduacaoPesquisa(PosGraduacaoView):
+
+    def get(self, request, *args, **kwargs):
+        payload = super().get(request)
+        payload[1] = 'home/posgraduacao_pesquisa.html'
+        context = payload[-1]
+        caminho = [
+            {
+                'text' : 'Pós-Graduação',
+                'url' : '/graduacao/geral'
+            },
+            {
+                'text' : 'Pesquisa',
+                'url' : '#'
+            }
+        ]
+        context['caminho'] = caminho
         return render(*payload)

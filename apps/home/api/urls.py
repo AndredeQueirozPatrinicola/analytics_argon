@@ -22,10 +22,6 @@ urlpatterns = [
 
     path('sexo-por-ano', GraficoSexoAPIView.as_view(), name='sexo'),
 
-    path('sexo-atual', GraficoPizzaSexo.as_view(), name='sexo-atual'),
-
-    path('raca-atual', GraficoPizzaRaca.as_view(), name='sexo-raca'),
-
     path('prod-por-ano', GraficoProducaoHistoricaDepartamentos.as_view(), name='prod-por-ano'),
 
     path('prod-total', GraficoProducaoDepartamentos.as_view(), name='prod-total'),
@@ -50,7 +46,17 @@ urlpatterns = [
 
     path("bolsas-ic", GraficoTipoBolsa.as_view(), name="bolsas-ic"),
 
-    path("ic-por-ano", GraficoProjetosIcPorAno.as_view(), name="ic-por-ano")
+    path("ic-por-ano", GraficoProjetosIcPorAno.as_view(), name="ic-por-ano"),
+
+    path("ingressantes-pos", GraficoIngressantesPosPorNivelPorAno.as_view(), name="ingressantes-pos"),
+
+    path("nivel-pos", GraficoDistribuicaoNivelPos.as_view(), name="nivel-pos"),
+
+    path("alunos-programa", GraficoAlunosPorPrograma.as_view(), name="alunos-programa"),
+
+    path("raca-por-ano-pos", GraficoRacaPorAnoPosGraduacao.as_view(), name="raca-por-ano-pos"),
+
+    path("sexo-por-ano-pos", GraficoSexoPorAnoPosGraduacao.as_view(), name="sexo-por-ano-pos")
 
     ##########################################
     ##              TABELAS                 ##

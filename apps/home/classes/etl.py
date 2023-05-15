@@ -20,18 +20,18 @@ class Etl:
                     return False
         return True
 
-    def pega_dados_por_ano(self, coluna, order_by='', where='', anos=''):
+    def pega_dados_por_ano(self, table, coluna, coluna_datas=[], order_by='', where='', anos=''):
         try:
             if self.secure_input(coluna, order_by, where, anos):
                 args = []
                 select = f"SELECT p.{coluna}"
-                _from = f'FROM graduacoes g'
+                _from = f'FROM {table} g'
                 join = f'JOIN pessoas p ON g.numero_usp = p.numero_usp'
                 group_by = f'GROUP BY p.{coluna}'
 
                 if where:
-                    args = [where, ]
-                    where = "WHERE g.nome_curso = %s"
+                    args.append(list(where.values())[0])
+                    where = f"WHERE {list(where.keys())[0]} = " + "%s"
 
                 if order_by:
                     order_by = f"ORDER BY {order_by}"
@@ -39,7 +39,7 @@ class Etl:
                 sum = []
                 for ano in anos:
                     sum.append(
-                        f", SUM(CASE WHEN ({ano} >= YEAR(data_inicio_vinculo)) AND ({ano} <= YEAR(data_fim_vinculo) OR data_fim_vinculo IS NULL) THEN 1 END) AS '{ano}'")
+                        f", SUM(CASE WHEN ({ano} >= YEAR({coluna_datas[0]})) AND ({ano} <= YEAR({coluna_datas[1]}) OR {coluna_datas[1]} IS NULL) THEN 1 ELSE 0 END) AS '{ano}'")
                 sum = "".join(sum)
 
                 query = f"""
@@ -51,6 +51,7 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
+
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
@@ -108,6 +109,7 @@ class Etl:
         
     def soma_por_ano(self, table, anos, coluna_ano, coluna_select="", where = ""):
         try:
+
             if self.secure_input(anos):
                 args = []
                 group_by = ""
@@ -123,14 +125,14 @@ class Etl:
                 sum = "".join(sum)
 
                 if where:
-                    args.append(where)
-                    where = "WHERE nome_curso = %s"
+                    args.append(list(where.values())[0])
+                    where = f"WHERE {list(where.keys())[0]} = %s"
 
                 if coluna_select:
                     group_by = f"GROUP BY {coluna_select} ORDER BY {coluna_select}"
                     coluna_select = f"{coluna_select}, "
 
-                query = f"SELECT {coluna_select}{sum} FROM {table} {where}{group_by};"
+                query = f"SELECT {coluna_select} {sum} FROM {table} {where} {group_by};"
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")
