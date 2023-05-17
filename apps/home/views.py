@@ -393,7 +393,7 @@ class PosGraduacaoPesquisa(PosGraduacaoView):
         caminho = [
             {
                 'text' : 'Pós-Graduação',
-                'url' : '/graduacao/geral'
+                'url' : '/pos-graduacao/geral'
             },
             {
                 'text' : 'Pesquisa',
