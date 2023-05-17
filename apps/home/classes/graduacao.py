@@ -65,6 +65,16 @@ class Graduacao:
         df_pivot = df_pivot[columns]
         df_pivot = df_pivot.reset_index()
         
+        total = {
+            'nome_curso': 'Total',
+            'Encerrado': df_pivot['Encerrado'].sum(),
+            'Ativo': df_pivot['Ativo'].sum(),
+            'Trancado': df_pivot['Trancado'].sum(),
+            'Reativado': df_pivot['Reativado'].sum(),
+            'Suspenso': df_pivot['Suspenso'].sum()
+        }
+        df_pivot = df_pivot.append(total, ignore_index=True)
+
         tabela = {
             "columns" : ["Nome", *columns],
             "values" : df_pivot.values.tolist()

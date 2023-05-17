@@ -251,7 +251,7 @@ class GraficoSexoAPIView(GraficoAPI):
         return self.get_anos
 
     def get(self, *args, **kwargs):
-        try:
+        # try:
             if self.request.GET.get('stacked') == 'true':
                 stacked = True
             else:
@@ -262,8 +262,8 @@ class GraficoSexoAPIView(GraficoAPI):
             ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
-        except:
-            return Response(self.error_message)
+        # except:
+            # return Response(self.error_message)
 
 
 class GraficoRacaSexo(GraficoPizzaAPIView):
@@ -1010,12 +1010,12 @@ class GraficoRacaPorAnoPosGraduacao(GraficoRacaAPIView):
         
         if departamento := self.request.GET.get('departamento'):
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "raca", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "raca", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='raca', anos=self.get_anos, where={"nome_area" : departamento}
                     )
         else:
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "raca", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "raca", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='raca', anos=self.get_anos
                     )
 
@@ -1036,12 +1036,12 @@ class GraficoSexoPorAnoPosGraduacao(GraficoSexoAPIView):
         
         if departamento := self.request.GET.get('departamento'):
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "sexo", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='sexo', anos=self.get_anos, where={"nome_area" : departamento}
                     )
         else:
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "sexo", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='sexo', anos=self.get_anos
                     )
 
