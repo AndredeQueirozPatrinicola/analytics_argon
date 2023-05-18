@@ -56,7 +56,14 @@ class Etl:
                         )
                     else:
                         sum.append(
-                            f", SUM(CASE WHEN ({ano} >= YEAR({coluna_datas[0]})) AND ({ano} <= YEAR({coluna_datas[1]}) OR {coluna_datas[1]} IS NULL) THEN 1 ELSE 0 END) AS '{ano}'")
+                            f"""
+                                , SUM(
+                                    CASE WHEN (
+                                        {ano} >= YEAR({coluna_datas[0]})) AND 
+                                        (
+                                            {ano} <= YEAR({coluna_datas[1]}) OR 
+                                            {coluna_datas[1]} IS NULL) 
+                                    THEN 1 ELSE 0 END) AS '{ano}'""")
                 sum = "".join(sum)
 
                 query = f"""
