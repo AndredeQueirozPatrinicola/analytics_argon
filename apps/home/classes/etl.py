@@ -20,7 +20,7 @@ class Etl:
                     return False
         return True
 
-    def pega_dados_por_ano(self, table, coluna, coluna_datas=[], order_by='', where='', anos=''):
+    def pega_dados_por_ano(self, table, coluna, pos="",coluna_datas=[], order_by='', where='', anos=''):
         try:
             if self.secure_input(coluna, order_by, where, anos):
                 args = []
@@ -38,8 +38,32 @@ class Etl:
 
                 sum = []
                 for ano in anos:
-                    sum.append(
-                        f", SUM(CASE WHEN ({ano} >= YEAR({coluna_datas[0]})) AND ({ano} <= YEAR({coluna_datas[1]}) OR {coluna_datas[1]} IS NULL) THEN 1 ELSE 0 END) AS '{ano}'")
+                    if pos:
+                        sum.append(
+                            f"""
+                                , SUM(
+                                    CASE WHEN (
+                                        (YEAR({coluna_datas[0]}) <= {ano}) AND 
+                                        (
+                                            (YEAR({coluna_datas[1]}) >= {ano}) OR 
+                                            (
+                                                ({coluna_datas[1]} IS NULL) AND 
+                                                (YEAR({coluna_datas[2]}) >= {ano} )
+                                            )
+                                        )
+                                    ) THEN 1 ELSE 0 END) AS '{ano}'
+                            """
+                        )
+                    else:
+                        sum.append(
+                            f"""
+                                , SUM(
+                                    CASE WHEN (
+                                        {ano} >= YEAR({coluna_datas[0]})) AND 
+                                        (
+                                            {ano} <= YEAR({coluna_datas[1]}) OR 
+                                            {coluna_datas[1]} IS NULL) 
+                                    THEN 1 ELSE 0 END) AS '{ano}'""")
                 sum = "".join(sum)
 
                 query = f"""
@@ -51,7 +75,7 @@ class Etl:
                             { group_by }
                             { order_by }
                         """
-
+                
                 self.cursor.execute(query, args)
                 return self.cursor.fetchall()
             raise Exception("SQLInjection Detected")

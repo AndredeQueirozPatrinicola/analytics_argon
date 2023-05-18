@@ -258,8 +258,8 @@ class GraficoSexoAPIView(GraficoAPI):
                 stacked = False
             departamento = self.request.GET.get('departamento')
             dados = self.plota_grafico(tipo='bar', colors=[
-                "#a2c272", "#323B81"
-            ], stacked=stacked, departamento=departamento)
+                                "#a2c272", "#323B81"
+                            ], stacked=stacked, departamento=departamento)
             serializer = GraficoSerializer(dados)
             return Response(serializer.data)
         except:
@@ -740,9 +740,7 @@ class GraficoTipoEgresso(GraficoAPI):
 
     @cached_property
     def get_data(self):
-        ano_inicial = self.request.GET.get('ano_inicial')
-        ano_final = self.request.GET.get('ano_final')
-        anos = [int(ano) for ano in range(int(ano_inicial), int(ano_final) + 1)]
+        anos = self.get_anos
 
         if departamento := self.request.GET.get("departamento"):
             data = self.etl.soma_por_ano("graduacoes", anos, "data_fim_vinculo", coluna_select="tipo_encerramento_bacharel", where={"nome_curso" : departamento})
@@ -912,10 +910,10 @@ class GraficoIngressantesPosPorNivelPorAno(GraficoLinhasAPIView):
             data = self.etl.soma_por_ano("posgraduacoes", self.get_anos, "primeira_matricula", coluna_select="nivel_programa")
 
         df = pd.DataFrame(data)
-        x = 0
-        for i in df[0].values:
+        
+        for x, i in enumerate(df[0].values):
             df.loc[x, 0] = map.get(i)
-            x+=1
+            
 
         return df.values.tolist()
 
@@ -951,10 +949,10 @@ class GraficoDistribuicaoNivelPos(GraficoPizzaAPIView):
             data = Posgraduacoes.objects.using('etl').values('nivel_programa').filter(tipo_ultima_ocorrencia__in=["ACO", "MAR"]).annotate(total=Count('*'))
 
         df = pd.DataFrame(data)
-        x = 0
-        for i in df['nivel_programa'].values:
+        
+        for x, i in enumerate(df['nivel_programa'].values):
             df.loc[x, 'nivel_programa'] = self.utils.pos_niveis.get(i)
-            x+=1
+            
 
         return df.values.tolist()
 
@@ -1010,12 +1008,12 @@ class GraficoRacaPorAnoPosGraduacao(GraficoRacaAPIView):
         
         if departamento := self.request.GET.get('departamento'):
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "raca", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "raca", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='raca', anos=self.get_anos, where={"nome_area" : departamento}
                     )
         else:
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "raca", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "raca", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='raca', anos=self.get_anos
                     )
 
@@ -1036,12 +1034,12 @@ class GraficoSexoPorAnoPosGraduacao(GraficoSexoAPIView):
         
         if departamento := self.request.GET.get('departamento'):
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "sexo", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='sexo', anos=self.get_anos, where={"nome_area" : departamento}
                     )
         else:
             data = self.etl.pega_dados_por_ano("posgraduacoes",
-                    "sexo", coluna_datas=["primeira_matricula", "data_aprovacao_trabalho"],
+                    "sexo", pos=True, coluna_datas=["primeira_matricula", "data_aprovacao_trabalho", "data_ultima_ocorrencia"],
                     order_by='sexo', anos=self.get_anos
                     )
 

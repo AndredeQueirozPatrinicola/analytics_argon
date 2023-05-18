@@ -786,6 +786,12 @@ btn:hover {
     font-size: 1.1rem;
 }
 
+.nested{
+    font-size: 12px !important;
+    margin-left: 1.5rem !important;
+    max-width: 8rem;
+}
+
 
 /* Responsividade !! */
 

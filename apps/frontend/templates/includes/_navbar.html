@@ -16,9 +16,18 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             {% for item in menu %}
             <li>
-                <a class="dropdown-item" href="{{ item.url }}">
-                    {{ item.text }}
-                </a>
+                {% if item.submenu %}
+                    <a class="dropdown-item">{{ item.text }}</a>
+                    {% for submenu in item.submenu %}
+                        <a class="dropdown-item nested" href="/{{ item.url }}/{{ submenu.url }}">
+                            {{ submenu.text }}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <a class="dropdown-item" href="{{ item.url }}">
+                        {{ item.text }}
+                    </a>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
