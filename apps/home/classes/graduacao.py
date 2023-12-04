@@ -26,10 +26,11 @@ class Graduacao:
         ]
 
     def pega_numero_alunos_ativos(self):
-        dados = Graduacoes.objects.using('etl').filter(situacao_curso = 'ativo')
+        dados = Graduacoes.objects.using('etl').filter(situacao_curso = 'ativo').count()
         resultado = {
             'title' : 'Numero de Alunos Ativos',
-            'text' : f"Alunos: {len(dados)}"
+            #'text': dados
+            'text' : f"Alunos: {dados}"
         }
         return resultado
     
@@ -58,7 +59,7 @@ class Graduacao:
         }
 
     def tabela_alunos(self):
-        columns = ['Encerrado', 'Ativo', 'Trancado', 'Reativado', 'Suspenso']
+        columns = ['Encerrado', 'Ativo', 'Trancado', 'Suspenso']
         dados = Graduacoes.objects.using("etl").values("situacao_curso", "nome_curso").annotate(dcount=Count('*'))
         df = pd.DataFrame(dados)
         df_pivot = pd.pivot_table(df, index='nome_curso', columns='situacao_curso', values='dcount', aggfunc='sum', fill_value=0)
@@ -70,7 +71,6 @@ class Graduacao:
             'Encerrado': df_pivot['Encerrado'].sum(),
             'Ativo': df_pivot['Ativo'].sum(),
             'Trancado': df_pivot['Trancado'].sum(),
-            'Reativado': df_pivot['Reativado'].sum(),
             'Suspenso': df_pivot['Suspenso'].sum()
         }
         df_pivot = df_pivot.append(total, ignore_index=True)
