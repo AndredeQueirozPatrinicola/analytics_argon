@@ -154,7 +154,7 @@ class CursosCulturaextensao(models.Model):
 class Graduacoes(models.Model):
     id_graduacao = models.CharField(primary_key=True, max_length=32)
     numero_usp = models.ForeignKey('Pessoas', models.DO_NOTHING, db_column='numero_usp')
-    sequencia_curso = models.IntegerField()
+    sequencia_grad = models.IntegerField()
     situacao_curso = models.CharField(max_length=16)
     data_inicio_vinculo = models.DateField()
     data_fim_vinculo = models.DateField(blank=True, null=True)
